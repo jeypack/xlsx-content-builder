@@ -1,0 +1,21 @@
+<script type="text/javascript">
+    console.log("");
+    console.log("Content [Alza,Responsive] Template 😎");
+    console.log("✔️", "Version:", '{{version}}');
+    console.log("✔️", "{{title}}");
+    console.log("✔️", "Flexslider Cols: {{flexSliderCols}}");
+    window.addEventListener('load', function () {
+      window.EGP.FlexSlider.get('.slider', {
+        media: [
+          { width: 320, cols: 1 },
+          { width: 640, cols: 2 },
+          { width: 768, cols: 3 },
+        ],
+        loop: false,
+        minDistanceToDrag: 2,
+        minDistanceYToCancel: 30,
+        minDistanceToSwipe: 40,
+        gutters: 16
+      });
+    }, false);
+  </script>

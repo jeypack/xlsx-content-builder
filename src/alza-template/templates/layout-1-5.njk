@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="{{language | lower}}">
+  <head>
+    <meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta http-equiv="content-language" content="{{language | lower}}" />
+    <meta name="author" content="joerg.pfeifer@egplusww.com">
+    <meta name="description" content="{{version}}">
+    {% block head -%}
+      <title>{{title}}</title>
+    {%- endblock %}
+    <link rel="stylesheet" href="{{'./css/' + jsCssName + '.css'}}">
+    {%- block style -%} {%- endblock -%}
+</head>
+<body class="{{bodyClass}}">
+  <div id="celek">
+    <div class="main">
+      <!-- MODULE 1 WITH HEADLINE AND FULLSIZE IMAGE PLUS ALT TEXT -->
+      {% block module1 -%}
+      <div class="container items-start gutters-all">
+        <div class="col-12"><h4>MODULE-1 HEADLINE</h4></div>
+      </div>
+      <div class="container items-start gutters-all">
+        <div class="col-12"><img src="assets/module-1.jpg" alt="IMAGE-ALT-TEXT"></div>
+      </div>
+      {%- endblock %}
+      <!-- MODULE 2 WITH 4 COLS IMAGE HEADLINE COPY -->
+      {% block module2 -%}
+      <div class="container items-start gutters-all">
+        <div class="col-12"></div>
+        <div class="col-sm-3 col-xs-6 col-12">
+          <img src="assets/module-2-feature-1.jpg">
+          <h5>MODULE-2 FEATURE-1 HEADLINE</h5>
+          <p>MODULE-2 FEATURE-1 PARAGRAPH</p>
+        </div>
+        <div class="col-sm-3 col-xs-6 col-12">
+          <img src="assets/module-2-feature-2.jpg">
+          <h5>MODULE-2 FEATURE-2 HEADLINE</h5>
+          <p>MODULE-2 FEATURE-2 PARAGRAPH</p>
+        </div>
+        <div class="col-sm-3 col-xs-6 col-12">
+          <img src="assets/module-2-feature-3.jpg">
+          <h5>MODULE-2 FEATURE-3 HEADLINE</h5>
+          <p>MODULE-2 FEATURE-3 PARAGRAPH</p>
+        </div>
+        <div class="col-sm-3 col-xs-6 col-12">
+          <img src="assets/module-2-feature-4.jpg">
+          <h5>MODULE-2 FEATURE-4 HEADLINE</h5>
+          <p>MODULE-2 FEATURE-4 PARAGRAPH</p>
+        </div>
+      </div>
+      {%- endblock %}
+      <!-- MODULE 3 WITH 4 COLS IMAGE HEADLINE COPY -->
+      {% block module3 -%}
+      <div class="container items-start gutters-all">
+        <div class="col-12"></div>
+        <div class="col-sm-3 col-xs-6 col-12">
+          <img src="assets/module-3-feature-1.jpg">
+          <h5>MODULE-3 FEATURE-1 HEADLINE</h5>
+          <p>MODULE-3 FEATURE-1 PARAGRAPH</p>
+        </div>
+        <div class="col-sm-3 col-xs-6 col-12">
+          <img src="assets/module-3-feature-2.jpg">
+          <h5>MODULE-3 FEATURE-2 HEADLINE</h5>
+          <p>MODULE-3 FEATURE-2 PARAGRAPH</p>
+        </div>
+        <div class="col-sm-3 col-xs-6 col-12">
+          <img src="assets/module-3-feature-3.jpg">
+          <h5>MODULE-3 FEATURE-3 HEADLINE</h5>
+          <p>MODULE-3 FEATURE-3 PARAGRAPH</p>
+        </div>
+        <div class="col-sm-3 col-xs-6 col-12">
+          <img src="assets/module-3-feature-4.jpg">
+          <h5>MODULE-3 FEATURE-4 HEADLINE</h5>
+          <p>MODULE-3 FEATURE-4 PARAGRAPH</p>
+        </div>
+      </div>
+      {%- endblock %}
+      <!-- MODULE 4 WITH FULLSIZE IMAGE AND ALT TEXT -->
+      {% block module4 -%}
+      <div class="container items-start gutters-all">
+        <div class="col-12"><img src="assets/module-4.jpg" alt="IMAGE-ALT-TEXT"></div>
+      </div>
+      {%- endblock %}
+      <!-- MODULE 5 SLIDER TABLE PART -->
+      {% block module5 -%}
+      <div class="container items-start gutters-all">
+        <div class="col-12"><h4>MODULE-5 HEADLINE</h4></div>
+      </div>
+      <div class="slider">
+        <div class="navigation">
+          <div class="slide-left">
+            <svg width="14" height="14" style="fill: rgb(86, 87, 88);" aria-hidden="true" viewBox="0 0 470 470" xmlns="http://www.w3.org/2000/svg">
+              <path xmlns="http://www.w3.org/2000/svg" class="sp-icon-primary" fill="currentColor" d="M389.67 403.34L221.34 235L389.67 66.67L323.01 0L88 235L323.01 470L389.67 403.34Z"></path>
+            </svg>
+          </div>
+          <div class="pagination">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          <div class="slide-right">
+            <svg width="14" height="14" style="fill: rgb(86, 87, 88);" aria-hidden="true" viewBox="0 0 470 470" xmlns="http://www.w3.org/2000/svg">
+              <path xmlns="http://www.w3.org/2000/svg" class="sp-icon-primary" fill="currentColor" d="M88 403.34L256.34 235L88 66.67L154.67 0L389.67 235L154.67 470L88 403.34Z"></path>
+            </svg>
+          </div>
+        </div>
+        <div class="table text-center">
+          <!-- first table row with images plus logo - last one is first one -->
+          <div class="row items-center">
+            <div class="col order-1">
+              <img src="assets/module-5-product-1.jpg">
+            </div>
+            <div class="col order-2">
+              <img src="assets/module-5-product-2.jpg">
+            </div>
+            <div class="col order-3">
+              <img src="assets/module-5-product-3.jpg">
+            </div>
+            <div class="col order-0 col-logo">
+              <!-- <img class="logo" src="assets/logo.png"> -->
+            </div>
+          </div>
+          <!-- table row with labels -->
+          <div class="row items-stretch border-bottom">
+            <div class="col padding-bottom order-1">
+              <h6>Oral-B PRO 3</h6>
+            </div>
+            <div class="col padding-bottom order-2">
+              <h6>Oral-B iO Series 4</h6>
+            </div>
+            <div class="col padding-bottom order-3">
+              <h6>Oral-B PRO 1</h6>
+            </div>
+            <div class="col padding-bottom order-0 col-logo"></div>
+          </div>
+          <!-- table row with info -->
+          <div class="row items-stretch border-bottom">
+            <div class="col padding-bottom order-1">
+              <p>✓</p>
+            </div>
+            <div class="col padding-bottom order-2">
+              <p>✓</p>
+            </div>
+            <div class="col padding-bottom order-3">
+              <p>✓</p>
+            </div>
+            <div class="col padding-bottom order-0 col-logo text-left background-color-table">
+              <h5>Časovač</h5>
+            </div>
+          </div>
+          <!-- table row with ticks - last one is left side label -->
+          <div class="row items-stretch border-bottom">
+            <div class="col padding-bottom order-1">
+              <p>Vizuální</p>
+            </div>
+            <div class="col padding-bottom order-2">
+              <p>Vizuální smart</p>
+            </div>
+            <div class="col padding-bottom order-3">
+              <p>Nevizuální</p>
+            </div>
+            <div class="col padding-bottom order-0 col-logo text-left background-color-table">
+              <h5>Senzor tlaku</h5>
+            </div>
+          </div>
+          <div class="row items-stretch border-bottom">
+            <div class="col padding-bottom order-1">
+              <p></p>
+            </div>
+            <div class="col padding-bottom order-2">
+              <p>✓</p>
+            </div>
+            <div class="col padding-bottom order-3">
+              <p></p>
+            </div>
+            <div class="col padding-bottom order-0 col-logo text-left background-color-table">
+              <h5>Připojení přes Bluetooth</h5>
+            </div>
+          </div>
+          <div class="row items-stretch border-bottom">
+            <div class="col padding-bottom order-1">
+              <p>3</p>
+            </div>
+            <div class="col padding-bottom order-2">
+              <p>4</p>
+            </div>
+            <div class="col padding-bottom order-3">
+              <p>1</p>
+            </div>
+            <div class="col padding-bottom order-0 col-logo text-left background-color-table">
+              <h5>Režimy čištění</h5>
+            </div>
+          </div>
+          <div class="row items-stretch border-bottom">
+            <div class="col padding-bottom order-1">
+              <p></p>
+            </div>
+            <div class="col padding-bottom order-2">
+              <p>Kontrolka LED</p>
+            </div>
+            <div class="col padding-bottom order-3">
+              <p></p>
+            </div>
+            <div class="col padding-bottom order-0 col-logo text-left background-color-table">
+              <h5>Připomínka výměny kartáčkové hlavy</h5>
+            </div>
+          </div>
+          <div class="row items-stretch border-bottom">
+            <div class="col padding-bottom align-center order-1">
+              <p></p>
+            </div>
+            <div class="col padding-bottom align-center order-2">
+              <p>✓</p>
+            </div>
+            <div class="col padding-bottom align-center order-3">
+              <p></p>
+            </div>
+            <div class="col padding-bottom order-0 col-logo text-left background-color-table">
+              <h5>Technologie iO</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+      {%- endblock %}
+    </div>
+  </div>
+  {% block js -%}
+    <script src="{{'./js/' + jsCssName + '.js'}}"></script>
+  {%- endblock %}
+  {% block script -%}
+    {%- if flexSliderCols === 3 -%}
+    {%- include "partials/flex-inline-js-3-cols.njk" -%}
+    {%- elif flexSliderCols === 4 -%}
+    {%- include "partials/flex-inline-js-4-cols.njk" -%}
+    {%- elif flexSliderCols === 5 -%}
+    {%- include "partials/flex-inline-js-5-cols.njk" -%}
+    {%- endif -%}
+  {%- endblock -%}
+</body>
+</html>

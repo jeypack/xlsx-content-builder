@@ -1,0 +1,11 @@
+{
+  "name": "xlsx-content-builder",
+  "version": "1.0.0",
+  "description": "Generates responsive content from xlsx via nunjucks templates.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Joerg Pfeifer",
+  "license": "ISC"
+}

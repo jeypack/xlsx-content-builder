@@ -1,0 +1,108 @@
+{% extends "layout-1-5.njk" %}
+
+      <!-- MODULE 1 WITH HEADLINE AND FULLSIZE IMAGE PLUS ALT TEXT -->
+      {% block module1 -%}
+      <div class="container items-start gutters-all">
+        <div class="col-12"><h4>{{module1.headline.value}}</h4></div>
+      </div>
+      <div class="container items-start gutters-all">
+        <div class="col-12"><img src="assets/module-1.jpg" alt="{{module1['image-alt'].value | replace('\n', '')}}"></div>
+      </div>
+      {%- endblock %}
+      <!-- MODULE 2 WITH 4 COLS IMAGE HEADLINE COPY -->
+      {% block module2 -%}
+      <div class="container items-start gutters-all">
+        <div class="col-12"></div>
+        {# Loop through all the headline and copy #}
+        {% for item in module2.headline -%}
+        <div class="col-sm-3 col-xs-6 col-12">
+          <img src="assets/module-2-feature-{{loop.index}}.jpg">
+          <h5>{{item.value}}</h5>
+          {%- if module2.copy[loop.index0].spl -%}
+          <p>{{module2.copy[loop.index0].spl[0]}}</p>
+          <p class="small">{{module2.copy[loop.index0].spl[1]}}</p>
+          {%- else %}
+          <p>{{module2.copy[loop.index0].value}}</p>
+          {% endif -%}
+        </div>
+        {%- endfor -%}
+      </div>
+      {%- endblock %}
+      <!-- MODULE 3 WITH 4 COLS IMAGE HEADLINE COPY -->
+      {% block module3 -%}
+      <div class="container items-start gutters-all">
+        <div class="col-12"></div>
+        {# Loop through all the headline and copy #}
+        {% for item in module3.headline -%}
+        <div class="col-sm-3 col-xs-6 col-12">
+          <img src="assets/module-3-feature-{{loop.index}}.jpg">
+          {%- if module3.copy[loop.index0].spl -%}
+          <p>{{module3.copy[loop.index0].spl[0]}}</p>
+          <p class="small">{{module3.copy[loop.index0].spl[1]}}</p>
+          {%- else %}
+          <p>{{module3.copy[loop.index0].value}}</p>
+          {% endif -%}
+        </div>
+        {%- endfor -%}
+      </div>
+      {%- endblock %}
+      <!-- MODULE 4 WITH FULLSIZE IMAGE AND ALT TEXT -->
+      {% block module4 -%}
+      <div class="container items-start gutters-all">
+        <div class="col-12"><img src="assets/module-4.jpg" alt="{{module4['image-alt'].value | replace('\n', '')}}"></div>
+      </div>
+      {%- endblock %}
+      <!-- MODULE 5 SLIDER TABLE PART -->
+      {% block module5 -%}
+      <div class="container items-start gutters-all">
+        <div class="col-12"><h4>{{module5.headline.value}}</h4></div>
+      </div>
+      <div class="slider">
+        <div class="navigation">
+          <div class="slide-left">
+            <svg width="14" height="14" style="fill: rgb(86, 87, 88);" aria-hidden="true" viewBox="0 0 470 470" xmlns="http://www.w3.org/2000/svg">
+              <path xmlns="http://www.w3.org/2000/svg" class="sp-icon-primary" fill="currentColor" d="M389.67 403.34L221.34 235L389.67 66.67L323.01 0L88 235L323.01 470L389.67 403.34Z"></path>
+            </svg>
+          </div>
+          <div class="pagination">
+            {% for i in range(0, flexSliderCols) -%}
+              <div class="dot"></div>
+            {% endfor -%}
+          </div>
+          <div class="slide-right">
+            <svg width="14" height="14" style="fill: rgb(86, 87, 88);" aria-hidden="true" viewBox="0 0 470 470" xmlns="http://www.w3.org/2000/svg">
+              <path xmlns="http://www.w3.org/2000/svg" class="sp-icon-primary" fill="currentColor" d="M88 403.34L256.34 235L88 66.67L154.67 0L389.67 235L154.67 470L88 403.34Z"></path>
+            </svg>
+          </div>
+        </div>
+        <div class="table text-center">
+          <!-- first table row with images plus logo - last one is first one -->
+          <div class="row items-center">
+            {% for i in range(0, flexSliderCols) -%}
+              <div class="col order-{{loop.index}}">
+              <img src="assets/module-5-product-{{loop.index}}.jpg">
+            </div>
+            {% endfor -%}
+            <div class="col order-0 col-logo">
+              <!-- <img class="logo" src="assets/logo.png"> -->
+            </div>
+          </div>
+          <!-- table rows with info - last one is left side label -->
+          {% for row in module5.table -%}
+            <div class="row items-stretch border-bottom">
+            {% for i in range(0, flexSliderCols) -%}
+              <div class="col padding-bottom order-{{loop.index}}">
+              <h6>{{row[i + 1].value | striptags(true) | escape | nl2br}}</h6>
+            </div>
+            {%- endfor -%}
+            {# skip first table row #}
+            <div class="col padding-bottom order-0 col-logo{{ ' text-left background-color-table' if loop.index0 > 0 else '' }}">
+            {%- if loop.index0 > 0 %}
+              <h5>{{row[0].value | striptags(true) | escape | nl2br}}</h5>
+            {% endif -%}
+            </div>
+          </div>
+          {% endfor -%}
+        </div>
+      </div>
+      {%- endblock %}

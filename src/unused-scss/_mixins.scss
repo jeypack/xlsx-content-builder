@@ -1,0 +1,730 @@
+@use "sass:map";
+//
+//@mixin generate-utility($prop, ) {}
+
+//$weights: ("light": 300, "medium": 500);
+//$map : map.merge($weights, ("medium": 700));
+//@debug $weights;
+
+// $i: 12;
+// @while $i>0 {
+// 	&>.col-order-#{$i} {
+// 		order: $i;
+// 	}
+// 	$i: $i - 1;
+// }
+// @include juiced-rows;
+@mixin juiced-rows() {
+  // .container {
+  //   width: 100%;
+  //   display: flex;
+  //   flex-wrap: wrap;
+  //   flex-direction: row;
+  //   margin: auto;
+  // }
+  .container.gutters>.row,
+  .container.gutters>.row-1,
+  .container.gutters>.row-10,
+  .container.gutters>.row-11,
+  .container.gutters>.row-12,
+  .container.gutters>.row-2,
+  .container.gutters>.row-3,
+  .container.gutters>.row-4,
+  .container.gutters>.row-5,
+  .container.gutters>.row-6,
+  .container.gutters>.row-7,
+  .container.gutters>.row-8,
+  .container.gutters>.row-9,
+  .container.gutters>.row-auto,
+  .container.gutters>.row-lg-1,
+  .container.gutters>.row-lg-10,
+  .container.gutters>.row-lg-11,
+  .container.gutters>.row-lg-12,
+  .container.gutters>.row-lg-2,
+  .container.gutters>.row-lg-3,
+  .container.gutters>.row-lg-4,
+  .container.gutters>.row-lg-5,
+  .container.gutters>.row-lg-6,
+  .container.gutters>.row-lg-7,
+  .container.gutters>.row-lg-8,
+  .container.gutters>.row-lg-9,
+  .container.gutters>.row-md-1,
+  .container.gutters>.row-md-10,
+  .container.gutters>.row-md-11,
+  .container.gutters>.row-md-12,
+  .container.gutters>.row-md-2,
+  .container.gutters>.row-md-3,
+  .container.gutters>.row-md-4,
+  .container.gutters>.row-md-5,
+  .container.gutters>.row-md-6,
+  .container.gutters>.row-md-7,
+  .container.gutters>.row-md-8,
+  .container.gutters>.row-md-9,
+  .container.gutters>.row-sm-1,
+  .container.gutters>.row-sm-10,
+  .container.gutters>.row-sm-11,
+  .container.gutters>.row-sm-12,
+  .container.gutters>.row-sm-2,
+  .container.gutters>.row-sm-3,
+  .container.gutters>.row-sm-4,
+  .container.gutters>.row-sm-5,
+  .container.gutters>.row-sm-6,
+  .container.gutters>.row-sm-7,
+  .container.gutters>.row-sm-8,
+  .container.gutters>.row-sm-9,
+  .container.gutters>.row-xs-1,
+  .container.gutters>.row-xs-10,
+  .container.gutters>.row-xs-11,
+  .container.gutters>.row-xs-12,
+  .container.gutters>.row-xs-2,
+  .container.gutters>.row-xs-3,
+  .container.gutters>.row-xs-4,
+  .container.gutters>.row-xs-5,
+  .container.gutters>.row-xs-6,
+  .container.gutters>.row-xs-7,
+  .container.gutters>.row-xs-8,
+  .container.gutters>.row-xs-9 {
+    padding: 0 $container-gutters;
+  }
+
+  .container.gutters-all>.row,
+  .container.gutters-all>.row-1,
+  .container.gutters-all>.row-10,
+  .container.gutters-all>.row-11,
+  .container.gutters-all>.row-12,
+  .container.gutters-all>.row-2,
+  .container.gutters-all>.row-3,
+  .container.gutters-all>.row-4,
+  .container.gutters-all>.row-5,
+  .container.gutters-all>.row-6,
+  .container.gutters-all>.row-7,
+  .container.gutters-all>.row-8,
+  .container.gutters-all>.row-9,
+  .container.gutters-all>.row-auto,
+  .container.gutters-all>.row-lg-1,
+  .container.gutters-all>.row-lg-10,
+  .container.gutters-all>.row-lg-11,
+  .container.gutters-all>.row-lg-12,
+  .container.gutters-all>.row-lg-2,
+  .container.gutters-all>.row-lg-3,
+  .container.gutters-all>.row-lg-4,
+  .container.gutters-all>.row-lg-5,
+  .container.gutters-all>.row-lg-6,
+  .container.gutters-all>.row-lg-7,
+  .container.gutters-all>.row-lg-8,
+  .container.gutters-all>.row-lg-9,
+  .container.gutters-all>.row-md-1,
+  .container.gutters-all>.row-md-10,
+  .container.gutters-all>.row-md-11,
+  .container.gutters-all>.row-md-12,
+  .container.gutters-all>.row-md-2,
+  .container.gutters-all>.row-md-3,
+  .container.gutters-all>.row-md-4,
+  .container.gutters-all>.row-md-5,
+  .container.gutters-all>.row-md-6,
+  .container.gutters-all>.row-md-7,
+  .container.gutters-all>.row-md-8,
+  .container.gutters-all>.row-md-9,
+  .container.gutters-all>.row-sm-1,
+  .container.gutters-all>.row-sm-10,
+  .container.gutters-all>.row-sm-11,
+  .container.gutters-all>.row-sm-12,
+  .container.gutters-all>.row-sm-2,
+  .container.gutters-all>.row-sm-3,
+  .container.gutters-all>.row-sm-4,
+  .container.gutters-all>.row-sm-5,
+  .container.gutters-all>.row-sm-6,
+  .container.gutters-all>.row-sm-7,
+  .container.gutters-all>.row-sm-8,
+  .container.gutters-all>.row-sm-9,
+  .container.gutters-all>.row-xs-1,
+  .container.gutters-all>.row-xs-10,
+  .container.gutters-all>.row-xs-11,
+  .container.gutters-all>.row-xs-12,
+  .container.gutters-all>.row-xs-2,
+  .container.gutters-all>.row-xs-3,
+  .container.gutters-all>.row-xs-4,
+  .container.gutters-all>.row-xs-5,
+  .container.gutters-all>.row-xs-6,
+  .container.gutters-all>.row-xs-7,
+  .container.gutters-all>.row-xs-8,
+  .container.gutters-all>.row-xs-9 {
+    padding: $container-gutters;
+  }
+
+  .container>.row-1 {
+    flex: 0 1 8.33333%;
+    max-height: 8.33333%;
+  }
+
+  .container>.row-2 {
+    flex: 0 1 16.66667%;
+    max-height: 16.66667%;
+  }
+
+  .container>.row-3 {
+    flex: 0 1 25%;
+    max-height: 25%;
+  }
+
+  .container>.row-4 {
+    flex: 0 1 33.3333333%;
+    max-height: 33.3333333%;
+  }
+
+  .container>.row-5 {
+    flex: 0 1 41.66667%;
+    max-height: 41.66667%;
+  }
+
+  .container>.row-6 {
+    flex: 0 1 50%;
+    max-height: 50%;
+  }
+
+  .container>.row-7 {
+    flex: 0 1 58.33333%;
+    max-height: 58.33333%;
+  }
+
+  .container>.row-8 {
+    flex: 0 1 66.66667%;
+    max-height: 66.66667%;
+  }
+
+  .container>.row-9 {
+    flex: 0 1 75%;
+    max-height: 75%;
+  }
+
+  .container>.row-10 {
+    flex: 0 1 83.33333%;
+    max-height: 83.33333%;
+  }
+
+  .container>.row-11 {
+    flex: 0 1 91.66667%;
+    max-height: 91.66667%;
+  }
+
+  .container>.row-12 {
+    flex: 0 1 100%;
+    max-height: 100%;
+  }
+
+  .row-1,
+  .row-10,
+  .row-11,
+  .row-12,
+  .row-2,
+  .row-3,
+  .row-4,
+  .row-5,
+  .row-6,
+  .row-7,
+  .row-8,
+  .row-9,
+  .row-auto,
+  .row-lg-1,
+  .row-lg-10,
+  .row-lg-11,
+  .row-lg-12,
+  .row-lg-2,
+  .row-lg-3,
+  .row-lg-4,
+  .row-lg-5,
+  .row-lg-6,
+  .row-lg-7,
+  .row-lg-8,
+  .row-lg-9,
+  .row-md-1,
+  .row-md-10,
+  .row-md-11,
+  .row-md-12,
+  .row-md-2,
+  .row-md-3,
+  .row-md-4,
+  .row-md-5,
+  .row-md-6,
+  .row-md-7,
+  .row-md-8,
+  .row-md-9,
+  .row-sm-1,
+  .row-sm-10,
+  .row-sm-11,
+  .row-sm-12,
+  .row-sm-2,
+  .row-sm-3,
+  .row-sm-4,
+  .row-sm-5,
+  .row-sm-6,
+  .row-sm-7,
+  .row-sm-8,
+  .row-sm-9,
+  .row-xs-1,
+  .row-xs-10,
+  .row-xs-11,
+  .row-xs-12,
+  .row-xs-2,
+  .row-xs-3,
+  .row-xs-4,
+  .row-xs-5,
+  .row-xs-6,
+  .row-xs-7,
+  .row-xs-8,
+  .row-xs-9 {
+    flex: 0 1 auto;
+    position: relative;
+    height: 100%;
+    max-height: 100%;
+  }
+
+  .row-lg-12.grow-1, .row-lg-11.grow-1, .row-lg-10.grow-1, .row-lg-9.grow-1, .row-lg-8.grow-1, .row-lg-7.grow-1, .row-lg-6.grow-1, .row-lg-5.grow-1, .row-lg-4.grow-1, .row-lg-3.grow-1, .row-lg-2.grow-1, .row-lg-1.grow-1, .row-md-12.grow-1, .row-md-11.grow-1, .row-md-10.grow-1, .row-md-9.grow-1, .row-md-8.grow-1, .row-md-7.grow-1, .row-md-6.grow-1, .row-md-5.grow-1, .row-md-4.grow-1, .row-md-3.grow-1, .row-md-2.grow-1, .row-md-1.grow-1, .row-sm-12.grow-1, .row-sm-11.grow-1, .row-sm-10.grow-1, .row-sm-9.grow-1, .row-sm-8.grow-1, .row-sm-7.grow-1, .row-sm-6.grow-1, .row-sm-5.grow-1, .row-sm-4.grow-1, .row-sm-3.grow-1, .row-sm-2.grow-1, .row-sm-1.grow-1, .row-xs-12.grow-1, .row-xs-11.grow-1, .row-xs-10.grow-1, .row-xs-9.grow-1, .row-xs-8.grow-1, .row-xs-7.grow-1, .row-xs-6.grow-1, .row-xs-5.grow-1, .row-xs-4.grow-1, .row-xs-3.grow-1, .row-xs-2.grow-1, .row-xs-1.grow-1, .row-12.grow-1, .row-11.grow-1, .row-10.grow-1, .row-9.grow-1, .row-8.grow-1, .row-7.grow-1, .row-6.grow-1, .row-5.grow-1, .row-4.grow-1, .row-3.grow-1, .row-2.grow-1, .row-1.grow-1, .row-auto.grow-1, .row.grow-1 {
+    max-height: none;
+    flex-grow: 1;
+  }
+
+  .row-auto {
+    flex: 0 1 auto;
+    height: auto;
+    max-height: none;
+  }
+}
+
+// @include juiced-inside;
+@mixin juiced-inside() {
+	.container {
+		width: 100%;
+		display: flex;
+		flex-wrap: wrap;
+		flex-direction: row;
+		margin: auto;
+
+	}
+	.container.gutters>.col,
+	.container.gutters>.col-1,
+	.container.gutters>.col-10,
+	.container.gutters>.col-11,
+	.container.gutters>.col-12,
+	.container.gutters>.col-2,
+	.container.gutters>.col-3,
+	.container.gutters>.col-4,
+	.container.gutters>.col-5,
+	.container.gutters>.col-6,
+	.container.gutters>.col-7,
+	.container.gutters>.col-8,
+	.container.gutters>.col-9,
+	.container.gutters>.col-auto,
+	.container.gutters>.col-lg-1,
+	.container.gutters>.col-lg-10,
+	.container.gutters>.col-lg-11,
+	.container.gutters>.col-lg-12,
+	.container.gutters>.col-lg-2,
+	.container.gutters>.col-lg-3,
+	.container.gutters>.col-lg-4,
+	.container.gutters>.col-lg-5,
+	.container.gutters>.col-lg-6,
+	.container.gutters>.col-lg-7,
+	.container.gutters>.col-lg-8,
+	.container.gutters>.col-lg-9,
+	.container.gutters>.col-md-1,
+	.container.gutters>.col-md-10,
+	.container.gutters>.col-md-11,
+	.container.gutters>.col-md-12,
+	.container.gutters>.col-md-2,
+	.container.gutters>.col-md-3,
+	.container.gutters>.col-md-4,
+	.container.gutters>.col-md-5,
+	.container.gutters>.col-md-6,
+	.container.gutters>.col-md-7,
+	.container.gutters>.col-md-8,
+	.container.gutters>.col-md-9,
+	.container.gutters>.col-sm-1,
+	.container.gutters>.col-sm-10,
+	.container.gutters>.col-sm-11,
+	.container.gutters>.col-sm-12,
+	.container.gutters>.col-sm-2,
+	.container.gutters>.col-sm-3,
+	.container.gutters>.col-sm-4,
+	.container.gutters>.col-sm-5,
+	.container.gutters>.col-sm-6,
+	.container.gutters>.col-sm-7,
+	.container.gutters>.col-sm-8,
+	.container.gutters>.col-sm-9,
+	.container.gutters>.col-xs-1,
+	.container.gutters>.col-xs-10,
+	.container.gutters>.col-xs-11,
+	.container.gutters>.col-xs-12,
+	.container.gutters>.col-xs-2,
+	.container.gutters>.col-xs-3,
+	.container.gutters>.col-xs-4,
+	.container.gutters>.col-xs-5,
+	.container.gutters>.col-xs-6,
+	.container.gutters>.col-xs-7,
+	.container.gutters>.col-xs-8,
+	.container.gutters>.col-xs-9 {
+		padding: 0 $container-gutters;
+	}
+	.container.gutters-all>.col,
+	.container.gutters-all>.col-1,
+	.container.gutters-all>.col-10,
+	.container.gutters-all>.col-11,
+	.container.gutters-all>.col-12,
+	.container.gutters-all>.col-2,
+	.container.gutters-all>.col-3,
+	.container.gutters-all>.col-4,
+	.container.gutters-all>.col-5,
+	.container.gutters-all>.col-6,
+	.container.gutters-all>.col-7,
+	.container.gutters-all>.col-8,
+	.container.gutters-all>.col-9,
+	.container.gutters-all>.col-auto,
+	.container.gutters-all>.col-lg-1,
+	.container.gutters-all>.col-lg-10,
+	.container.gutters-all>.col-lg-11,
+	.container.gutters-all>.col-lg-12,
+	.container.gutters-all>.col-lg-2,
+	.container.gutters-all>.col-lg-3,
+	.container.gutters-all>.col-lg-4,
+	.container.gutters-all>.col-lg-5,
+	.container.gutters-all>.col-lg-6,
+	.container.gutters-all>.col-lg-7,
+	.container.gutters-all>.col-lg-8,
+	.container.gutters-all>.col-lg-9,
+	.container.gutters-all>.col-md-1,
+	.container.gutters-all>.col-md-10,
+	.container.gutters-all>.col-md-11,
+	.container.gutters-all>.col-md-12,
+	.container.gutters-all>.col-md-2,
+	.container.gutters-all>.col-md-3,
+	.container.gutters-all>.col-md-4,
+	.container.gutters-all>.col-md-5,
+	.container.gutters-all>.col-md-6,
+	.container.gutters-all>.col-md-7,
+	.container.gutters-all>.col-md-8,
+	.container.gutters-all>.col-md-9,
+	.container.gutters-all>.col-sm-1,
+	.container.gutters-all>.col-sm-10,
+	.container.gutters-all>.col-sm-11,
+	.container.gutters-all>.col-sm-12,
+	.container.gutters-all>.col-sm-2,
+	.container.gutters-all>.col-sm-3,
+	.container.gutters-all>.col-sm-4,
+	.container.gutters-all>.col-sm-5,
+	.container.gutters-all>.col-sm-6,
+	.container.gutters-all>.col-sm-7,
+	.container.gutters-all>.col-sm-8,
+	.container.gutters-all>.col-sm-9,
+	.container.gutters-all>.col-xs-1,
+	.container.gutters-all>.col-xs-10,
+	.container.gutters-all>.col-xs-11,
+	.container.gutters-all>.col-xs-12,
+	.container.gutters-all>.col-xs-2,
+	.container.gutters-all>.col-xs-3,
+	.container.gutters-all>.col-xs-4,
+	.container.gutters-all>.col-xs-5,
+	.container.gutters-all>.col-xs-6,
+	.container.gutters-all>.col-xs-7,
+	.container.gutters-all>.col-xs-8,
+	.container.gutters-all>.col-xs-9 {
+		padding: $container-gutters;
+	}
+
+	.container.no-wrap {
+		flex-wrap: nowrap;
+	}
+
+	.container.items-start {
+		align-items: flex-start;
+	}
+
+	.container.items-center {
+		align-items: center;
+	}
+
+	.container.items-end {
+		align-items: flex-end;
+	}
+
+	.container.justify-space-around {
+		justify-content: space-around;
+	}
+
+	.container.justify-space-between {
+		justify-content: space-between;
+	}
+
+	.container>.col-1 {
+		flex: 0 1 8.33333%;
+		max-width: 8.33333%;
+	}
+
+	.container>.col-2 {
+		flex: 0 1 16.66667%;
+		max-width: 16.66667%;
+	}
+
+	.container>.col-3 {
+		flex: 0 1 25%;
+		max-width: 25%;
+	}
+
+	.container>.col-4 {
+		flex: 0 1 33.3333333%;
+		max-width: 33.3333333%;
+	}
+
+	.container>.col-5 {
+		flex: 0 1 41.66667%;
+		max-width: 41.66667%;
+	}
+
+	.container>.col-6 {
+		flex: 0 1 50%;
+		max-width: 50%;
+	}
+
+	.container>.col-7 {
+		flex: 0 1 58.33333%;
+		max-width: 58.33333%;
+	}
+
+	.container>.col-8 {
+		flex: 0 1 66.66667%;
+		max-width: 66.66667%;
+	}
+
+	.container>.col-9 {
+		flex: 0 1 75%;
+		max-width: 75%;
+	}
+
+	.container>.col-10 {
+		flex: 0 1 83.33333%;
+		max-width: 83.33333%;
+	}
+
+	.container>.col-11 {
+		flex: 0 1 91.66667%;
+		max-width: 91.66667%;
+	}
+
+	.container>.col-12 {
+		flex: 0 1 100%;
+		max-width: 100%;
+	}
+
+	.col-1,
+	.col-10,
+	.col-11,
+	.col-12,
+	.col-2,
+	.col-3,
+	.col-4,
+	.col-5,
+	.col-6,
+	.col-7,
+	.col-8,
+	.col-9,
+	.col-auto,
+	.col-lg-1,
+	.col-lg-10,
+	.col-lg-11,
+	.col-lg-12,
+	.col-lg-2,
+	.col-lg-3,
+	.col-lg-4,
+	.col-lg-5,
+	.col-lg-6,
+	.col-lg-7,
+	.col-lg-8,
+	.col-lg-9,
+	.col-md-1,
+	.col-md-10,
+	.col-md-11,
+	.col-md-12,
+	.col-md-2,
+	.col-md-3,
+	.col-md-4,
+	.col-md-5,
+	.col-md-6,
+	.col-md-7,
+	.col-md-8,
+	.col-md-9,
+	.col-sm-1,
+	.col-sm-10,
+	.col-sm-11,
+	.col-sm-12,
+	.col-sm-2,
+	.col-sm-3,
+	.col-sm-4,
+	.col-sm-5,
+	.col-sm-6,
+	.col-sm-7,
+	.col-sm-8,
+	.col-sm-9,
+	.col-xs-1,
+	.col-xs-10,
+	.col-xs-11,
+	.col-xs-12,
+	.col-xs-2,
+	.col-xs-3,
+	.col-xs-4,
+	.col-xs-5,
+	.col-xs-6,
+	.col-xs-7,
+	.col-xs-8,
+	.col-xs-9 {
+		flex: 0 1 auto;
+		position: relative;
+		width: 100%;
+		max-width: 100%;
+	}
+
+	.col-auto {
+		flex: 0 1 auto;
+		width: auto;
+		max-width: none;
+	}
+
+	// $i: 12;
+	// @while $i>0 {
+	// 	&>.col-order-#{$i} {
+	// 		order: $i;
+	// 	}
+	// 	$i: $i - 1;
+	// }
+
+	img {
+		// Get rid of gap under images by making them display: inline-block; by default
+		display: inline-block;
+		width: 100%;
+		height: auto;
+		-ms-interpolation-mode: bicubic;
+		&.limit {
+			max-width: 100%;
+		}
+	}
+
+	@media (min-width: 480px) {
+		.container>.col-xs-3 {
+			flex: 0 1 25%;
+			max-width: 25%;
+		}
+		.container>.col-xs-4 {
+			flex: 0 1 33.3333333%;
+			max-width: 33.3333333%;
+		}
+	}
+
+	@media (min-width: 640px) {
+		.container>.col-sm-3 {
+			flex: 0 1 25%;
+			max-width: 25%;
+		}
+
+		.container>.col-sm-4 {
+			flex: 0 1 33.3333333%;
+			max-width: 33.3333333%;
+		}
+	}
+
+}
+
+@mixin hidden-cols() {
+	@media only screen and (max-width: $media-xxs-max) {
+		.hidden-xxs {
+			display: none;
+		}
+	}
+	@media only screen and (min-width: $media-xs) and (max-width: $media-xs-max) {
+		.hidden-xs {
+			display: none;
+		}
+	}
+	@media only screen and (min-width: $media-sm) and (max-width: $media-sm-max) {
+		.hidden-sm {
+			display: none;
+		}
+	}
+	@media only screen and (min-width: $media-md) and (max-width: $media-md-max) {
+		.hidden-md {
+			display: none;
+		}
+	}
+	@media only screen and (min-width: $media-lg) and (max-width: $media-lg-max) {
+		.hidden-lg {
+			display: none;
+		}
+	}
+	@media only screen and (min-width: $media-xl) and (max-width: $media-xl-max) {
+		.hidden-xl {
+			display: none;
+		}
+	}
+}
+
+// @mixin statement-plh-height() {
+// 	height: $section-height-statement-plh;
+// 	@media only screen and (min-width: $media-xs) {
+// 		height: $section-height-statement-plh-xs;
+// 	}
+// 	@media only screen and (min-width: $media-sm) {
+// 		height: $section-height-statement-plh-sm;
+// 	}
+// 	@media only screen and (min-width: $media-md) {
+// 		height: $section-height-statement-plh-md;
+// 	}
+// 	@media only screen and (min-width: $media-lg) {
+// 		height: $section-height-statement-plh-lg;
+// 	}
+// }
+
+//
+//
+// @mixin gui-btn-variant($color, $background, $border, $color-hover: transparent, $background-hover: transparent, $shadow: false) {
+// 	color: $color;
+// 	background-color: $background;
+// 	border-color: $border;
+// 	// added transition for buttons
+// 	transition: all .3s ease-out;
+
+// 	//&:focus,&:hover &:active,&.active
+// 	//@if $color-hover == transparent {} @else {}
+// }
+
+// Button sizes
+// @mixin gui-btn-size($padding, $font-size, $line-height, $border-radius) {
+// 	padding: $padding;
+// 	font-size: $font-size;
+// 	line-height: $line-height;
+// 	border-radius: $border-radius;
+// }
+
+
+//Responsive Breakpoints
+//Usage:
+//.page-wrap {
+//	@include breakpoint(large) { width: 60%; }
+//	@include breakpoint(medium) { width: 80%; }
+//	@include breakpoint(small) { width: 95%; }
+//}
+//@mixin breakpoint($point) {
+//	@if $point == large {
+//		@media (min-width: 64.375em) { @content; }
+//	}
+//	@else if $point == medium {
+//		@media (min-width: 50em) { @content; }
+//	}
+//	@else if $point == small {
+//		@media (min-width: 37.5em)  { @content; }
+//	}
+//}
+//
+// Fake (pseudo) element, that enables vertical-align
+//&:before {
+//	content: "";
+//	display: inline-block;
+//	vertical-align: middle;
+//	height: 100%;
+//}
