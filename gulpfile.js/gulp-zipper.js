@@ -30,12 +30,12 @@ function createDirectory(dir, cb) {
 }
 
 /**
- *
+ * gulpZipper
  * @param {Object} opts An object with destination and name properties^
  * @param {Function} onFileComplete A function to be called after
  * @returns
  */
-function gulpZipper(opts, onFileComplete) {
+function gulpPlugin(opts, onFileComplete) {
   const { destination, name } = opts;
 
   let countFiles = 0;
@@ -167,4 +167,4 @@ function gulpZipper(opts, onFileComplete) {
 }
 
 // exporting the plugin main function
-module.exports = gulpZipper;
+module.exports = gulpPlugin;
