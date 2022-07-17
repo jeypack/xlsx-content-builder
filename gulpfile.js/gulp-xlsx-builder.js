@@ -636,17 +636,17 @@ const watchDirectory = (cb) => {
 
 const setConfigHasFolderToZip = (cb) => {
   const folder = config.DEVELOPMENT ? config.DEV_FOLDER : config.BUILD_FOLDER;
-  const folderFiles = directoryContains(folder, (resp) => {
+  directoryContains(folder, (resp) => {
     const length = resp.files.length;
     /* for (let i = 0; i < length; i++) {
       console.log("zip", "i:", i, "files:", resp.files[i]);
     } */
     config.HAS_FOLDER_TO_ZIP = length > 1;
-    console.log("zip", "config.HAS_FOLDER_TO_ZIP:", config.HAS_FOLDER_TO_ZIP);
+    console.log("zip", "folder:", folder, "config.HAS_FOLDER_TO_ZIP:", config.HAS_FOLDER_TO_ZIP);
     cb();
   }, (error) => {
     config.HAS_FOLDER_TO_ZIP = false;
-    console.log("zip", "error:", error.substr(0, 20), "...");
+    console.log("zip", "folder:", folder, "error:", error.substr(0, 20), "...");
     cb();
   });
 };
