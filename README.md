@@ -1,7 +1,7 @@
 # [gulp](https://github.com/gulpjs/gulp)-product-template
 
 ```css
-EG+ Alza|Platform Product Template: 2.0.0
+EG+ XLSX Content Builder: 2.0.0
 ```
 
 >A product template frontend tool based on the juiced library with responsive flexbox slider section.
