@@ -35,7 +35,7 @@ function createDirectory(dir, cb) {
  * @param {Function} onFileComplete A function to be called after
  * @returns
  */
-function gulpPlugin(opts, onFileComplete) {
+function gulpPlugin(opts, onFileComplete, onAllFilesComplete) {
   const { destination, name } = opts;
 
   let countFiles = 0;
@@ -48,6 +48,13 @@ function gulpPlugin(opts, onFileComplete) {
     throw new PluginError(
       PLUGIN_NAME,
       "Param onFileComplete has to be type of function!"
+    );
+  }
+
+  if (onAllFilesComplete && typeof onAllFilesComplete !== "function") {
+    throw new PluginError(
+      PLUGIN_NAME,
+      "Param onAllFilesComplete has to be type of function!"
     );
   }
 
@@ -147,8 +154,8 @@ function gulpPlugin(opts, onFileComplete) {
         // or save the zipped file to disk
         zipped.save(destination + name + "-" + stamp + ".zip", function (err) {
           console.log("ZIPPER    ✔ ", countFiles, "files/directories successfully zipped :)");
-          if (onFileComplete) {
-            onFileComplete({
+          if (onAllFilesComplete) {
+            onAllFilesComplete({
               file: destination + name + "-" + stamp + ".zip",
               destination: destination,
               isDirectory: true,

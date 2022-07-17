@@ -4,31 +4,26 @@
  */
 //const { bold, dim, cyan, blue, red, green, magenta, grey, white, redBright, cyanBright, greenBright, blueBright, bgMagenta } = require('ansi-colors');
 //const log = require('fancy-log');
-const {
-  watch,
-  series,
-  parallel,
-  src,
-  dest
-} = require('gulp');
-const gulpif = require('gulp-if');
-const concat = require('gulp-concat');
+const fs = require("fs");
+const { watch, series, parallel, src, dest } = require("gulp");
+const gulpif = require("gulp-if");
+const concat = require("gulp-concat");
 const data = require("gulp-data");
-const rename = require('gulp-rename');
-const sass = require('gulp-sass')(require('sass'));
-const postcss = require('gulp-postcss');
-const cssnano = require('gulp-cssnano');
-const uglify = require('gulp-uglify');
-const removeLogging = require('gulp-remove-logging');
-const saveLicense = require('uglify-save-license');
-const autoprefixer = require('autoprefixer');
-const flexbugsfixer = require('postcss-flexbugs-fixes');
-const htmlReplace = require('gulp-html-replace');
+const rename = require("gulp-rename");
+const sass = require("gulp-sass")(require("sass"));
+const postcss = require("gulp-postcss");
+const cssnano = require("gulp-cssnano");
+const uglify = require("gulp-uglify");
+const removeLogging = require("gulp-remove-logging");
+const saveLicense = require("uglify-save-license");
+const autoprefixer = require("autoprefixer");
+const flexbugsfixer = require("postcss-flexbugs-fixes");
+const htmlReplace = require("gulp-html-replace");
 const nunjucksRender = require("gulp-nunjucks-render");
-const browserSync = require('browser-sync').create();
+const browserSync = require("browser-sync").create();
 const reload = browserSync.reload;
-const del = require('del');
-const { v4: uuidv4 } = require('uuid');
+const del = require("del");
+const { v4: uuidv4 } = require("uuid");
 const XLSX = require("xlsx");
 const zipper = require("./gulp-zipper");
 const {
@@ -37,6 +32,7 @@ const {
   setTemplate,
   setTemplateValues,
 } = require("./gulp-xlsx-helper.js");
+const { type } = require("os");
 
 const TPL_ENUM = {
   STD: "NAME",
@@ -49,6 +45,7 @@ const TPL_ENUM = {
 let config = {
   UID: 0,
   DEVELOPMENT: true,
+  HAS_FOLDER_TO_ZIP: false,
   //PATH_INCLUDES_SASS: ['bower_components/juiced/sass/'],
   HTDOCS_PATH: "/Applications/MAMP/htdocs/",
   SRC_PATH: "./src/xlsx-template/",
@@ -100,6 +97,20 @@ let config = {
 };
 
 // HELPER FUNCTIONS GULP
+
+const directoryContains = (path, doneFn, errorFn) => {
+  fs.readdir(path, function (err, files) {
+    if (err) {
+      if (errorFn && typeof errorFn === "function") {
+        errorFn(err);
+      }
+    } else {
+      if (doneFn && typeof doneFn === "function") {
+        doneFn({ files: files });
+      }
+    }
+  });
+};
 
 const getTplNameFunction = () => {
   switch (config.CURRENT_TPL_VERSION) {
@@ -199,9 +210,9 @@ const getZipName = () => {
     "_" +
     tplNames.PRODUCT[index] +
     "_" +
-    tplNames.TYPE[index]
+    tplNames.TYPE[index];
   console.log("getZipName", "NAME:", name);
-  return name
+  return name;
 };
 //BRAND_PRODUCT_TYPE_LANGUAGE_VERSION_DATE
 const getXLSXName = () => {
@@ -210,7 +221,7 @@ const getXLSXName = () => {
   const languageIndex = config.CURRENT_LANGUAGE;
   const versionIndex = config.CURRENT_VERSION;
   const name =
-   tplNames.BRAND[index] +
+    tplNames.BRAND[index] +
     "_" +
     tplNames.PRODUCT[index] +
     "_" +
@@ -280,7 +291,7 @@ const getVersion = () => {
   return "STD TPL V2.0.0 | 26.06.2022 | " + new Date().toDateString();
 };
 const extendTemplateVars = (obj) => {
-  if (typeof obj !== 'object') {
+  if (typeof obj !== "object") {
     obj = {};
   }
   //get template name function via enum
@@ -309,17 +320,6 @@ const nextIndex = () => {
   const nextIndex = config.CURRENT + 1;
   const nextLanguageIndex = config.CURRENT_LANGUAGE + 1;
   const nextVersionIndex = config.CURRENT_VERSION + 1;
-  /* console.log(
-    "nextIndex",
-    "versionLength:",
-    versionLength,
-    "nextVersionIndex:",
-    nextVersionIndex,
-    "nextLanguageIndex:",
-    nextLanguageIndex,
-    "nextIndex:",
-    nextIndex
-  ); */
   if (nextVersionIndex < versionLength) {
     config.CURRENT_VERSION = nextVersionIndex;
   } else {
@@ -335,9 +335,19 @@ const nextIndex = () => {
       }
     }
   }
-  console.log("nextIndex", "CURRENT:", config.CURRENT, "CURRENT_LANGUAGE:", config.CURRENT_LANGUAGE, "CURRENT_VERSION:", config.CURRENT_VERSION);
+  console.log(
+    "nextIndex",
+    "CURRENT:",
+    config.CURRENT,
+    "CURRENT_LANGUAGE:",
+    config.CURRENT_LANGUAGE,
+    "CURRENT_VERSION:",
+    config.CURRENT_VERSION
+  );
   return true;
 };
+
+// GULP ENABLED
 
 const enableDevelopment = (cb) => {
   config.DEVELOPMENT = true;
@@ -351,7 +361,7 @@ const enableProduction = (cb) => {
 
 const next = (cb) => {
   if (!nextIndex()) {
-    console.log("no more next index iterations")
+    console.log("no more next index iterations");
   }
   cb();
 };
@@ -380,8 +390,8 @@ const setDestination = (cb) => {
 // buildTemplate 2
 const cleanDirectory = (cb) => {
   //del.bind(null, config.DEVELOPMENT ? [config.DEV_FOLDER + '**'] : [config.BUILD_FOLDER + '**']);
-  del.sync([config.destination + '**'], {
-    force: true
+  del.sync([config.destination + "**"], {
+    force: true,
   });
   cb();
 };
@@ -399,56 +409,80 @@ const moveAssets = (cb) => {
 // +++ Helper +++
 
 const createSassCss = (sources, name, destination) => {
-  const output = config.DEVELOPMENT ? 'expanded' : 'compressed';
-  const processors = [
-    autoprefixer,
-    flexbugsfixer
-  ];
-  return src(sources, { sourcemaps: config.DEVELOPMENT })
-    //.pipe(sourcemaps.init())
-    .pipe(sass.sync({
-      outputStyle: output,
-      precision: 10,
-      includePaths: []
-    }).on('error', sass.logError))
-    //.pipe(sourcemaps.write('./'))
-    .pipe(postcss(processors))
-    .pipe(gulpif(!config.DEVELOPMENT, cssnano({ safe: true })))
-    /* .pipe(cssnano({
+  const output = config.DEVELOPMENT ? "expanded" : "compressed";
+  const processors = [autoprefixer, flexbugsfixer];
+  return (
+    src(sources, { sourcemaps: config.DEVELOPMENT })
+      //.pipe(sourcemaps.init())
+      .pipe(
+        sass
+          .sync({
+            outputStyle: output,
+            precision: 10,
+            includePaths: [],
+          })
+          .on("error", sass.logError)
+      )
+      //.pipe(sourcemaps.write('./'))
+      .pipe(postcss(processors))
+      .pipe(gulpif(!config.DEVELOPMENT, cssnano({ safe: true })))
+      /* .pipe(cssnano({
       safe: true
     })) */
-    .pipe(rename(name + '.css'))
-    //.pipe(dest(destination, { sourcemaps: '.' }))
-    .pipe(gulpif(!config.DEVELOPMENT, dest(destination)))
-    .pipe(gulpif(config.DEVELOPMENT, dest(destination, {
-      sourcemaps: '.'
-    })))
-    .pipe(reload({
-      stream: true
-    }));
+      .pipe(rename(name + ".css"))
+      //.pipe(dest(destination, { sourcemaps: '.' }))
+      .pipe(gulpif(!config.DEVELOPMENT, dest(destination)))
+      .pipe(
+        gulpif(
+          config.DEVELOPMENT,
+          dest(destination, {
+            sourcemaps: ".",
+          })
+        )
+      )
+      .pipe(
+        reload({
+          stream: true,
+        })
+      )
+  );
 };
 
 //Helper
 const createCombinedJS = (sources, name, destination, minified) => {
   //const destination = config.SRC_PATH + 'js';
-  if (typeof minified !== 'boolean') {
+  if (typeof minified !== "boolean") {
     minified = !config.DEVELOPMENT;
   }
-  return src(sources)
-    .pipe(concat(name + '.js'))
-    .pipe(gulpif(minified, removeLogging({
-      methods: ['log', 'info']
-    })))
-    .pipe(gulpif(minified, uglify({
-      output: {
-        comments: saveLicense
-      }
-    })))
-    //.pipe(gulpif(config.DEVELOPMENT, dest(destination)));
-    .pipe(dest(destination))
-    .pipe(reload({
-      stream: true
-    }));
+  return (
+    src(sources)
+      .pipe(concat(name + ".js"))
+      .pipe(
+        gulpif(
+          minified,
+          removeLogging({
+            methods: ["log", "info"],
+          })
+        )
+      )
+      .pipe(
+        gulpif(
+          minified,
+          uglify({
+            output: {
+              comments: saveLicense,
+            },
+          })
+        )
+      )
+      //.pipe(gulpif(config.DEVELOPMENT, dest(destination)));
+      .pipe(dest(destination))
+      .pipe(
+        reload({
+          stream: true,
+        })
+      )
+  );
 };
 
 // buildTemplate 4
@@ -457,26 +491,32 @@ const buildCss = (cb) => {
   const getTplNameFunc = getTplNameFunction();
   const templateName = getTplNameFunc() + "/";
   const sources = [config.SRC_PATH + templateName + "index.scss"];
-  const destination = config.destination + 'css';
-  const name = config.DEVELOPMENT ? 'index.min' : 'index.' + config.UID + '.min';
+  const destination = config.destination + "css";
+  const name = config.DEVELOPMENT
+    ? "index.min"
+    : "index." + config.UID + ".min";
   return createSassCss(sources, name, destination);
 };
 
 // buildTemplate 5
 const buildJs = (cb) => {
-  let sources = [config.SRC_PATH + 'js/flex-slider.js'];
+  let sources = [config.SRC_PATH + "js/flex-slider.js"];
   if (config.DEVELOPMENT) {
-    sources.push(config.SRC_PATH + 'js/index.js');
+    sources.push(config.SRC_PATH + "js/index.js");
   }
-  const destination = config.destination + 'js';
-  const name = config.DEVELOPMENT ? 'index.min' : 'index.' + config.UID + '.min';
+  const destination = config.destination + "js";
+  const name = config.DEVELOPMENT
+    ? "index.min"
+    : "index." + config.UID + ".min";
   return createCombinedJS(sources, name, destination, !config.DEVELOPMENT);
 };
 
 const buildHtml = (cb) => {
   const getTplNameFunc = getTplNameFunction();
   const templateName = getTplNameFunc() + "/";
-  const name = config.DEVELOPMENT ? 'index.min' : 'index.' + config.UID + '.min';
+  const name = config.DEVELOPMENT
+    ? "index.min"
+    : "index." + config.UID + ".min";
   return src(config.SRC_PATH + templateName + "index.html")
     .pipe(
       htmlReplace({
@@ -499,7 +539,9 @@ const buildNunjucks = () => {
   //get nunjucks pages via name (.njk)
   const pageName = getTplName();
   console.log("buildNunjucks", "pageName:", pageName);
-  const name = config.DEVELOPMENT ? 'index.min' : 'index.' + config.UID + '.min';
+  const name = config.DEVELOPMENT
+    ? "index.min"
+    : "index." + config.UID + ".min";
   return (
     src(config.SRC_PATH + "pages/" + pageName + ".njk")
       .pipe(
@@ -592,32 +634,50 @@ const watchDirectory = (cb) => {
   cb();
 };
 
+const setConfigHasFolderToZip = (cb) => {
+  const folder = config.DEVELOPMENT ? config.DEV_FOLDER : config.BUILD_FOLDER;
+  const folderFiles = directoryContains(folder, (resp) => {
+    const length = resp.files.length;
+    /* for (let i = 0; i < length; i++) {
+      console.log("zip", "i:", i, "files:", resp.files[i]);
+    } */
+    config.HAS_FOLDER_TO_ZIP = length > 1;
+    console.log("zip", "config.HAS_FOLDER_TO_ZIP:", config.HAS_FOLDER_TO_ZIP);
+    cb();
+  }, (error) => {
+    config.HAS_FOLDER_TO_ZIP = false;
+    console.log("zip", "error:", error.substr(0, 20), "...");
+    cb();
+  });
+};
+
 const zip = (cb) => {
   const folder = config.DEVELOPMENT ? config.DEV_FOLDER : config.BUILD_FOLDER;
   const name = getZipName();
-  // leave fallbacks folder by default: "!" + folder + "fallbacks"
-  // get only folders inside directory without single files and zip folder
-  return src([folder + "*", "!" + folder + "zip", "!" + folder + "*.*"])
-    .pipe(
-      zipper(
-        { destination: folder + "zip/", name: name },
-        function (evt) {
-          console.log(
-            "zip :",
-            evt.file,
-            "destination:",
-            evt.destination,
-            "isDirectory:",
-            evt.isDirectory,
-            "index:",
-            evt.index,
-            "message:",
-            evt.message
-          );
-        }
-      )
-    );
-  };
+  console.log("zip", "folder:", folder);
+  const stream = src([folder + "*", "!" + folder + "zip", "!" + folder + "*.*"]).pipe(
+    zipper({ destination: folder + "zip/", name: name }, (evt) => {
+      console.log(
+        "zip :",
+        evt.file,
+        "destination:",
+        evt.destination,
+        "isDirectory:",
+        evt.isDirectory,
+        "index:",
+        evt.index,
+        "message:",
+        evt.message
+      );
+    })
+  );
+  if (config.HAS_FOLDER_TO_ZIP) {
+    // leave fallbacks folder by default: "!" + folder + "fallbacks"
+    // get only folders inside directory without single files and zip folder
+    return stream;
+  }
+  cb();
+};
 
 const buildTemplate = series(
   setDestination,
@@ -634,6 +694,8 @@ const buildTemplateViaHtml = series(
   parallel(buildCss, buildJs),
   buildHtml
 );
+
+// EXPORTS
 
 exports.default = series(
   enableDevelopment,
@@ -664,7 +726,9 @@ exports.dev = series(
   next,
   buildTemplate,
   /* next,
-  buildTemplate */
+  buildTemplate, */
+  setConfigHasFolderToZip,
+  zip
 );
 
 exports.build = series(
@@ -680,12 +744,21 @@ exports.build = series(
   next,
   buildTemplate,
   /* next,
-  buildTemplate */
+  buildTemplate, */
+  setConfigHasFolderToZip,
+  zip
 );
 
-exports.clean = series(setDestination, enableDevelopment, cleanDirectory, enableProduction, cleanDirectory);
+exports.clean = series(
+  enableDevelopment,
+  setDestination,
+  cleanDirectory,
+  enableProduction,
+  setDestination,
+  cleanDirectory
+);
 
-exports.zip = series(enableDevelopment, zip, enableProduction, zip);
+exports.zip = series(enableDevelopment, setConfigHasFolderToZip, zip, enableProduction, setConfigHasFolderToZip, zip);
 
 //+++ R.I.P. +++
 //npm init react-app ./my-react-app
