@@ -51,7 +51,7 @@ let config = {
   DEVELOPMENT: true,
   //PATH_INCLUDES_SASS: ['bower_components/juiced/sass/'],
   HTDOCS_PATH: "/Applications/MAMP/htdocs/",
-  SRC_PATH: "./src/alza-template/",
+  SRC_PATH: "./src/xlsx-template/",
   SRC_VENDOR: "./src/vendor/",
   DEV_FOLDER: "./_temp/",
   BUILD_FOLDER: "./_build/",
@@ -688,6 +688,7 @@ exports.clean = series(setDestination, enableDevelopment, cleanDirectory, enable
 exports.zip = series(enableDevelopment, zip, enableProduction, zip);
 
 //+++ R.I.P. +++
+//npm init react-app ./my-react-app
 
 //SRC_VANILLA: ['Clipboard.js', 'EventDispatcher.js', 'Point.js', 'Rectangle.js', 'Vector2D.js', 'PointerEvents.js'],
 /* const buildVendorJs = (cb) => {
