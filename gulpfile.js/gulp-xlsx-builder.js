@@ -32,7 +32,8 @@ const {
   setTemplate,
   setTemplateValues,
 } = require("./gulp-xlsx-helper.js");
-const { type } = require("os");
+//const { type } = require("os");
+const { config } = require("./config.js");
 
 const TPL_ENUM = {
   STD: "NAME",
@@ -40,7 +41,7 @@ const TPL_ENUM = {
   VERSION: "VERSION",
   LANG_VERSION: "LANG_VERSION",
 };
-
+/* 
 //config.DEV_FOLDER
 let config = {
   UID: 0,
@@ -95,7 +96,7 @@ let config = {
   CURRENT_TPL_VERSION: "LANG",
   destination: "./_temp/",
 };
-
+ */
 // HELPER FUNCTIONS GULP
 
 const directoryContains = (path, doneFn, errorFn) => {
