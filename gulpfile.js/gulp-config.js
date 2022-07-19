@@ -79,6 +79,7 @@ const directoryContains = (path, doneFn, errorFn) => {
 };
 
 const getTplNameFunction = () => {
+  console.log("getTplNameFunction", "CURRENT_TPL_VERSION:", config.CURRENT_TPL_VERSION);
   switch (config.CURRENT_TPL_VERSION) {
     case TPL_ENUM.LANG:
       //images and scss for every language

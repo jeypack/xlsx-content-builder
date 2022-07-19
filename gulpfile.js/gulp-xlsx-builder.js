@@ -231,10 +231,9 @@ const buildHtml = (cb) => {
 };
 
 const buildNunjucks = () => {
-  // Gets .html and .nunjucks files in pages
-  //return src(adBundler.SRC + 'pages/**/*.+(html|njk|nunjucks)')
   //get nunjucks pages via name (.njk)
   const pageName = getTplName();
+  // BRAND_PRODUCT_TYPE_DATE
   console.log("buildNunjucks", "pageName:", pageName);
   const name = config.DEVELOPMENT
     ? "index.min"
