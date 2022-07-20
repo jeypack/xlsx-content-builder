@@ -22,10 +22,11 @@ const config = {
   // PREFIX_BRAND_PRODUCT_TYPE_LANGUAGE_VERSION_SIZE_CLIENT_VERSION_DATE
   //e.g. HTML5_OralB_Genesis5_KIDS-Lightyear_HU_V1_1195xAUTO_V01_220626
   TPL_NAMES: {
-    BRAND: ["OralB", "OralB"],
-    PRODUCT: ["Genesis5", "Genesis5"],
-    TYPE: ["KIDS-Lightyear", "KIDS-Lightyear"],
+    BRAND: ["OralB", "OralB", "OralB"],
+    PRODUCT: ["Genesis5", "Genesis5", "Genesis5"],
+    TYPE: ["Vitality-Pro", "Pro-3", "KIDS-Lightyear"],
     LANGUAGE: [
+      ["CZ", "HU", "PL", "SK"],
       ["CZ", "HU", "PL", "SK"],
       ["CZ", "HU", "PL", "SK"],
     ],
@@ -35,27 +36,31 @@ const config = {
     VERSION: [
       [1, 1, 1, 1],
       [1, 1, 1, 1],
+      [1, 1, 1, 1],
     ],
     FLEX_COLS: [
-      [3, 3, 3, 3],
+      [4, 4, 4, 4],
+      [4, 4, 4, 4],
       [3, 3, 3, 3],
     ],
     CLIENT_VERSION: ["V01", "V01"],
     BODY_CLASS: [
       ["mobile", "mobile", "mobile", "mobile"],
       ["mobile", "mobile", "mobile", "mobile"],
+      ["mobile", "mobile", "mobile", "mobile"],
     ],
     XLSX_PARSER: [
-      XLSX_TYPE_ENUM.ORAL_B_KIDS_1_4_4_1_FLEX_3,
+      XLSX_TYPE_ENUM.ORAL_B_PRO3_1_4_4_1_FLEX_4,
+      XLSX_TYPE_ENUM.ORAL_B_PRO3_1_4_4_1_FLEX_4,
       XLSX_TYPE_ENUM.ORAL_B_KIDS_1_4_4_1_FLEX_3,
     ],
-    DATE: ["220626", "220626"],
+    DATE: ["220613", "220613", "220626"],
     SIZE: "1195xAUTO",
     PREFIX: "HTML5",
     SUFFIX: "",
   },
   //
-  CURRENT: 0,
+  CURRENT: 1,
   CURRENT_LANGUAGE: 0,
   CURRENT_VERSION: 0,
   CURRENT_TPL_VERSION: "LANG",
@@ -273,7 +278,7 @@ const extendTemplateVars = (obj) => {
     ? "index.min"
     : "index." + config.UID + ".min";
   obj.flexSliderCols = getFLexCols();
-  console.log("extendTemplateVars", "obj:", obj);
+  //console.log("extendTemplateVars", "obj:", obj);
   return obj;
 };
 /**

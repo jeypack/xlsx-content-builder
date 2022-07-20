@@ -26,11 +26,7 @@ const del = require("del");
 const { v4: uuidv4 } = require("uuid");
 const XLSX = require("xlsx");
 const zipper = require("./gulp-zipper");
-const {
-  getTemplateValues,
-  setTemplate,
-  setTemplateValues,
-} = require("./gulp-xlsx-helper.js");
+
 const {
   config,
   directoryContains,
@@ -43,6 +39,8 @@ const {
   extendTemplateVars,
   nextIndex,
 } = require("./gulp-config.js");
+const XLSXParser = require("./parser/XLSX-1-4-4-1-f-4");
+const { default: XLSX1441F4 } = require("./parser/XLSX-1-4-4-1-f-4");
 
 // GULP ENABLED
 
@@ -235,15 +233,13 @@ const buildNunjucks = () => {
   const pageName = getTplName();
   // BRAND_PRODUCT_TYPE_DATE
   console.log("buildNunjucks", "pageName:", pageName);
-  const name = config.DEVELOPMENT
-    ? "index.min"
-    : "index." + config.UID + ".min";
   return (
     src(config.SRC_PATH + "pages/" + pageName + ".njk")
       .pipe(
         data(function (file) {
           //log('nunjucks data obj: ' + JSON.stringify(obj));
           //console.log("buildNunjucks data path: " + file.path);
+          //BRAND_PRODUCT_TYPE_LANGUAGE_VERSION_DATE
           const xlsxName = getXLSXName();
           console.log("buildNunjucks data xlsxName: " + xlsxName);
           const filename = config.SRC_PATH + "xlsx/" + xlsxName + ".xlsx";
@@ -254,11 +250,13 @@ const buildNunjucks = () => {
           console.log("buildNunjucks data xlsxParser:", xlsxParser);
           // try to get the sheet named 'Template' FROM workbook HERE
           try {
+            let parser = new XLSX1441F4(workbook.Sheets.Template);
             setTemplate(workbook.Sheets.Template);
             setTemplateValues(xlsxParser);
             let tplValues = getTemplateValues();
             extendTemplateVars(tplValues);
-            //console.log("handleFileAsync tplValues:", tplValues);
+            console.log("handleFileAsync tplValues.module2:", tplValues.module2);
+            console.log("handleFileAsync tplValues.module3:", tplValues.module3);
             return tplValues;
           } catch (error) {
             console.log("buildNunjucks data catch error:", error);

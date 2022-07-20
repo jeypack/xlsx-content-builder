@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="{{language | lower}}">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="mobile-web-app-capable" content="yes"/>
+    <meta http-equiv="content-language" content="{{language | lower}}"/>
+    <meta name="author" content="joerg.pfeifer@egplusww.com">
+    <meta name="description" content="{{version}}">
+    {% block head -%}
+      <title>{{title}}</title>
+    {%- endblock %}
+    {%- block style -%}{%- endblock -%}
+  </head>
+  {% block body -%}{%- endblock %}
+</html>

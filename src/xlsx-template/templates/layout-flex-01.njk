@@ -1,0 +1,27 @@
+{% extends "layout-std.njk" %}
+
+{%- block style -%}
+  <link rel="stylesheet" href="{{'./css/' + jsCssName + '.css'}}">
+{%- endblock -%}
+
+{% block body -%}
+  <body class="{{bodyClass}}">
+    <div id="celek">
+      <div class="main">
+        {% block content -%}{%- endblock %}
+      </div>
+    </div>
+    {% block js -%}
+      <script src="{{'./js/' + jsCssName + '.js'}}"></script>
+    {%- endblock %}
+    {% block script -%}
+      {%- if flexSliderCols === 3 -%}
+        {%- include "partials/flex-inline-js-3-cols.njk" -%}
+      {%- elif flexSliderCols === 4 -%}
+        {%- include "partials/flex-inline-js-4-cols.njk" -%}
+      {%- elif flexSliderCols === 5 -%}
+        {%- include "partials/flex-inline-js-5-cols.njk" -%}
+      {%- endif -%}
+    {%- endblock -%}
+  </body>
+{%- endblock %}

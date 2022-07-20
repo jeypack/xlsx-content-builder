@@ -1,0 +1,39 @@
+{% extends "layout-flex-1-4-4-1.njk" %}
+
+<!-- MODULE 2 WITH 4 COLS IMAGE HEADLINE COPY -->
+{% block module2 -%}
+  <div class="container items-start gutters-all">
+    <div class="col-12"></div>
+    {# Loop through all the headline and copy #}
+    {% for item in module2.headline -%}
+      <div class="col-sm-4 col-xs-6 col-12">
+        <img src="assets/module-2-feature-{{loop.index}}.jpg">
+        <h5>{{item.value}}</h5>
+        {%- if module2.copy[loop.index0].spl -%}
+          <p>{{module2.copy[loop.index0].spl[0]}}</p>
+          <p class="small">{{module2.copy[loop.index0].spl[1]}}</p>
+        {%- else %}
+          <p>{{module2.copy[loop.index0].value}}</p>
+        {% endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+{%- endblock %}
+<!-- MODULE 3 WITH 4 COLS IMAGE HEADLINE COPY -->
+{% block module3 -%}
+  <div class="container items-start gutters-all">
+    <div class="col-12"></div>
+    {# Loop through all the headline and copy #}
+    {% for item in module3.headline -%}
+      <div class="col-sm-4 col-xs-6 col-12">
+        <img src="assets/module-3-feature-{{loop.index}}.jpg">
+        {%- if module3.copy[loop.index0].spl -%}
+          <p>{{module3.copy[loop.index0].spl[0]}}</p>
+          <p class="small">{{module3.copy[loop.index0].spl[1]}}</p>
+        {%- else %}
+          <p>{{module3.copy[loop.index0].value}}</p>
+        {% endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+{%- endblock %}
