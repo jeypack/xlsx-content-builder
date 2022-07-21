@@ -1,36 +1,30 @@
 @charset "UTF-8";
+// CSS Document index.scss
+@import "../scss/index.scss";
 
 // GLOBAL COLOR DEFINITIONS
-$default-color : #333;
-$dark-color : #222;
-$light-color : #ccc;
-$table-cell-color : #f5f5f5;
-$border-color : #ccc;
+$default-color : #555 !default;
+$dark-color : #222 !default;
+$light-color : #ccc !default;
+$table-cell-color : #f5f5f5 !default;
+$border-color : #ccc !default;
 
 //gutters
-$gutters: 10px;
-
-$line-height: 1.35;
+$gutters: 10px !default;
 
 $slider-padding-bottom: 16px;
 $slider-navigation-height: 40px;
-$table-cols-max: 4;
-$table-cols-media-360: 1;
-$table-cols-media-xxs: 1;
-$table-cols-media-xs: 2;
-$table-cols-media-sm: 3;
-$table-cols-media-sd: 3;
+$table-cols-max: 6;
 $table-logo-width: 200px;
 $table-logo-width-small: 160px;
-$table-logo-width-percent: 24%;
-$table-col-width: 19.5%;
-//$table-cols-width: 100% - $table-logo-width-percent;
+$table-logo-width-percent: 19%;
+$table-col-width: 13.5%;
+$table-cols-width: 100% - $table-logo-width-percent;
 $table-line-height: 1.25;
 $table-logo-max-width: 180px;
 $table-img-max-width: 120px;
 
-$font-size-small: 10px;
-$font-size-p: 13px;
+$font-size-p: 14px;
 $font-size-h6: 13px;
 $font-size-h5: 14px;
 $font-size-h4: 15px;
@@ -38,19 +32,15 @@ $font-size-h3: 16px;
 $font-size-h2: 18px;
 $font-size-table-p: 13px;
 
-$font-size-mobile-p: 12px;
+$font-size-mobile-p: 11px;
 $font-size-mobile-h6: 12px;
 $font-size-mobile-h5: 13px;
 $font-size-mobile-h4: 14px;
 $font-size-mobile-h3: 15px;
 $font-size-mobile-h2: 17px;
-$font-size-mobile-table-p: 11px;
+$font-size-mobile-table-p: 12px;
 $font-size-mobile-table-h5: 12px;
 
-$font-weight-table-p: bold;
-
-// IMPORTANT: place variable definition above
-@import "../scss/index.scss";
 
 //entry
 //#celek {}

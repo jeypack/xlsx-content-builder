@@ -31,7 +31,9 @@ class XLSXParser {
   //abstract let subclasses override this protected member function
   _parse() {
     //we set a default value
-    this._elems.module = { headline: { key: 'Y4', value: 'Default Headline Text' } };
+    this._elems.module = {
+      headline: { key: "Y4", value: "Default Headline Text" },
+    };
   }
 
   _setFieldValue(module, key, name, type, splitter) {
@@ -78,12 +80,13 @@ class XLSXParser {
         this._elems[module][nVal] = obj;
       }
     } catch (error) {
-      console.log("* setFieldValue catch");
+      console.log("*");
       console.log(
-        "*** Try to read key:",
-        "'" + key + "' inside this._template - we SKIP this one! ***"
+        "** setFieldValue catch -",
+        "Try to read key:",
+        "'" + key + "' inside template -",
+        error.message + " **"
       );
-      console.log("*** ERROR:", error.message);
       console.log("*");
     }
   }

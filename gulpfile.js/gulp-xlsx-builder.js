@@ -238,19 +238,18 @@ const buildNunjucks = () => {
     src(config.SRC_PATH + "pages/" + pageName + ".njk")
       .pipe(
         data(function (file) {
-          //log('nunjucks data obj: ' + JSON.stringify(obj));
           //console.log("buildNunjucks data path: " + file.path);
           //BRAND_PRODUCT_TYPE_LANGUAGE_VERSION_DATE
           const xlsxName = getXLSXName();
           console.log("buildNunjucks data xlsxName: " + xlsxName);
-          const filename = config.SRC_PATH + "xlsx/" + xlsxName + ".xlsx";
-          const workbook = XLSX.read(filename, { type: "file" });
-          console.log("buildNunjucks data filename:", filename);
-          //console.log("buildNunjucks data workbook:", workbook);
           const xlsxParser = geXlsxParser();
           console.log("buildNunjucks data xlsxParser:", xlsxParser);
+          const filename = config.SRC_PATH + "xlsx/" + xlsxName + ".xlsx";
+          console.log("buildNunjucks data filename:", filename);
           // try to get the sheet named 'Template' FROM workbook HERE
           try {
+            const workbook = XLSX.read(filename, { type: "file" });
+            //console.log("buildNunjucks data workbook:", workbook);
             //Call simple factory method
             let tplValues = XLSXParserFactory.create(
               xlsxParser,
@@ -262,7 +261,9 @@ const buildNunjucks = () => {
             //console.log("handleFileAsync tplValues.module3:", tplValues.module3);
             return tplValues;
           } catch (error) {
+            console.log("*");
             console.log("buildNunjucks data catch error:", error);
+            console.log("*");
           }
           return extendTemplateVars();
           //return cb(undefined, tplValues);
