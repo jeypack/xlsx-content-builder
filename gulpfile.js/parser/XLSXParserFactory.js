@@ -1,19 +1,32 @@
-const { XLSX_TYPE_ENUM } = require("../gulp-xlsx-helper");
+const { XLSX_TYPE_ENUM } = require("./XLSXParserEnum");
+const { XLSXParser } = require("./XLSXParser");
+const { XLSX1441f3 } = require("./XLSX-1-4-4-1-f-3");
+const { XLSX1441f4 } = require("./XLSX-1-4-4-1-f-4");
+
 /**
  * XLSXParserFactory XLSXParserFactory.js
  * AUTHOR: J. Pfeifer (c) 2022
  * Created: 20.07.2022
  */
 module.exports.XLSXParserFactory = class XLSXParserFactory {
-  static create(type) {
+  /**
+   * Static factory method
+   * @param {String} type Enum xlsx parser type
+   * @param {Object} template SheetJS result workbook
+   * @returns The parsers result values or null
+   */
+  static create(type, template) {
+    let parser = null;
     switch (type) {
-      case XLSX_TYPE_ENUM.ORAL_B_KIDS_1_4_4_1_FLEX_3:
-        break;
+      case XLSX_TYPE_ENUM.P_1_4_4_1_FLEX_3:
+        parser = new XLSX1441f3(template);
 
-      case XLSX_TYPE_ENUM.ORAL_B_PRO3_1_4_4_1_FLEX_4:
-        break;
+      case XLSX_TYPE_ENUM.P_1_4_4_1_FLEX_4:
+        parser = new XLSX1441f4(template);
       default:
+        parser = new XLSXParser(template);
         break;
     }
+    return parser.execute();
   }
 };

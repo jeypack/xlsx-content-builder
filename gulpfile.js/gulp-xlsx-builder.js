@@ -39,8 +39,9 @@ const {
   extendTemplateVars,
   nextIndex,
 } = require("./gulp-config.js");
-const XLSXParser = require("./parser/XLSX-1-4-4-1-f-4");
-const { default: XLSX1441F4 } = require("./parser/XLSX-1-4-4-1-f-4");
+
+const { XLSX_TYPE_ENUM } = require("./parser/XLSXParserEnum");
+const { XLSXParserFactory } = require("./parser/XLSXParserFactory");
 
 // GULP ENABLED
 
@@ -250,13 +251,15 @@ const buildNunjucks = () => {
           console.log("buildNunjucks data xlsxParser:", xlsxParser);
           // try to get the sheet named 'Template' FROM workbook HERE
           try {
-            let parser = new XLSX1441F4(workbook.Sheets.Template);
-            setTemplate(workbook.Sheets.Template);
-            setTemplateValues(xlsxParser);
-            let tplValues = getTemplateValues();
+            //Call simple factory method
+            let tplValues = XLSXParserFactory.create(
+              XLSX_TYPE_ENUM.P_1_4_4_1_FLEX_4,
+              workbook.Sheets.Template
+            );
             extendTemplateVars(tplValues);
-            console.log("handleFileAsync tplValues.module2:", tplValues.module2);
-            console.log("handleFileAsync tplValues.module3:", tplValues.module3);
+            console.log("handleFileAsync tplValues:", tplValues);
+            //console.log("handleFileAsync tplValues.module2:", tplValues.module2);
+            //console.log("handleFileAsync tplValues.module3:", tplValues.module3);
             return tplValues;
           } catch (error) {
             console.log("buildNunjucks data catch error:", error);

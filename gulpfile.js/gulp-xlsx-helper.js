@@ -42,7 +42,7 @@ const setFieldValue = (module, key, name, type, splitter) => {
       Values[module].table[nVal].push(obj);
       //console.log("setFieldValue", "nVal:", nVal, "obj:", obj);
     } else if (type && type === "ARRAY") {
-      console.log("setFieldValue", "nVal:", nVal, "obj:", obj);
+      //console.log("setFieldValue", "nVal:", nVal, "obj:", obj);
       //make array, if not allready exists!
       if (!Values[module][nVal]) {
         Values[module][nVal] = [];

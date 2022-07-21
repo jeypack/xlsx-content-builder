@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { XLSX_TYPE_ENUM } = require("./gulp-xlsx-helper.js");
+const { XLSX_TYPE_ENUM } = require("./parser/XLSXParserEnum");
 
 const TPL_ENUM = {
   STD: "NAME",
@@ -50,9 +50,9 @@ const config = {
       ["mobile", "mobile", "mobile", "mobile"],
     ],
     XLSX_PARSER: [
-      XLSX_TYPE_ENUM.ORAL_B_PRO3_1_4_4_1_FLEX_4,
-      XLSX_TYPE_ENUM.ORAL_B_PRO3_1_4_4_1_FLEX_4,
-      XLSX_TYPE_ENUM.ORAL_B_KIDS_1_4_4_1_FLEX_3,
+      XLSX_TYPE_ENUM.P_1_4_4_1_FLEX_4,
+      XLSX_TYPE_ENUM.P_1_4_4_1_FLEX_4,
+      XLSX_TYPE_ENUM.P_1_4_4_1_FLEX_3,
     ],
     DATE: ["220613", "220613", "220626"],
     SIZE: "1195xAUTO",
