@@ -65,7 +65,7 @@ class XLSXParser {
         this._elems[module].table[nVal].push(obj);
         //console.log("setFieldValue", "nVal:", nVal, "obj:", obj);
       } else if (type && type === "ARRAY") {
-        console.log("_setFieldValue", "nVal:", nVal, "obj:", obj);
+        //console.log("_setFieldValue", "nVal:", nVal, "obj:", obj);
         //make array, if not allready exists!
         if (!this._elems[module][nVal]) {
           this._elems[module][nVal] = [];

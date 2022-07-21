@@ -50,7 +50,7 @@ const config = {
       ["mobile", "mobile", "mobile", "mobile"],
     ],
     XLSX_PARSER: [
-      XLSX_TYPE_ENUM.P_1_4_4_1_FLEX_4,
+      XLSX_TYPE_ENUM.P_1_3_3_1_FLEX_4,
       XLSX_TYPE_ENUM.P_1_4_4_1_FLEX_4,
       XLSX_TYPE_ENUM.P_1_4_4_1_FLEX_3,
     ],
@@ -60,7 +60,7 @@ const config = {
     SUFFIX: "",
   },
   //
-  CURRENT: 1,
+  CURRENT: 0,
   CURRENT_LANGUAGE: 0,
   CURRENT_VERSION: 0,
   CURRENT_TPL_VERSION: "LANG",

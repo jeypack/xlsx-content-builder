@@ -253,7 +253,7 @@ const buildNunjucks = () => {
           try {
             //Call simple factory method
             let tplValues = XLSXParserFactory.create(
-              XLSX_TYPE_ENUM.P_1_4_4_1_FLEX_4,
+              xlsxParser,
               workbook.Sheets.Template
             );
             extendTemplateVars(tplValues);

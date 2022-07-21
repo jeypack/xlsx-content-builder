@@ -6,6 +6,7 @@
 const XLSX_TYPE_ENUM = {
   P_1_4_4_1_FLEX_3: "PARSER-1-4-4-1-FLEX-3",
   P_1_4_4_1_FLEX_4: "PARSER-1-4-4-1-FLEX-4",
+  P_1_3_3_1_FLEX_4: "PARSER-1-3-3-1-FLEX-4",
 };
 
 // *EXPORTS*
