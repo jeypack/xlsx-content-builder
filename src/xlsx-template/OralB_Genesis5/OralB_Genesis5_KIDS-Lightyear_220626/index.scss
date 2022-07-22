@@ -22,7 +22,6 @@ $table-cols-media-sm: 3;
 $table-cols-media-sd: 3;
 $table-logo-width: 200px;
 $table-logo-width-small: 160px;
-// P_1_4_4_1_FLEX_3
 $table-logo-width-percent: 25%;
 $table-col-width: 25%;
 //$table-cols-width: 100% - $table-logo-width-percent;
@@ -51,7 +50,7 @@ $font-size-mobile-table-h5: 12px;
 $font-weight-table-p: bold;
 
 // IMPORTANT: place variable definition above
-@import "../scss/index.scss";
+@import "../../scss/index.scss";
 
 //entry
 //#celek {}

@@ -24,7 +24,7 @@ const config = {
   TPL_NAMES: {
     BRAND: ["Pampers", "OralB", "OralB", "OralB"],
     PRODUCT: ["P8-Std", "Genesis5", "Genesis5", "Genesis5"],
-    TYPE: ["Size-0-2", "Pro-3", "KIDS-Lightyear"],
+    TYPE: ["Size-0-2", "Vitality-Pro", "Pro-3", "KIDS-Lightyear"],
     LANGUAGE: [
       ["CZ", "SK"],
       ["CZ", "HU", "PL", "SK"],
@@ -105,6 +105,17 @@ const getTplNameFunction = () => {
       return getTplName;
   }
 };
+// BRAND_PRODUCT
+const getTplFolder = () => {
+  const tplNames = config.TPL_NAMES;
+  const index = config.CURRENT;
+  const name =
+    tplNames.BRAND[index] +
+    "_" +
+    tplNames.PRODUCT[index];
+  console.log("getTplFolder", "NAME:", name);
+  return name;
+};
 // BRAND_PRODUCT_TYPE_DATE
 const getTplName = () => {
   const tplNames = config.TPL_NAMES;
@@ -178,7 +189,7 @@ const getTplLangVersionName = () => {
   console.log("getTplLangVersionName", "NAME:", name);
   return name;
 };
-//BRAND_PRODUCT_TYPE_DATE
+//BRAND_PRODUCT_TYPE
 const getZipName = () => {
   const tplNames = config.TPL_NAMES;
   const index = config.CURRENT;
@@ -267,6 +278,7 @@ const getFLexCols = () => {
 const getVersion = () => {
   return "STD TPL V2.0.0 | 26.06.2022 | " + new Date().toDateString();
 };
+
 const extendTemplateVars = (obj) => {
   if (typeof obj !== "object") {
     obj = {};
@@ -329,6 +341,7 @@ module.exports.config = config;
 module.exports.TPL_ENUM = TPL_ENUM;
 module.exports.directoryContains = directoryContains;
 module.exports.getTplNameFunction = getTplNameFunction;
+module.exports.getTplFolder = getTplFolder;
 module.exports.getTplName = getTplName;
 module.exports.getTplLangName = getTplLangName;
 module.exports.getTplVersionName = getTplVersionName;

@@ -31,6 +31,7 @@ const {
   config,
   directoryContains,
   getTplNameFunction,
+  getTplFolder,
   getTplName,
   getZipName,
   getXLSXName,
@@ -97,7 +98,8 @@ const moveAssets = (cb) => {
   //move from template folder to output (destination) folder
   const getTplNameFunc = getTplNameFunction();
   const templateName = getTplNameFunc() + "/";
-  return src(config.SRC_PATH + templateName + "assets/**/*").pipe(
+  const templateFolder = getTplFolder() + "/";
+  return src(config.SRC_PATH + templateFolder + templateName + "assets/**/*").pipe(
     dest(config.destination + "assets/")
   );
 };
@@ -186,7 +188,8 @@ const buildCss = (cb) => {
   //build from scss source out of template folder into output (destination) folder
   const getTplNameFunc = getTplNameFunction();
   const templateName = getTplNameFunc() + "/";
-  const sources = [config.SRC_PATH + templateName + "index.scss"];
+  const templateFolder = getTplFolder() + "/";
+  const sources = [config.SRC_PATH + templateFolder + templateName + "index.scss"];
   const destination = config.destination + "css";
   const name = config.DEVELOPMENT
     ? "index.min"
@@ -319,14 +322,15 @@ const watchDirectory = (cb) => {
   //build from scss source out of template folder into output (destination) folder
   const getTplNameFunc = getTplNameFunction();
   const templateName = getTplNameFunc() + "/";
+  const templateFolder = getTplFolder() + "/";
   //watch("./build/**/*.html").on("change", handleChange);
   //watch([config.SRC_PATH + 'js/*.js', '!' + config.SRC_PATH + 'js/*.min.js'], buildHtml);
   //watch(config.SRC_PATH + 'vendor/*.js', series(buildVendorJs));
-  watch(config.SRC_PATH + templateName + "assets/**/*", buildTemplate);
+  watch(config.SRC_PATH + templateFolder + templateName + "assets/**/*", buildTemplate);
+  watch(config.SRC_PATH + templateFolder + templateName + "*.scss", buildCss);
+  watch(config.SRC_PATH + templateFolder + templateName + "index.html", buildHtml);
   watch(config.SRC_PATH + "js/*.js", buildJs);
   watch(config.SRC_PATH + "scss/*.scss", buildCss);
-  watch(config.SRC_PATH + templateName + "/*.scss", buildCss);
-  watch(config.SRC_PATH + templateName + "/index.html", buildHtml);
   watch(config.SRC_PATH + "pages/**/*.+(html|njk|nunjucks)", buildNunjucks);
   watch(config.SRC_PATH + "templates/**/*.+(html|njk|nunjucks)", buildNunjucks);
   cb();
