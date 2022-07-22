@@ -22,10 +22,11 @@ const config = {
   // PREFIX_BRAND_PRODUCT_TYPE_LANGUAGE_VERSION_SIZE_CLIENT_VERSION_DATE
   //e.g. HTML5_OralB_Genesis5_KIDS-Lightyear_HU_V1_1195xAUTO_V01_220626
   TPL_NAMES: {
-    BRAND: ["OralB", "OralB", "OralB"],
-    PRODUCT: ["Genesis5", "Genesis5", "Genesis5"],
-    TYPE: ["Vitality-Pro", "Pro-3", "KIDS-Lightyear"],
+    BRAND: ["Pampers", "OralB", "OralB", "OralB"],
+    PRODUCT: ["P8-Std", "Genesis5", "Genesis5", "Genesis5"],
+    TYPE: ["Size-0-2", "Pro-3", "KIDS-Lightyear"],
     LANGUAGE: [
+      ["CZ", "SK"],
       ["CZ", "HU", "PL", "SK"],
       ["CZ", "HU", "PL", "SK"],
       ["CZ", "HU", "PL", "SK"],
@@ -34,27 +35,31 @@ const config = {
     //here we keep version length for every language entry
     //e.g. TPL_NAMES.VERSION[CURRENT_LANGUAGE] = 1 means one version ...
     VERSION: [
+      [1, 1],
       [1, 1, 1, 1],
       [1, 1, 1, 1],
       [1, 1, 1, 1],
     ],
     FLEX_COLS: [
+      [6, 6],
       [4, 4, 4, 4],
       [4, 4, 4, 4],
       [3, 3, 3, 3],
     ],
-    CLIENT_VERSION: ["V01", "V01"],
+    CLIENT_VERSION: ["V01", "V01", "V01", "V01"],
     BODY_CLASS: [
+      ["mobile", "mobile"],
       ["mobile", "mobile", "mobile", "mobile"],
       ["mobile", "mobile", "mobile", "mobile"],
       ["mobile", "mobile", "mobile", "mobile"],
     ],
     XLSX_PARSER: [
+      XLSX_TYPE_ENUM.P_1_1_4_4_FLEX_6,
       XLSX_TYPE_ENUM.P_1_3_3_1_FLEX_4,
       XLSX_TYPE_ENUM.P_1_4_4_1_FLEX_4,
       XLSX_TYPE_ENUM.P_1_4_4_1_FLEX_3,
     ],
-    DATE: ["220613", "220613", "220626"],
+    DATE: ["220324", "220613", "220613", "220626"],
     SIZE: "1195xAUTO",
     PREFIX: "HTML5",
     SUFFIX: "",

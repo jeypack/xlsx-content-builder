@@ -64,6 +64,12 @@ $font-size-h4: 15px !default;
 $font-size-h3: 16px !default;
 $font-size-h2: 18px !default;
 $font-size-table-p: 13px !default;
+$font-size-table-h6: 13px !default;
+$font-size-table-h5: 14px !default;
+$font-weight-h5: bold !default;
+$font-weight-h6: bold !default;
+$font-weight-table-h5: bold !default;
+$font-weight-table-h6: bold !default;
 
 $font-size-mobile-p: 11px !default;
 $font-size-mobile-h6: 12px !default;
@@ -214,12 +220,13 @@ a {
   }
   h5 {
     font-size: $font-size-h5;
-    font-weight: bold;
+    font-weight: $font-weight-h5;
   }
   h6 {
     font-size: $font-size-h6;
-    font-weight: bold;
+    font-weight: $font-weight-h6;
   }
+
   p {
     font-size: $font-size-p;
   }
@@ -370,6 +377,12 @@ a {
 
       h5 {
         padding: 0;
+        font-size: $font-size-table-h5;
+        font-weight: $font-weight-table-h5;
+      }
+      h6 {
+        font-size: $font-size-table-h6;
+        font-weight: $font-weight-table-h6;
       }
       p {
         font-size: $font-size-table-p;

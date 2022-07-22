@@ -3,7 +3,7 @@
 ## EG+ XLSX Content Builder: 2.0.0
 >A product template tool based on [`sheetjs`](https://sheetjs.com/), [`nunjucks`](https://www.npmjs.com/package/nunjucks) and the [`juiced`](http://juicedcss.com/) library with responsive `flexbox slider` section.
 
-[Author](joerg.pfeifer@geplusww.com) Jörg Pfeifer 19.07.2022
+[Author](joerg.pfeifer@geplusww.com) Jörg Pfeifer 22.07.2022
 
 ### `Installation`
 
@@ -46,7 +46,7 @@ Let's take the following situation as an example:
 TPL_NAMES: {
     BRAND: ["OralB", "OralB"],
     PRODUCT: ["Genesis5", "Genesis5"],
-    TYPE: ["KIDS-Lightyear", "KIDS-Lightyear"],
+    TYPE: [ "Pro-3", "KIDS-Lightyear"],
     LANGUAGE: [
       ["CZ", "HU", "PL", "SK"],
       ["CZ", "HU", "PL", "SK"],
@@ -68,8 +68,8 @@ TPL_NAMES: {
       ["mobile", "mobile", "mobile", "mobile"],
     ],
     XLSX_PARSER: [
-      XLSX_TYPE_ENUM.ORAL_B_KIDS_1_4_4_1_FLEX_3,
-      XLSX_TYPE_ENUM.ORAL_B_KIDS_1_4_4_1_FLEX_3,
+      XLSX_TYPE_ENUM.P_1_4_4_1_FLEX_4,
+      XLSX_TYPE_ENUM.P_1_4_4_1_FLEX_3,
     ],
     DATE: ["220626", "220626"],
     SIZE: "1195xAUTO",
@@ -90,8 +90,10 @@ The XLSX parser is currently controlled via the following enums.
 ```js
 //to be continued...
 const XLSX_TYPE_ENUM = {
-  ORAL_B_KIDS_1_4_4_1_FLEX_3: "ORAL-B-KIDS-LIGHTYEAR-1-4-4-1-FLEX-3",
-  ORAL_B_PRO3_1_4_4_1_FLEX_4: "ORAL-B-PRO3-1-4-4-1-FLEX-4",
+  P_1_4_4_1_FLEX_3: "PARSER-1-4-4-1-FLEX-3",
+  P_1_4_4_1_FLEX_4: "PARSER-1-4-4-1-FLEX-4",
+  P_1_3_3_1_FLEX_4: "PARSER-1-3-3-1-FLEX-4",
+  P_1_1_4_4_FLEX_6: "PARSER-1-1-4-4-FLEX-6",
 };
 ```
 
@@ -141,10 +143,6 @@ gulp zip
 ### `Deployment`
 
 This section has to be added.
-
-## Live Version
-
-This section has to be added. [clients](https://online.e-graphics-germany.de/clients/?user=egp) and choose your favorite. ;)
 
 ## How It Works
 
