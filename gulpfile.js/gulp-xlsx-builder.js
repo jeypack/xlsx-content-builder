@@ -20,6 +20,7 @@ const autoprefixer = require("autoprefixer");
 const flexbugsfixer = require("postcss-flexbugs-fixes");
 const htmlReplace = require("gulp-html-replace");
 const nunjucksRender = require("gulp-nunjucks-render");
+const merge = require("merge-stream");
 const browserSync = require("browser-sync").create();
 const reload = browserSync.reload;
 const del = require("del");
@@ -99,9 +100,9 @@ const moveAssets = (cb) => {
   const getTplNameFunc = getTplNameFunction();
   const templateName = getTplNameFunc() + "/";
   const templateFolder = getTplFolder() + "/";
-  return src(config.SRC_PATH + templateFolder + templateName + "assets/**/*").pipe(
-    dest(config.destination + "assets/")
-  );
+  return src(
+    config.SRC_PATH + templateFolder + templateName + "assets/**/*"
+  ).pipe(dest(config.destination + "assets/"));
 };
 
 // +++ Helper +++
@@ -189,7 +190,9 @@ const buildCss = (cb) => {
   const getTplNameFunc = getTplNameFunction();
   const templateName = getTplNameFunc() + "/";
   const templateFolder = getTplFolder() + "/";
-  const sources = [config.SRC_PATH + templateFolder + templateName + "index.scss"];
+  const sources = [
+    config.SRC_PATH + templateFolder + templateName + "index.scss",
+  ];
   const destination = config.destination + "css";
   const name = config.DEVELOPMENT
     ? "index.min"
@@ -259,9 +262,9 @@ const buildNunjucks = () => {
               workbook.Sheets.Template
             );
             extendTemplateVars(tplValues);
-            console.log("handleFileAsync tplValues:", tplValues);
-            //console.log("handleFileAsync tplValues.module2:", tplValues.module2);
-            //console.log("handleFileAsync tplValues.module3:", tplValues.module3);
+            //console.log("buildNunjucks tplValues:", tplValues);
+            //console.log("buildNunjucks tplValues.module2:", tplValues.module2);
+            //console.log("buildNunjucks tplValues.module3:", tplValues.module3);
             return tplValues;
           } catch (error) {
             console.log("*");
@@ -326,9 +329,15 @@ const watchDirectory = (cb) => {
   //watch("./build/**/*.html").on("change", handleChange);
   //watch([config.SRC_PATH + 'js/*.js', '!' + config.SRC_PATH + 'js/*.min.js'], buildHtml);
   //watch(config.SRC_PATH + 'vendor/*.js', series(buildVendorJs));
-  watch(config.SRC_PATH + templateFolder + templateName + "assets/**/*", buildTemplate);
+  watch(
+    config.SRC_PATH + templateFolder + templateName + "assets/**/*",
+    buildTemplate
+  );
   watch(config.SRC_PATH + templateFolder + templateName + "*.scss", buildCss);
-  watch(config.SRC_PATH + templateFolder + templateName + "index.html", buildHtml);
+  watch(
+    config.SRC_PATH + templateFolder + templateName + "index.html",
+    buildHtml
+  );
   watch(config.SRC_PATH + "js/*.js", buildJs);
   watch(config.SRC_PATH + "scss/*.scss", buildCss);
   watch(config.SRC_PATH + "pages/**/*.+(html|njk|nunjucks)", buildNunjucks);
@@ -402,7 +411,46 @@ const zip = (cb) => {
   cb();
 };
 
-// HELPERS
+const buildAll = (cb) => {
+  let counter = 0;
+  //const stream = merge2();
+  //let stream = [];
+  //stream.add = (item) => { stream.push(item); };
+  while (counter++ < 1) {
+    console.log("buildAll", "counter:", counter);
+    const getTplNameFunc = getTplNameFunction();
+    let templateName = getOutputName() + "/";
+    config.destination = config.DEVELOPMENT
+      ? config.DEV_FOLDER + templateName
+      : config.BUILD_FOLDER + templateName;
+    merge.add(
+      del.sync([config.destination + "**"], {
+        force: true,
+      })
+    );
+    templateName = getTplNameFunc();
+    const templateFolder = getTplFolder() + "/";
+    merge.add(
+      src(config.SRC_PATH + templateFolder + templateName + "assets/**/*").pipe(
+        dest(config.destination + "assets/")
+      )
+    );
+    /* merge.add(setDestination());
+    merge.add(cleanDirectory());
+    merge.add(moveAssets());
+    merge.add(buildCss());
+    merge.add(buildJs());
+    merge.add(buildNunjucks()); */
+
+    let stop = nextIndex();
+    if (stop) {
+      return merge;
+    }
+  }
+  cb();
+};
+
+// GULP SERIES
 
 const buildTemplate = series(
   setDestination,
@@ -442,7 +490,14 @@ exports.dev = series(
   enableDevelopment,
   setUID,
   setStartTemplate,
+  buildAll,
+  /* buildTemplate,
   //repeat this until end of templates
+  next,
+  buildTemplate,
+  next,
+  buildTemplate,
+  next,
   buildTemplate,
   next,
   buildTemplate,
@@ -450,8 +505,17 @@ exports.dev = series(
   buildTemplate,
   next,
   buildTemplate,
-  /* next,
+  next,
+  buildTemplate,
+  next,
+  buildTemplate,
+  next,
+  buildTemplate,
+  next,
+  buildTemplate,
+  next,
   buildTemplate, */
+  //
   setConfigHasFolderToZip,
   zip
 );
@@ -460,7 +524,13 @@ exports.build = series(
   enableProduction,
   setUID,
   setStartTemplate,
+  buildTemplate,
   //repeat this until end of templates
+  next,
+  buildTemplate,
+  next,
+  buildTemplate,
+  next,
   buildTemplate,
   next,
   buildTemplate,
@@ -468,8 +538,17 @@ exports.build = series(
   buildTemplate,
   next,
   buildTemplate,
-  /* next,
-  buildTemplate, */
+  next,
+  buildTemplate,
+  next,
+  buildTemplate,
+  next,
+  buildTemplate,
+  next,
+  buildTemplate,
+  next,
+  buildTemplate,
+  //
   setConfigHasFolderToZip,
   zip
 );

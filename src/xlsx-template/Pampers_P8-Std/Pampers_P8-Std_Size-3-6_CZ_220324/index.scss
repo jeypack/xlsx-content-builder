@@ -1,0 +1,68 @@
+@charset "UTF-8";
+
+// GLOBAL COLOR DEFINITIONS
+$default-color : #333;
+$dark-color : #222;
+$light-color : #ccc;
+$table-cell-color : #f5f5f5;
+$border-color : #ccc;
+
+//gutters
+$gutters: 10px;
+
+$line-height: 1.35;
+
+$slider-padding-bottom: 16px;
+$slider-navigation-height: 40px;
+$table-cols-max: 4;
+$table-cols-media-360: 1;
+$table-cols-media-xxs: 1;
+$table-cols-media-xs: 2;
+$table-cols-media-sm: 3;
+$table-cols-media-sd: 3;
+$table-logo-width: 200px;
+$table-logo-width-small: 160px;
+// P_1_1_4_4_FLEX_6
+$table-logo-width-percent: 19%;
+$table-col-width: 13.5%;
+//$table-cols-width: 100% - $table-logo-width-percent;
+$table-line-height: 1.25;
+$table-logo-max-width: 180px;
+$table-img-max-width: 120px;
+
+$font-size-small: 10px;
+$font-size-p: 13px;
+$font-size-h6: 13px;
+$font-size-h5: 14px;
+$font-size-h4: 15px;
+$font-size-h3: 16px;
+$font-size-h2: 18px;
+$font-size-table-p: 13px;
+$font-size-table-h6: 13px;
+$font-size-table-h5: 14px;
+$font-weight-h5: bold;
+$font-weight-h6: bold;
+$font-weight-table-h5: bold;
+$font-weight-table-h6: normal;
+
+$font-size-mobile-p: 12px;
+$font-size-mobile-h6: 12px;
+$font-size-mobile-h5: 13px;
+$font-size-mobile-h4: 14px;
+$font-size-mobile-h3: 15px;
+$font-size-mobile-h2: 17px;
+$font-size-mobile-table-p: 11px;
+$font-size-mobile-table-h5: 12px;
+
+$font-weight-table-p: bold;
+
+// IMPORTANT: place variable definition above
+@import "../../scss/index.scss";
+
+//entry
+//#celek {}
+
+//mobile
+//.mobile #celek {}
+
+//@media (min-width: 768px) {}
