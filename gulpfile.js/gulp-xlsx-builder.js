@@ -20,7 +20,8 @@ const autoprefixer = require("autoprefixer");
 const flexbugsfixer = require("postcss-flexbugs-fixes");
 const htmlReplace = require("gulp-html-replace");
 const nunjucksRender = require("gulp-nunjucks-render");
-const merge = require("merge-stream");
+//const mergeStream = require("merge-stream");
+const mergeStream = require("merge2");
 const browserSync = require("browser-sync").create();
 const reload = browserSync.reload;
 const del = require("del");
@@ -44,6 +45,7 @@ const {
 
 const { XLSX_TYPE_ENUM } = require("./parser/XLSXParserEnum");
 const { XLSXParserFactory } = require("./parser/XLSXParserFactory");
+const merge2 = require("merge2");
 
 // GULP ENABLED
 
@@ -406,45 +408,30 @@ const zip = (cb) => {
   if (config.HAS_FOLDER_TO_ZIP) {
     // leave fallbacks folder by default: "!" + folder + "fallbacks"
     // get only folders inside directory without single files and zip folder
+    cb();
     return stream;
   }
   cb();
 };
 
-const buildAll = (cb) => {
+const buildStream = (cb) => {
   let counter = 0;
-  //const stream = merge2();
+  const stream = mergeStream();
+  const noobFn = () => {};
   //let stream = [];
   //stream.add = (item) => { stream.push(item); };
-  while (counter++ < 1) {
-    console.log("buildAll", "counter:", counter);
-    const getTplNameFunc = getTplNameFunction();
-    let templateName = getOutputName() + "/";
-    config.destination = config.DEVELOPMENT
-      ? config.DEV_FOLDER + templateName
-      : config.BUILD_FOLDER + templateName;
-    merge.add(
-      del.sync([config.destination + "**"], {
-        force: true,
-      })
-    );
-    templateName = getTplNameFunc();
-    const templateFolder = getTplFolder() + "/";
-    merge.add(
-      src(config.SRC_PATH + templateFolder + templateName + "assets/**/*").pipe(
-        dest(config.destination + "assets/")
-      )
-    );
-    /* merge.add(setDestination());
-    merge.add(cleanDirectory());
-    merge.add(moveAssets());
-    merge.add(buildCss());
-    merge.add(buildJs());
-    merge.add(buildNunjucks()); */
-
-    let stop = nextIndex();
-    if (stop) {
-      return merge;
+  while (counter++ < 4) {
+    console.log("buildStream", "counter:", counter);
+    setDestination(noobFn);
+    cleanDirectory(noobFn);
+    stream.add(moveAssets(cb));
+    stream.add(buildCss(cb));
+    stream.add(buildJs(cb));
+    stream.add(buildNunjucks(cb));
+    let go = nextIndex();
+    if (!go || config.CURRENT > config.EXPORT_LENGTH - 1) {
+      cb();
+      return stream;
     }
   }
   cb();
@@ -490,32 +477,7 @@ exports.dev = series(
   enableDevelopment,
   setUID,
   setStartTemplate,
-  buildAll,
-  /* buildTemplate,
-  //repeat this until end of templates
-  next,
-  buildTemplate,
-  next,
-  buildTemplate,
-  next,
-  buildTemplate,
-  next,
-  buildTemplate,
-  next,
-  buildTemplate,
-  next,
-  buildTemplate,
-  next,
-  buildTemplate,
-  next,
-  buildTemplate,
-  next,
-  buildTemplate,
-  next,
-  buildTemplate,
-  next,
-  buildTemplate, */
-  //
+  buildStream,
   setConfigHasFolderToZip,
   zip
 );

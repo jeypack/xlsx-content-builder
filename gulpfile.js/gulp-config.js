@@ -70,6 +70,7 @@ const config = {
     SUFFIX: "",
   },
   //
+  EXPORT_LENGTH: 4,
   CURRENT: 0,
   CURRENT_LANGUAGE: 0,
   CURRENT_VERSION: 0,
