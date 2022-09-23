@@ -4,7 +4,9 @@
 // DYNAMIC CONTENT EXPORT
 const template = require('./gulp-xlsx-builder.js');
 exports.default = template.default;
+exports.cleanAll = template.cleanAll;
+exports.cleanBuild = template.cleanBuild;
 exports.build = template.build;
 exports.dev = template.dev;
-exports.html = template.html;
-exports.zip = template.zip;
+exports.images = template.images;
+//exports.zip = template.zip;

@@ -1,3 +1,5 @@
+const { col } = require("../console-col");
+
 /**
  * XLSXParser XLSXParser.js
  * AUTHOR: J. Pfeifer (c) 2022
@@ -87,14 +89,25 @@ class XLSXParser {
         this._elems[module][nVal] = obj;
       }
     } catch (error) {
-      console.log("");
+      //console.log('\x1b[36m%s\x1b[0m', 'I am cyan');
       console.log(
-        "** setFieldValue catch -",
-        "Try to read key:",
-        "'" + key + "' inside template -",
-        error.message + " **"
+        col.dim,
+        "** setFieldValue",
+        col.reset,
+        col.fg.yellow,
+        "catch ERROR : try to read key:",
+        col.fg.magenta,
+        key,
+        col.reset,
+        col.dim,
+        "inside template",
+        col.reset,
+        col.fg.yellow,
+        error.message,
+        col.reset,
+        col.dim + "**",
+        col.reset
       );
-      console.log("");
     }
   }
 }

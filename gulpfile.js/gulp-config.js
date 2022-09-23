@@ -1,5 +1,6 @@
 const fs = require("fs");
-const { XLSX_TYPE_ENUM } = require("./parser/XLSXParserEnum");
+//const { XLSX_TYPE_ENUM } = require("./parser/XLSXParserEnum");
+const { TPL_NAMES } = require("./config/MOJITO-BABYDRY");
 
 const TPL_ENUM = {
   STD: "NAME",
@@ -18,58 +19,11 @@ const config = {
   SRC_VENDOR: "./src/vendor/",
   DEV_FOLDER: "./_temp/",
   BUILD_FOLDER: "./_build/",
-  CLIENT: "P&G",
   // PREFIX_BRAND_PRODUCT_TYPE_LANGUAGE_VERSION_SIZE_CLIENT_VERSION_DATE
   //e.g. HTML5_OralB_Genesis5_KIDS-Lightyear_HU_V1_1195xAUTO_V01_220626
-  TPL_NAMES: {
-    BRAND: ["Pampers", "Pampers", "OralB", "OralB", "OralB"],
-    PRODUCT: ["P8-Std", "P8-Std", "Genesis5", "Genesis5", "Genesis5"],
-    TYPE: ["Size-3-6", "Size-0-2", "Vitality-Pro", "Pro-3", "KIDS-Lightyear"],
-    LANGUAGE: [
-      ["CZ", "SK"],
-      ["CZ", "SK"],
-      ["CZ", "HU", "PL", "SK"],
-      ["CZ", "HU", "PL", "SK"],
-      ["CZ", "HU", "PL", "SK"],
-    ],
-    //every language may have more than 1 version
-    //here we keep version length for every language entry
-    //e.g. TPL_NAMES.VERSION[CURRENT_LANGUAGE] = 1 means one version ...
-    VERSION: [
-      [1, 1],
-      [1, 1],
-      [1, 1, 1, 1],
-      [1, 1, 3, 1],
-      [1, 1, 1, 1],
-    ],
-    FLEX_COLS: [
-      [6, 6],
-      [6, 6],
-      [4, 4, 4, 4],
-      [4, 4, 4, 4],
-      [3, 3, 3, 3],
-    ],
-    CLIENT_VERSION: ["V01", "V01", "V01", "V01"],
-    BODY_CLASS: [
-      ["mobile", "mobile"],
-      ["mobile", "mobile"],
-      ["mobile", "mobile", "mobile", "mobile"],
-      ["mobile", "mobile", "mobile", "mobile"],
-      ["mobile", "mobile", "mobile", "mobile"],
-    ],
-    XLSX_PARSER: [
-      XLSX_TYPE_ENUM.P_1_1_4_4_FLEX_6,
-      XLSX_TYPE_ENUM.P_1_1_4_4_FLEX_6,
-      XLSX_TYPE_ENUM.P_1_3_3_1_FLEX_4,
-      XLSX_TYPE_ENUM.P_1_4_4_1_FLEX_4,
-      XLSX_TYPE_ENUM.P_1_4_4_1_FLEX_3,
-    ],
-    DATE: ["220324", "220324", "220613", "220613", "220626"],
-    SIZE: "1195xAUTO",
-    PREFIX: "HTML5",
-    SUFFIX: "",
-  },
+  TPL_NAMES: TPL_NAMES,
   //
+  JPEG_QUALITY: 82,
   EXPORT_LENGTH: 4,
   CURRENT: 0,
   CURRENT_LANGUAGE: 0,
@@ -95,7 +49,7 @@ const directoryContains = (path, doneFn, errorFn) => {
 };
 
 const getTplNameFunction = () => {
-  console.log("getTplNameFunction", "CURRENT_TPL_VERSION:", config.CURRENT_TPL_VERSION);
+  //console.log("getTplNameFunction", "CURRENT_TPL_VERSION:", config.CURRENT_TPL_VERSION);
   switch (config.CURRENT_TPL_VERSION) {
     case TPL_ENUM.LANG:
       //images and scss for every language
@@ -119,7 +73,7 @@ const getTplFolder = () => {
     tplNames.BRAND[index] +
     "_" +
     tplNames.PRODUCT[index];
-  console.log("getTplFolder", "NAME:", name);
+  //console.log("getTplFolder", "NAME:", name);
   return name;
 };
 // BRAND_PRODUCT_TYPE_DATE
@@ -134,7 +88,7 @@ const getTplName = () => {
     tplNames.TYPE[index] +
     "_" +
     tplNames.DATE[index];
-  console.log("getTplName", "NAME:", name);
+  //console.log("getTplName", "NAME:", name);
   return name;
 };
 // BRAND_PRODUCT_TYPE_LANGUAGE_DATE
@@ -152,7 +106,7 @@ const getTplLangName = () => {
     tplNames.LANGUAGE[index][languageIndex] +
     "_" +
     tplNames.DATE[index];
-  console.log("getTplLangName", "NAME:", name);
+  //console.log("getTplLangName", "NAME:", name);
   return name;
 };
 // BRAND_PRODUCT_TYPE_VERSION_DATE
@@ -171,7 +125,7 @@ const getTplVersionName = () => {
     (versionIndex + 1) +
     "_" +
     tplNames.DATE[index];
-  console.log("getTplVersionName", "NAME:", name);
+  //console.log("getTplVersionName", "NAME:", name);
   return name;
 };
 // BRAND_PRODUCT_TYPE_LANGUAGE_VERSION_DATE
@@ -205,7 +159,7 @@ const getZipName = () => {
     tplNames.PRODUCT[index] +
     "_" +
     tplNames.TYPE[index];
-  console.log("getZipName", "NAME:", name);
+  //console.log("getZipName", "NAME:", name);
   return name;
 };
 //BRAND_PRODUCT_TYPE_LANGUAGE_VERSION_DATE
@@ -252,8 +206,20 @@ const getOutputName = () => {
     tplNames.CLIENT_VERSION[index] +
     "_" +
     tplNames.DATE[index];
-  console.log("getOutputName", "NAME:", name);
+  //console.log("getOutputName", "NAME:", name);
   return name;
+};
+//TYPE
+const getType = () => {
+  const tplNames = config.TPL_NAMES;
+  const index = config.CURRENT;
+  return tplNames.TYPE[index];
+};
+//DATE
+const getDate = () => {
+  const tplNames = config.TPL_NAMES;
+  const index = config.CURRENT;
+  return tplNames.DATE[index];
 };
 const getLanguage = () => {
   const tplNames = config.TPL_NAMES;
@@ -307,6 +273,17 @@ const extendTemplateVars = (obj) => {
 /**
  * Gulp nex index iterator
  */
+const printIndex = () => {
+  console.log(
+    "nextIndex",
+    "CURRENT:",
+    config.CURRENT,
+    "CURRENT_LANGUAGE:",
+    config.CURRENT_LANGUAGE,
+    "CURRENT_VERSION:",
+    config.CURRENT_VERSION
+  );
+};
 const nextIndex = () => {
   const tpls = config.TPL_NAMES;
   const length = tpls.BRAND.length;
@@ -330,16 +307,14 @@ const nextIndex = () => {
       }
     }
   }
-  console.log(
-    "nextIndex",
-    "CURRENT:",
-    config.CURRENT,
-    "CURRENT_LANGUAGE:",
-    config.CURRENT_LANGUAGE,
-    "CURRENT_VERSION:",
-    config.CURRENT_VERSION
-  );
+  printIndex();
   return true;
+};
+const resetIndex = () => {
+  config.CURRENT = 0;
+  config.CURRENT_LANGUAGE = 0;
+  config.CURRENT_VERSION = 0;
+  printIndex();
 };
 
 // config, directoryContains, getTplNameFunction, getTplName, getTplLangName, getTplVersionName, getTplLangVersionName, getZipName, getXLSXName, getOutputName, getLanguage, geBodyClass, geXlsxParser, getLanguageVersion, getFLexCols, getVersion, extendTemplateVars, nextIndex
@@ -355,6 +330,8 @@ module.exports.getTplLangVersionName = getTplLangVersionName;
 module.exports.getZipName = getZipName;
 module.exports.getXLSXName = getXLSXName;
 module.exports.getOutputName = getOutputName;
+module.exports.getType = getType;
+module.exports.getDate = getDate;
 module.exports.getLanguage = getLanguage;
 module.exports.geBodyClass = geBodyClass;
 module.exports.geXlsxParser = geXlsxParser;
