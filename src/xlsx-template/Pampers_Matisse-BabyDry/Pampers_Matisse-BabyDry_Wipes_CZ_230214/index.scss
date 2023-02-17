@@ -66,3 +66,8 @@ $font-weight-table-p: bold;
 //.mobile #celek {}
 
 //@media (min-width: 768px) {}
+.table {
+  .row:first-child {
+    border: 1px solid $border-color;
+  }
+}

@@ -102,10 +102,17 @@ The VERSION property or array is special and has a corresponding version length 
 #
 ### `gulp tasks and deployment`
 
-In the project directory, you can run:
+In the project directory, you can run to watch current config:
 
 ```js
 gulp
+```
+
+Start by creating images out of existing folder inside `src/xlsx-template/_images`.
+
+
+```js
+gulp images
 ```
 
 
@@ -149,4 +156,4 @@ This section has to be added.
 todo
 
 
-[© EG+ 2017 - 2022](https://www.egplusww.de)
+[© EG+ 2017 - 2023](https://www.egplusww.de)

@@ -24,6 +24,10 @@ class XLSXParser {
     return this._elems;
   }
 
+  set parsed(value) {
+    throw new TypeError("XLSXParser - Attempted to assign to readonly property 'parsed'.");
+  }
+
   execute() {
     //this.value = value;
     this._parse();

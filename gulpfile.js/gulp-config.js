@@ -1,6 +1,9 @@
 const fs = require("fs");
 //const { XLSX_TYPE_ENUM } = require("./parser/XLSXParserEnum");
-const { TPL_NAMES } = require("./config/MOJITO-BABYDRY");
+//const { TPL_NAMES } = require("./config/OralB-Genesis5");
+//const { TPL_NAMES } = require("./config/P8-STD");
+//const { TPL_NAMES } = require("./config/MOJITO-BABYDRY");
+const { TPL_NAMES } = require("./config/MATISSE-BABYDRY");
 
 const TPL_ENUM = {
   STD: "NAME",
@@ -24,9 +27,9 @@ const config = {
   TPL_NAMES: TPL_NAMES,
   //
   JPEG_QUALITY: 82,
-  EXPORT_LENGTH: 4,
+  EXPORT_LENGTH: 4, //unused
   CURRENT: 0,
-  CURRENT_LANGUAGE: 0,
+  CURRENT_LANGUAGE: 1,
   CURRENT_VERSION: 0,
   CURRENT_TPL_VERSION: "LANG",
   destination: "./_temp/",
@@ -190,9 +193,9 @@ const getOutputName = () => {
   const languageIndex = config.CURRENT_LANGUAGE;
   const versionIndex = config.CURRENT_VERSION;
   const name =
-    tplNames.PREFIX +
-    "_" +
     tplNames.BRAND[index] +
+    "_" +
+    tplNames.PREFIX +
     "_" +
     tplNames.PRODUCT[index] +
     "_" +

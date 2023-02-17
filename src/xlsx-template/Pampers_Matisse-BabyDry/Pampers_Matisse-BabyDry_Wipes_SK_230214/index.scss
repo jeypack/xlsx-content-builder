@@ -1,11 +1,11 @@
 @charset "UTF-8";
 
 // GLOBAL COLOR DEFINITIONS
-$default-color : #333;
-$dark-color : #222;
-$light-color : #ccc;
-$table-cell-color : #f5f5f5;
-$border-color : #ccc;
+$default-color: #333;
+$dark-color: #222;
+$light-color: #ccc;
+$table-cell-color: #f5f5f5;
+$border-color: #ccc;
 
 //gutters
 $gutters: 10px;
@@ -60,9 +60,19 @@ $font-weight-table-p: bold;
 @import "../../scss/index.scss";
 
 //entry
-//#celek {}
+// #celek {
+//   .table {
+//     .row:first-child {
+//       .col.order-1 {
+//         border-left: 1px solid $border-color;
+//       }
+//     }
+//   }
+// }
 
 //mobile
 //.mobile #celek {}
 
 //@media (min-width: 768px) {}
+
+
