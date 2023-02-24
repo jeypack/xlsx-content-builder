@@ -81,6 +81,43 @@ const setUID = (cb) => {
   cb();
 };
 
+
+const setConfigHasNunjuckTpl = (cb) => {
+  const pageName = getTplName();
+  const tplFile = config.SRC_PATH + "pages/" + pageName + ".njk";
+  directoryContains(
+    tplFile,
+    (resp) => {
+      const length = resp.files.length;
+      /* for (let i = 0; i < length; i++) {
+      console.log("zip", "i:", i, "files:", resp.files[i]);
+    } */
+      config.HAS_NUNJUCK_TPL = length > 1;
+      console.log(
+        "nunjuck",
+        "tplFile:",
+        tplFile,
+        "config.HAS_NUNJUCK_TPL:",
+        config.HAS_NUNJUCK_TPL
+      );
+      cb();
+    },
+    (error) => {
+      config.HAS_NUNJUCK_TPL = false;
+      console.log(
+        "nunjuck",
+        "tplFile:",
+        tplFile,
+        "error:",
+        error,
+        "..."
+      );
+      cb();
+    }
+  );
+};
+
+
 // buildTemplate 1
 const setDestination = (cb) => {
   const templateName = getOutputName() + "/";
@@ -269,17 +306,20 @@ const buildNunjucks = () => {
   const templateName = getTplNameFunc() + "/";
   const templateFolder = getTplFolder() + "/"; */
   //config.SRC_PATH + templateFolder + templateName + "index.scss"
-
+  const source = config.HAS_NUNJUCK_TPL ? config.SRC_PATH + "pages/" + pageName: "Layout_M5_Flex_6";
   // BRAND_PRODUCT_TYPE_DATE
   console.log(
     "buildNunjucks",
     "pageName:",
     pageName,
+    "source:",
+    source,
     "templateFolder:",
     templateFolder
   );
+  //, { allowEmpty: true, debug: true }
   return (
-    src(config.SRC_PATH + "pages/" + pageName + ".njk")
+    src(config.SRC_PATH + "pages/" + source + ".njk")
       .pipe(
         data(function (file) {
           //console.log("buildNunjucks data path: " + file.path);
@@ -459,13 +499,17 @@ const makeImages = (cb) => {
   const stream = src([path + "**/02_jpg/*.*"])
     .pipe(
       data(function (file) {
+        //get start index '_images' folder
+        let startIndex = -1;
         const pathSplit = file.path.split("/");
-        const parts = pathSplit.slice(-6);
-        //[ 'Pampers_Mojito-BabyDry', 'CZ', 'Size-1-2', '01_Module', '02_jpg', 'Banner_970x600.jpg' ]
-        //[ '04_Module', '02_jpg', '03_Feature_300x300.jpg' ]
-        //[ '05_Module', '02_jpg', '01_Pampers_Harmonie_150x300.jpg' ]
-        //console.log(col.dim, file.path.split('/').slice(-6), col.reset);
-        //
+        for (let i = 0, l = pathSplit.length; i < l; i++) {
+          const s = pathSplit[i];
+          if (s === "_images") {
+            startIndex = i + 1;
+            break;
+          }
+        }
+        const parts = pathSplit.slice(startIndex);
         const partIndex = parts[parts.length - 1];
         //get first part
         const index = partIndex.split("_").shift();
@@ -477,6 +521,13 @@ const makeImages = (cb) => {
           dirname: parts[0] + "_" + parts[2] + "_" + parts[1] + "_" + date,
           destination: parts[0], //folder
         };
+        //TODO: we should be using this - check out
+        /* const obj = {
+          index: partIndex.indexOf("Banner") !== -1 ? -1 : parseInt(index, 10),
+          module: Number(parts[parts.length - 2].split("_").shift()),
+          dirname: parts[0] + "_" + type + "_" + parts[1] + "_" + date,
+          destination: parts[0], //folder
+        }; */
         return obj;
       })
     )
@@ -551,21 +602,14 @@ const makeImagesWithoutType = (cb) => {
         //get start index '_images' folder
         let startIndex = -1;
         const pathSplit = file.path.split("/");
-        /* pathSplit: [
-        '',
-        'Applications',
-        'MAMP',
-        'htdocs',
-        'egp',
-        'xlsx-content-builder',
-        'src',
-        'xlsx-template',
-        '_images',
-        'Pampers_Matisse-BabyDry',
-        'SK',
-        '03_Module',
-        '03_Banner_970x600.jpg'
-      ] */
+        /* 
+        pathSplit: [ '', 'Applications', 'MAMP', 'htdocs', 'egp', 'xlsx-content-builder', 'src', 'xlsx-template', '_images',
+          'Pampers_Matisse-BabyDry',
+          'SK',
+          '03_Module',
+          '03_Banner_970x600.jpg'
+        ] 
+        */
         for (let i = 0, l = pathSplit.length; i < l; i++) {
           const s = pathSplit[i];
           if (s === "_images") {
@@ -574,22 +618,11 @@ const makeImagesWithoutType = (cb) => {
           }
         }
         const parts = pathSplit.slice(startIndex);
-        //[ Pampers_Matisse-BabyDry, CZ, 01_Module, 01_Banner_970x600.jpg ] (-4)
-
-        //[ 'Pampers_Mojito-BabyDry', 'CZ', 'Size-1-2', '01_Module', '02_jpg', 'Banner_970x600.jpg' ] (-6)
-        //const index = parts[5].split('_').shift();
         const partIndex = parts[parts.length - 1];
         //get first part
         const index = partIndex.split("_").shift();
         //console.log("pathSplit:", pathSplit);
-        console.log(
-          "partIndex:",
-          partIndex,
-          "startIndex:",
-          startIndex,
-          "index:",
-          index
-        );
+        //console.log("partIndex:", partIndex, "startIndex:", startIndex, "index:", index);
         const obj = {
           index: partIndex.indexOf("Banner") !== -1 ? -1 : parseInt(index, 10),
           module: Number(parts[parts.length - 2].split("_").shift()),
@@ -597,10 +630,10 @@ const makeImagesWithoutType = (cb) => {
           destination: parts[0], //folder
         };
         /* console.log("::");
-      log = "makeImages parts " + parts.join(', ');
-      console.log(log);
-      log = "makeImages obj " + JSON.stringify(obj);
-      console.log(log); */
+        log = "makeImages parts " + parts.join(', ');
+        console.log(log);
+        log = "makeImages obj " + JSON.stringify(obj);
+        console.log(log); */
         return obj;
       })
     )
@@ -613,16 +646,16 @@ const makeImagesWithoutType = (cb) => {
     .pipe(
       rename((path, file) => {
         /* let date = new Date();
-        file.stat.atime = date;
-        file.stat.mtime = date; */
-        //{"dirname":"03_Module/02_jpg","basename":"Banner_970x600","extname":".jpg"}
-        //{"dirname":"04_Module/02_jpg","basename":"01_Feature_300x300","extname":".jpg"}
-        //{"dirname":"05_Module/02_jpg","basename":"02_Premium_Protection_150x300","extname":".jpg"}
-        /* return {
-        dirname: path.dirname,
-        basename: path.basename,
-        extname: path.extname
-      }; */
+          file.stat.atime = date;
+          file.stat.mtime = date; */
+          //{"dirname":"03_Module/02_jpg","basename":"Banner_970x600","extname":".jpg"}
+          //{"dirname":"04_Module/02_jpg","basename":"01_Feature_300x300","extname":".jpg"}
+          //{"dirname":"05_Module/02_jpg","basename":"02_Premium_Protection_150x300","extname":".jpg"}
+          /* return {
+          dirname: path.dirname,
+          basename: path.basename,
+          extname: path.extname
+        }; */
         //module-1.jpg | module-4-feature-1.jpg | module-5-product-3.jpg
         //get index out of path.basename
         //const part = path.basename.split('_').shift();
@@ -651,6 +684,118 @@ const makeImagesWithoutType = (cb) => {
           //console.log('dest file.data:', file.data);
           return config.SRC_PATH + "_images/result/" + file.data.destination;
           //return config.SRC_PATH + file.data.destination;
+        },
+        { overwrite: true }
+      )
+    );
+  return stream;
+  //cb();
+};
+//Version 3: imagefolder with Language (CZ) plus Module folder (01_Module) inside
+const makeImagesFolderType = (cb) => {
+  const folder = getTplFolder();
+  const lang = getLanguage();
+  const type = getType();
+  const date = getDate();
+
+  //const path = config.SRC_PATH + '_images/' + folder + '/' + lang + '/' + type + '/';
+  const path = config.SRC_PATH + "_images/" + folder + "/" + type + "/";
+  let log = "makeImages " + col.dim + " path: " + col.reset + path;
+  console.log(log);
+
+  //VERION-3
+  const stream = src([path + "**/**/*.*"])
+    .pipe(
+      data(function (file) {
+        //get start index '_images' folder
+        let startIndex = -1;
+        const pathSplit = file.path.split("/");
+        /* 
+        pathSplit: [ '', 'Applications', 'MAMP', 'htdocs', 'egp', 'xlsx-content-builder', 'src', 'xlsx-template', '_images',
+          'Pampers_Matisse-BabyDry',
+          'SK',
+          '03_Module',
+          '03_Banner_970x600.jpg'
+        ] 
+        */
+        for (let i = 0, l = pathSplit.length; i < l; i++) {
+          const s = pathSplit[i];
+          if (s === "_images") {
+            startIndex = i + 1;
+            break;
+          }
+        }
+        const parts = pathSplit.slice(startIndex);
+        const partIndex = parts[parts.length - 1];
+        //get first part
+        const index = partIndex.split("_").shift();
+        const language = parts[parts.length - 3];
+        //console.log("parts:", parts.join("/"));
+        //console.log("data:", "partIndex:", partIndex, "startIndex:", startIndex, "index:", index, "language:", language);
+        const obj = {
+          index: partIndex.indexOf("Banner") !== -1 ? -1 : parseInt(index, 10),
+          language: parts[parts.length - 3],
+          module: Number(parts[parts.length - 2].split("_").shift()),
+          dirname: parts[0] + "_" + type + "_" + language + "_" + date,
+          destination: parts[0], //folder
+        };
+        //log = "makeImages obj " + JSON.stringify(obj);
+        //console.log(log);
+        /* console.log("::");
+        log = "makeImages parts " + parts.join(', ');
+        console.log(log);
+        log = "makeImages obj " + JSON.stringify(obj);
+        console.log(log); */
+        return obj;
+      })
+    )
+    .pipe(
+      imagemin([
+        imagemin.mozjpeg({ quality: config.JPEG_QUALITY, progressive: false }),
+        imagemin.optipng({ optimizationLevel: 5 }),
+      ])
+    )
+    .pipe(
+      rename((path, file) => {
+        /* let date = new Date();
+          file.stat.atime = date;
+          file.stat.mtime = date; */
+          //{"dirname":"03_Module/02_jpg","basename":"Banner_970x600","extname":".jpg"}
+          //{"dirname":"04_Module/02_jpg","basename":"01_Feature_300x300","extname":".jpg"}
+          //{"dirname":"05_Module/02_jpg","basename":"02_Premium_Protection_150x300","extname":".jpg"}
+          /* return {
+          dirname: path.dirname,
+          basename: path.basename,
+          extname: path.extname
+        }; */
+        //module-1.jpg | module-4-feature-1.jpg | module-5-product-3.jpg
+        //get index out of path.basename
+        //const part = path.basename.split('_').shift();
+        let basename = "module-" + file.data.module;
+        //check for feature or
+        if (file.data.index !== -1) {
+          if (file.data.module === 5) {
+            basename += "-product-" + file.data.index;
+          } else {
+            basename += "-feature-" + file.data.index;
+          }
+        }
+        //console.log("path:", JSON.stringify(path), "file.data:", file.data);
+        //console.log("rename:", col.dim, file.data.dirname, col.reset, basename, file.data.language);
+        return {
+          dirname: file.data.dirname + "/assets",
+          //dirname: '.',
+          basename: basename,
+          extname: path.extname,
+        };
+      })
+    )
+    .pipe(
+      dest(
+        (file) => {
+          //console.log('dest file.data:', file.data);
+          //return config.SRC_PATH + "_images/result/" + file.data.destination;
+          return config.SRC_PATH + file.data.destination;
         },
         { overwrite: true }
       )
@@ -754,7 +899,7 @@ const buildTemplate = series(
   setDestination,
   cleanDirectory,
   moveAssets,
-  parallel(buildCss, buildJs),
+  parallel(buildCss, buildJs, setConfigHasNunjuckTpl),
   buildNunjucks
 );
 
@@ -768,7 +913,7 @@ const buildTemplateViaHtml = series(
   setDestination,
   cleanDirectory,
   moveAssets,
-  parallel(buildCss, buildJs),
+  parallel(buildCss, buildJs, setConfigHasNunjuckTpl),
   buildHtml
 );
 
@@ -797,6 +942,22 @@ exports.images = series(
   makeImagesWithoutType,
   next,
   makeImagesWithoutType
+);
+
+exports.imagesFolderType = series(
+  enableDevelopment,
+  setDestination,
+  makeImagesFolderType,
+  next,
+  makeImagesFolderType,
+  next,
+  makeImagesFolderType,
+  next,
+  makeImagesFolderType,
+  next,
+  makeImagesFolderType,
+  next,
+  makeImagesFolderType
 );
 
 //unused
@@ -838,7 +999,7 @@ exports.build = series(
   //repeat this until end of templates
   next,
   buildTemplate,
-  next,
+  /*next,
   buildTemplate,
   next,
   buildTemplate,
@@ -846,7 +1007,7 @@ exports.build = series(
   buildTemplate,
   next,
   buildTemplate,
-  /* next,
+   next,
   buildTemplate,
   next,
   buildTemplate,
@@ -870,8 +1031,9 @@ exports.cleanBuild = series(cleanBuild);
 
 //1.  Create Folder inside src/xlsx-template/_images with project-name/Language/01_Module - xx_Module
 //2.  Run 'gulp images' - this will create a folder with the same name plus assets folder inside  src/xlsx-template/
+
 //3.  Create new config file inside gulpfile.js/config/ and change this:
-//    const { TPL_NAMES } = require("./config/MATISSE-BABYDRY"); inside gulp-config.js at the top
+//    const { TPL_NAMES } = require("./config/P-MATISSE-BABYDRY"); inside gulp-config.js at the top
 //4.  Check for existing and matching XLSXParser - if not, create a new one
 //5.  Add new XLSXParser enum inside XLSXParserEnum.js
 //6.  Open XLSXParserFactory.js and implement the newly created parser via XLSXParserEnum type

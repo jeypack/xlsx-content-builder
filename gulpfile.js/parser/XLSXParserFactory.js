@@ -6,11 +6,12 @@ const { XLSX1331f4 } = require("./XLSX-1-3-3-1-f-4");
 const { XLSX1144f6 } = require("./XLSX-1-1-4-4-f-6");
 const { XLSX1113f6 } = require("./XLSX-1-1-1-3-f-6");
 const { XLSXB1113f6 } = require("./XLSX-B-1-1-1-3-f-6");
+const { XLSXM5FS6 } = require("./XLSX-M5-FS6");
 
 /**
  * XLSXParserFactory XLSXParserFactory.js
  * AUTHOR: J. Pfeifer (c) 2022-2023
- * Created: 20.07.2022
+ * Created: 20.07.2022 
  */
 module.exports.XLSXParserFactory = class XLSXParserFactory {
   /**
@@ -24,6 +25,9 @@ module.exports.XLSXParserFactory = class XLSXParserFactory {
     console.log("XLSXParserFactory.create", "type:", type);
     let parser = null;
     switch (type) {
+      case XLSX_TYPE_ENUM.P_M5_FLEX_6:
+        parser = new XLSXM5FS6(template);
+        break;
       case XLSX_TYPE_ENUM.P_B_1_1_1_3_FLEX_6:
         parser = new XLSXB1113f6(template);
         break;

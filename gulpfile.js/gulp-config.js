@@ -3,7 +3,8 @@ const fs = require("fs");
 //const { TPL_NAMES } = require("./config/OralB-Genesis5");
 //const { TPL_NAMES } = require("./config/P8-STD");
 //const { TPL_NAMES } = require("./config/MOJITO-BABYDRY");
-const { TPL_NAMES } = require("./config/MATISSE-BABYDRY");
+//const { TPL_NAMES } = require("./config/P-MATISSE-BABYDRY");
+const { TPL_NAMES } = require("./config/P-PANDORA");
 
 const TPL_ENUM = {
   STD: "NAME",
@@ -16,6 +17,7 @@ const config = {
   UID: 0,
   DEVELOPMENT: true,
   HAS_FOLDER_TO_ZIP: false,
+  HAS_NUNJUCK_TPL: false,
   //PATH_INCLUDES_SASS: ['bower_components/juiced/sass/'],
   HTDOCS_PATH: "/Applications/MAMP/htdocs/",
   SRC_PATH: "./src/xlsx-template/",
@@ -29,7 +31,7 @@ const config = {
   JPEG_QUALITY: 82,
   EXPORT_LENGTH: 4, //unused
   CURRENT: 0,
-  CURRENT_LANGUAGE: 1,
+  CURRENT_LANGUAGE: 0,
   CURRENT_VERSION: 0,
   CURRENT_TPL_VERSION: "LANG",
   destination: "./_temp/",
@@ -228,6 +230,7 @@ const getLanguage = () => {
   const tplNames = config.TPL_NAMES;
   const index = config.CURRENT;
   const languageIndex = config.CURRENT_LANGUAGE;
+  console.log("gulp-config getLanguage", "index:", index, "languageIndex:", languageIndex);
   return tplNames.LANGUAGE[index][languageIndex];
 };
 const geBodyClass = () => {

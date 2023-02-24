@@ -20,7 +20,7 @@ const TPL_NAMES = {
   ],
   //every language may have more than 1 version
   //here we keep version length for every language entry
-  //e.g. TPL_NAMES.VERSION[CURRENT_LANGUAGE] = 1 means one version ...
+  //e.g. TPL_NAMES.VERSION[CURRENT_LANGUAGE] = 1 means one version ... 
   VERSION: [
     [1, 1],
     [1, 1],

@@ -22,8 +22,8 @@ class XLSXB1113f6 extends XLSXParser {
     // module3
     this._setFieldValue("module3", "Y20", "image-alt");
     //this._setFieldValue("module3", "Y22", "copy");
-    // module4
-    this._setFieldValue("module4", "Y27", "h4");
+    // module4 
+    //this._setFieldValue("module4", "Y27", "h4");
     this._setFieldValue("module4", "Y28", "image-alt", "ARRAY");
     this._setFieldValue("module4", "AC28", "image-alt", "ARRAY");
     this._setFieldValue("module4", "AG28", "image-alt", "ARRAY");

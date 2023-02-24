@@ -9,4 +9,5 @@ exports.cleanBuild = template.cleanBuild;
 exports.build = template.build;
 exports.dev = template.dev;
 exports.images = template.images;
+exports.imagesFolderType = template.imagesFolderType;
 //exports.zip = template.zip;

@@ -9,7 +9,16 @@ class XLSXParser {
   constructor(template) {
     this._template = template;
     this._elems = {};
+    this._failed = 0;
     console.log("XLSXParser constructor");
+  }
+
+  get failed() {
+    return this._failed;
+  }
+
+  set failed(value) {
+    throw new TypeError("XLSXParser - Attempted to assign to readonly property 'failed'.");
   }
 
   get template() {
@@ -64,9 +73,11 @@ class XLSXParser {
     }
     //fallback(!) nur wenn kein key angegeben wurde
     const nVal = typeof name !== "undefined" ? name : key;
+    let obj = null;
     try {
-      let value = key === "BLANK" ? "" : this._template[key].v || "";
-      let obj = { key: key, value: value };
+      let tplField = this._template[key];
+      let value = key === "BLANK" ? "" : tplField.v || "";
+      obj = { key: key, value: value };
       //special case 'TABLE'
       if (type && type === "TABLE") {
         //create if not exists
@@ -94,6 +105,7 @@ class XLSXParser {
       }
     } catch (error) {
       //console.log('\x1b[36m%s\x1b[0m', 'I am cyan');
+      this._failed++;
       console.log(
         col.dim,
         "** setFieldValue",
@@ -104,15 +116,13 @@ class XLSXParser {
         key,
         col.reset,
         col.dim,
-        "inside template",
+        "inside template ** failed:",
         col.reset,
-        col.fg.yellow,
-        error.message,
-        col.reset,
-        col.dim + "**",
+        this.failed,
         col.reset
       );
     }
+    return obj;
   }
 }
 
