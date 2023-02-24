@@ -38,6 +38,7 @@ const TPL_NAMES = {
   SIZE: "1195xAUTO",
   PREFIX: "HTML5",
   SUFFIX: "",
+  STANDARD_LAYOUT: "Layout_M5_Flex_6",
 };
 
 module.exports.TPL_NAMES = TPL_NAMES;

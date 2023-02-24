@@ -45,6 +45,7 @@ const {
   getDate,
   getType,
   getLanguage,
+  getStandardLayout,
 } = require("./gulp-config.js");
 
 const { XLSX_TYPE_ENUM } = require("./parser/XLSXParserEnum");
@@ -81,7 +82,6 @@ const setUID = (cb) => {
   cb();
 };
 
-
 const setConfigHasNunjuckTpl = (cb) => {
   const pageName = getTplName();
   const tplFile = config.SRC_PATH + "pages/" + pageName + ".njk";
@@ -104,19 +104,11 @@ const setConfigHasNunjuckTpl = (cb) => {
     },
     (error) => {
       config.HAS_NUNJUCK_TPL = false;
-      console.log(
-        "nunjuck",
-        "tplFile:",
-        tplFile,
-        "error:",
-        error,
-        "..."
-      );
+      console.log("nunjuck", "tplFile:", tplFile, "error:", error, "...");
       cb();
     }
   );
 };
-
 
 // buildTemplate 1
 const setDestination = (cb) => {
@@ -306,7 +298,9 @@ const buildNunjucks = () => {
   const templateName = getTplNameFunc() + "/";
   const templateFolder = getTplFolder() + "/"; */
   //config.SRC_PATH + templateFolder + templateName + "index.scss"
-  const source = config.HAS_NUNJUCK_TPL ? config.SRC_PATH + "pages/" + pageName: "Layout_M5_Flex_6";
+  const source = config.HAS_NUNJUCK_TPL
+    ? config.SRC_PATH + "pages/" + pageName
+    : getStandardLayout();
   // BRAND_PRODUCT_TYPE_DATE
   console.log(
     "buildNunjucks",
@@ -648,10 +642,10 @@ const makeImagesWithoutType = (cb) => {
         /* let date = new Date();
           file.stat.atime = date;
           file.stat.mtime = date; */
-          //{"dirname":"03_Module/02_jpg","basename":"Banner_970x600","extname":".jpg"}
-          //{"dirname":"04_Module/02_jpg","basename":"01_Feature_300x300","extname":".jpg"}
-          //{"dirname":"05_Module/02_jpg","basename":"02_Premium_Protection_150x300","extname":".jpg"}
-          /* return {
+        //{"dirname":"03_Module/02_jpg","basename":"Banner_970x600","extname":".jpg"}
+        //{"dirname":"04_Module/02_jpg","basename":"01_Feature_300x300","extname":".jpg"}
+        //{"dirname":"05_Module/02_jpg","basename":"02_Premium_Protection_150x300","extname":".jpg"}
+        /* return {
           dirname: path.dirname,
           basename: path.basename,
           extname: path.extname
@@ -760,10 +754,10 @@ const makeImagesFolderType = (cb) => {
         /* let date = new Date();
           file.stat.atime = date;
           file.stat.mtime = date; */
-          //{"dirname":"03_Module/02_jpg","basename":"Banner_970x600","extname":".jpg"}
-          //{"dirname":"04_Module/02_jpg","basename":"01_Feature_300x300","extname":".jpg"}
-          //{"dirname":"05_Module/02_jpg","basename":"02_Premium_Protection_150x300","extname":".jpg"}
-          /* return {
+        //{"dirname":"03_Module/02_jpg","basename":"Banner_970x600","extname":".jpg"}
+        //{"dirname":"04_Module/02_jpg","basename":"01_Feature_300x300","extname":".jpg"}
+        //{"dirname":"05_Module/02_jpg","basename":"02_Premium_Protection_150x300","extname":".jpg"}
+        /* return {
           dirname: path.dirname,
           basename: path.basename,
           extname: path.extname

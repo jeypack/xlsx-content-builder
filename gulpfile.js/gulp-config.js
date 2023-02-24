@@ -81,6 +81,9 @@ const getTplFolder = () => {
   //console.log("getTplFolder", "NAME:", name);
   return name;
 };
+const getStandardLayout = () => {
+  return config.TPL_NAMES.STANDARD_LAYOUT;
+};
 // BRAND_PRODUCT_TYPE_DATE
 const getTplName = () => {
   const tplNames = config.TPL_NAMES;
@@ -346,3 +349,4 @@ module.exports.getFLexCols = getFLexCols;
 module.exports.getVersion = getVersion;
 module.exports.extendTemplateVars = extendTemplateVars;
 module.exports.nextIndex = nextIndex;
+module.exports.getStandardLayout = getStandardLayout;

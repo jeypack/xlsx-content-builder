@@ -38,112 +38,50 @@ class XLSXM5FS6 extends XLSXParser {
     this._setFieldValue("module3", "Y22", "copy");
     // *
     // module4
+    //if this description is empty we could break
+    //but for now we leave this as it is: try to get possible values
+    //obj = this._setFieldValue("module4", "Y28", "copy", "ARRAY");
     this._setFieldValue("module4", "Y26", "image-alt", "ARRAY");
     this._setFieldValue("module4", "AC26", "image-alt", "ARRAY");
     this._setFieldValue("module4", "AG26", "image-alt", "ARRAY");
     this._setFieldValue("module4", "AK26", "image-alt", "ARRAY");
+    this._setFieldValue("module4", "AN26", "image-alt", "ARRAY");
     this._setFieldValue("module4", "Y27", "h5", "ARRAY");
     this._setFieldValue("module4", "AC27", "h5", "ARRAY");
     this._setFieldValue("module4", "AG27", "h5", "ARRAY");
     this._setFieldValue("module4", "AK27", "h5", "ARRAY");
+    this._setFieldValue("module4", "AN27", "h5", "ARRAY");
     this._setFieldValue("module4", "Y28", "copy", "ARRAY");
     this._setFieldValue("module4", "AC28", "copy", "ARRAY");
     this._setFieldValue("module4", "AG28", "copy", "ARRAY");
     this._setFieldValue("module4", "AK28", "copy", "ARRAY");
+    this._setFieldValue("module4", "AN28", "copy", "ARRAY");
     // *
     // module5
     this._setFieldValue("module5", "Y31", "headline");
     // module5 table
-    let index = 0;
-    this._setFieldValue("module5", "BLANK", index, "TABLE");
-    this._setFieldValue("module5", "AC34", index, "TABLE");
-    this._setFieldValue("module5", "AE34", index, "TABLE");
-    this._setFieldValue("module5", "AG34", index, "TABLE");
-    this._setFieldValue("module5", "AI34", index, "TABLE");
-    this._setFieldValue("module5", "AK34", index, "TABLE");
-    this._setFieldValue("module5", "AM34", index, "TABLE");
-    index++;
-    this._setFieldValue("module5", "Y35", index, "TABLE");
-    this._setFieldValue("module5", "AC35", index, "TABLE");
-    this._setFieldValue("module5", "AE35", index, "TABLE");
-    this._setFieldValue("module5", "AG35", index, "TABLE");
-    this._setFieldValue("module5", "AI35", index, "TABLE");
-    this._setFieldValue("module5", "AK35", index, "TABLE");
-    this._setFieldValue("module5", "AM35", index, "TABLE");
-    index++;
-    this._setFieldValue("module5", "Y36", index, "TABLE");
-    this._setFieldValue("module5", "AC36", index, "TABLE");
-    this._setFieldValue("module5", "AE36", index, "TABLE");
-    this._setFieldValue("module5", "AG36", index, "TABLE");
-    this._setFieldValue("module5", "AI36", index, "TABLE");
-    this._setFieldValue("module5", "AK36", index, "TABLE");
-    this._setFieldValue("module5", "AM36", index, "TABLE");
-    index++;
-    this._setFieldValue("module5", "Y37", index, "TABLE");
-    this._setFieldValue("module5", "AC37", index, "TABLE");
-    this._setFieldValue("module5", "AE37", index, "TABLE");
-    this._setFieldValue("module5", "AG37", index, "TABLE");
-    this._setFieldValue("module5", "AI37", index, "TABLE");
-    this._setFieldValue("module5", "AK37", index, "TABLE");
-    this._setFieldValue("module5", "AM37", index, "TABLE");
-    index++;
-    this._setFieldValue("module5", "Y38", index, "TABLE");
-    this._setFieldValue("module5", "AC38", index, "TABLE");
-    this._setFieldValue("module5", "AE38", index, "TABLE");
-    this._setFieldValue("module5", "AG38", index, "TABLE");
-    this._setFieldValue("module5", "AI38", index, "TABLE");
-    this._setFieldValue("module5", "BLANK", index, "TABLE");
-    this._setFieldValue("module5", "BLANK", index, "TABLE");
-    index++;
-    this._setFieldValue("module5", "Y39", index, "TABLE");
-    this._setFieldValue("module5", "AC39", index, "TABLE");
-    this._setFieldValue("module5", "AE39", index, "TABLE");
-    this._setFieldValue("module5", "AG39", index, "TABLE");
-    this._setFieldValue("module5", "BLANK", index, "TABLE");
-    this._setFieldValue("module5", "BLANK", index, "TABLE");
-    this._setFieldValue("module5", "BLANK", index, "TABLE");
-    index++;
-
-    this._setFieldValue("module5", "Y40", index, "TABLE");
-    this._setFieldValue("module5", "AC40", index, "TABLE");
-    this._setFieldValue("module5", "AE40", index, "TABLE");
-    this._setFieldValue("module5", "BLANK", index, "TABLE");
-    this._setFieldValue("module5", "AI40", index, "TABLE");
-    this._setFieldValue("module5", "AK40", index, "TABLE");
-    this._setFieldValue("module5", "BLANK", index, "TABLE");
-    index++;
-    this._setFieldValue("module5", "Y41", index, "TABLE");
-    this._setFieldValue("module5", "AC41", index, "TABLE");
-    this._setFieldValue("module5", "BLANK", index, "TABLE");
-    this._setFieldValue("module5", "BLANK", index, "TABLE");
-    this._setFieldValue("module5", "BLANK", index, "TABLE");
-    this._setFieldValue("module5", "BLANK", index, "TABLE");
-    this._setFieldValue("module5", "BLANK", index, "TABLE");
-    /* index++;
-    this._setFieldValue("module5", "Y42", index, "TABLE");
-    this._setFieldValue("module5", "AC42", index, "TABLE");
-    this._setFieldValue("module5", "AE42", index, "TABLE");
-    this._setFieldValue("module5", "BLANK", index, "TABLE");
-    this._setFieldValue("module5", "AI42", index, "TABLE");
-    this._setFieldValue("module5", "AK42", index, "TABLE");
-    this._setFieldValue("module5", "BLANK", index, "TABLE"); 
-    index++;
-    this._setFieldValue("module5", "Y43", index, "TABLE");
-    this._setFieldValue("module5", "AC43", index, "TABLE");
-    this._setFieldValue("module5", "BLANK", index, "TABLE");
-    this._setFieldValue("module5", "BLANK", index, "TABLE");
-    this._setFieldValue("module5", "BLANK", index, "TABLE");
-    this._setFieldValue("module5", "BLANK", index, "TABLE");
-    this._setFieldValue("module5", "BLANK", index, "TABLE"); 
-    index++; */
-    //
-    /* this._setFieldValue("module5", "Y42", index, "TABLE");
-    this._setFieldValue("module5", "AC42", index, "TABLE");
-    this._setFieldValue("module5", "AE42", index, "TABLE");
-    this._setFieldValue("module5", "AG42", index, "TABLE");
-    this._setFieldValue("module5", "AI42", index, "TABLE");
-    this._setFieldValue("module5", "AK42", index, "TABLE");
-    this._setFieldValue("module5", "AM42", index, "TABLE");  */
+    const rows = 12; //maximal - we break if "Y" is empty
+    const cols = 7;
+    const colIDs = ["Y", "AC", "AE", "AG", "AI", "AK", "AM"];
+    const startNum = 34;
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        //logo case
+        if (row === 0 && col === 0) {
+          this._setFieldValue("module5", "BLANK", row, "TABLE");
+        } else {
+          obj = this._setFieldValue("module5", colIDs[col] + (startNum + row), row, "TABLE");
+          if (!obj) {
+            if (col === 0) {
+              row = 9999;
+              break;
+            }
+            this._setFieldValue("module5", "BLANK", row, "TABLE");
+          }
+        }
+        console.log("_parse", "setFieldValue:", col, row, colIDs[col] + (startNum + row));
+      }
+    }
   }
 };
 
