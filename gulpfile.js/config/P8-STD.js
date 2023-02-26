@@ -31,8 +31,8 @@ const TPL_NAMES = {
     ["mobile", "mobile"],
   ],
   XLSX_PARSER: [
-    XLSX_TYPE_ENUM.P_1_1_4_4_FLEX_6,
-    XLSX_TYPE_ENUM.P_1_1_4_4_FLEX_6,
+    XLSX_TYPE_ENUM.PARSER_STD_MODULE,
+    XLSX_TYPE_ENUM.PARSER_STD_MODULE,
   ],
   CLIENT_VERSION: ["V01", "V01"],
   DATE: ["220324", "220324"],

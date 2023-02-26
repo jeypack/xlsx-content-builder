@@ -13,35 +13,77 @@ class XLSXM5FS6 extends XLSXParser {
   _parse() {
     //let subclasses override this protected member function
     console.log("XLSXM5FS6 extends XLSXParser - call protected method _parse");
-    // *
-    // module1
-    this._setFieldValue("module1", "Y4", "headline");
-    let obj = this._setFieldValue("module1", "Y6", "image-alt");
-    if (!obj) {
-      this._setFieldValue("module1", "Y5", "image-alt");
+    //get module start position via 'caption' field
+    let captionStartNums = [];
+    let cNum = 0;
+    let obj = null;
+    while (true) {
+      obj = this._setFieldValue("modules", "V" + cNum, "captions", "ARRAY");
+      if (obj && obj.value === "Caption") {
+        captionStartNums.push(cNum);
+      }
+      if (++cNum > 50) {
+        break;
+      }
     }
+    console.log("_parse", "modules", "captions", captionStartNums);
+
     // *
-    // module2
-    obj = this._setFieldValue("module1", "Y13", "image-alt");
-    if (!obj) {
-      this._setFieldValue("module2", "Y12", "image-alt");
+    // module1 - 3
+    for (let i = 0, l = 3; i < l; i++) {
+      //set module
+      let c = captionStartNums[i];
+      //let m = "module" + (c + 1);
+      let m = "module" + (i + 1);
+      console.log("_parse", "module", "m", m);
+      this._setFieldValue(m, "Y" + c, "headline");
+      obj = this._setFieldValue(m, "Y" + (c + 2), "image-alt");
+      if (!obj) {
+        obj = this._setFieldValue(m, "Y" + (c + 1), "image-alt");
+        if (!obj) {
+          obj = this._setFieldValue(m, "Y" + c, "image-alt");
+        }
+      }
+      //optional
+      this._setFieldValue(m, "Y" + (c + 3), "h5");
+      this._setFieldValue(m, "Y" + (c + 4), "copy");
     }
-    //optional
-    this._setFieldValue("module2", "Y15", "copy");
-    // *
-    // module3
-    obj = this._setFieldValue("module1", "Y20", "image-alt");
-    if (!obj) {
-      this._setFieldValue("module2", "Y19", "image-alt");
-    }
-    //optional
-    this._setFieldValue("module3", "Y22", "copy");
+
     // *
     // module4
     //if this description is empty we could break
     //but for now we leave this as it is: try to get possible values
     //obj = this._setFieldValue("module4", "Y28", "copy", "ARRAY");
-    this._setFieldValue("module4", "Y26", "image-alt", "ARRAY");
+    let startNum = captionStartNums[3];
+    /* for (let i = startNum, l = startNum + 5; i < l; i++) {
+      obj = this._setFieldValue("module4", "V" + i, "caption");
+      console.log("_parse", "i:", i, "obj:", obj);
+      if (obj && obj.value === "Caption") {
+        startNum = i;
+        break;
+      }
+    } */
+
+    this._setFieldValue("module4", "Y" + startNum, "headline");
+    console.log("_parse", "startNum:", startNum, "startNum + 2:", startNum + 2);
+    let colIDs = ["AC", "AG", "AK", "AN"];
+    for (let i = 0, l = colIDs.length; i < l; i++) {
+      this._setFieldValue(
+        "module4",
+        colIDs[i] + (startNum + 2),
+        "image-alt",
+        "ARRAY"
+      );
+      this._setFieldValue("module4", colIDs[i] + (startNum + 3), "h5", "ARRAY");
+      this._setFieldValue(
+        "module4",
+        colIDs[i] + (startNum + 4),
+        "copy",
+        "ARRAY"
+      );
+    }
+
+    /* this._setFieldValue("module4", "Y26", "image-alt", "ARRAY");
     this._setFieldValue("module4", "AC26", "image-alt", "ARRAY");
     this._setFieldValue("module4", "AG26", "image-alt", "ARRAY");
     this._setFieldValue("module4", "AK26", "image-alt", "ARRAY");
@@ -55,22 +97,28 @@ class XLSXM5FS6 extends XLSXParser {
     this._setFieldValue("module4", "AC28", "copy", "ARRAY");
     this._setFieldValue("module4", "AG28", "copy", "ARRAY");
     this._setFieldValue("module4", "AK28", "copy", "ARRAY");
-    this._setFieldValue("module4", "AN28", "copy", "ARRAY");
+    this._setFieldValue("module4", "AN28", "copy", "ARRAY"); */
+
     // *
     // module5
-    this._setFieldValue("module5", "Y31", "headline");
+    startNum = captionStartNums[4] + 3;
+    this._setFieldValue("module5", "Y" + (startNum - 3), "headline");
     // module5 table
     const rows = 12; //maximal - we break if "Y" is empty
     const cols = 7;
-    const colIDs = ["Y", "AC", "AE", "AG", "AI", "AK", "AM"];
-    const startNum = 34;
+    colIDs = ["Y", "AC", "AE", "AG", "AI", "AK", "AM"];
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < cols; col++) {
         //logo case
         if (row === 0 && col === 0) {
           this._setFieldValue("module5", "BLANK", row, "TABLE");
         } else {
-          obj = this._setFieldValue("module5", colIDs[col] + (startNum + row), row, "TABLE");
+          obj = this._setFieldValue(
+            "module5",
+            colIDs[col] + (startNum + row),
+            row,
+            "TABLE"
+          );
           if (!obj) {
             if (col === 0) {
               row = 9999;
@@ -79,10 +127,16 @@ class XLSXM5FS6 extends XLSXParser {
             this._setFieldValue("module5", "BLANK", row, "TABLE");
           }
         }
-        console.log("_parse", "setFieldValue:", col, row, colIDs[col] + (startNum + row));
+        console.log(
+          "_parse",
+          "setFieldValue:",
+          col,
+          row,
+          colIDs[col] + (startNum + row)
+        );
       }
     }
   }
-};
+}
 
 module.exports.XLSXM5FS6 = XLSXM5FS6;

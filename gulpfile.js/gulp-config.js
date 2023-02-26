@@ -30,10 +30,11 @@ const config = {
   //
   JPEG_QUALITY: 82,
   EXPORT_LENGTH: 4, //unused
+  //change this for development testing
   CURRENT: 0,
   CURRENT_LANGUAGE: 0,
   CURRENT_VERSION: 0,
-  CURRENT_TPL_VERSION: "LANG",
+  CURRENT_TPL_VERSION: "LANG", //@see getTplNameFunction
   destination: "./_temp/",
 };
 
@@ -74,15 +75,15 @@ const getTplNameFunction = () => {
 const getTplFolder = () => {
   const tplNames = config.TPL_NAMES;
   const index = config.CURRENT;
-  const name =
-    tplNames.BRAND[index] +
-    "_" +
-    tplNames.PRODUCT[index];
+  const name = tplNames.BRAND[index] + "_" + tplNames.PRODUCT[index];
   //console.log("getTplFolder", "NAME:", name);
   return name;
 };
 const getStandardLayout = () => {
-  return config.TPL_NAMES.STANDARD_LAYOUT;
+  const tplNames = config.TPL_NAMES;
+  const index = config.CURRENT;
+  const layout = "StandardFlexLayout";
+  return tplNames.STANDARD_LAYOUT ? tplNames.STANDARD_LAYOUT[index] : layout;
 };
 // BRAND_PRODUCT_TYPE_DATE
 const getTplName = () => {
@@ -233,7 +234,13 @@ const getLanguage = () => {
   const tplNames = config.TPL_NAMES;
   const index = config.CURRENT;
   const languageIndex = config.CURRENT_LANGUAGE;
-  console.log("gulp-config getLanguage", "index:", index, "languageIndex:", languageIndex);
+  console.log(
+    "gulp-config getLanguage",
+    "index:",
+    index,
+    "languageIndex:",
+    languageIndex
+  );
   return tplNames.LANGUAGE[index][languageIndex];
 };
 const geBodyClass = () => {
@@ -245,7 +252,7 @@ const geBodyClass = () => {
 const geXlsxParser = () => {
   const tplNames = config.TPL_NAMES;
   const index = config.CURRENT;
-  return tplNames.XLSX_PARSER[index];
+  return tplNames.XLSX_PARSER ? tplNames.XLSX_PARSER[index] : "";
 };
 const getLanguageVersion = () => {
   return config.CURRENT_VERSION + 1;
@@ -275,7 +282,7 @@ const extendTemplateVars = (obj) => {
   obj.jsCssName = config.DEVELOPMENT
     ? "index.min"
     : "index." + config.UID + ".min";
-  obj.flexSliderCols = getFLexCols();
+  //obj.flexSliderCols = getFLexCols();
   //console.log("extendTemplateVars", "obj:", obj);
   return obj;
 };

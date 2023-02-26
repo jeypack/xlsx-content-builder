@@ -14,6 +14,8 @@ const TPL_NAMES = {
     [1, 1],
     [1, 1],
   ],
+  //@see gulp-config.js -> getFLexCols() - now via XLSXParser ->numSliderCols
+  //TODO: remove in future versions
   FLEX_COLS: [
     [6, 6],
     [6, 6],
@@ -24,10 +26,11 @@ const TPL_NAMES = {
     ["mobile", "mobile"],
     ["mobile", "mobile"],
   ],
+  STANDARD_LAYOUT: ["StandardFlexLayout", "StandardFlexLayout", "StandardFlexLayout"],
   XLSX_PARSER: [
-    XLSX_TYPE_ENUM.P_B_1_1_1_3_FLEX_6,
-    XLSX_TYPE_ENUM.P_B_1_1_1_3_FLEX_6,
-    XLSX_TYPE_ENUM.P_B_1_1_1_3_FLEX_6,
+    XLSX_TYPE_ENUM.PARSER_STD_MODULE,
+    XLSX_TYPE_ENUM.PARSER_STD_MODULE,
+    XLSX_TYPE_ENUM.PARSER_STD_MODULE,
   ],
   CLIENT_VERSION: ["V01", "V01", "V01"],
   DATE: ["230214", "230214", "230214"],

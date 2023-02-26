@@ -11,6 +11,9 @@
     <div class="container items-start gutters-all">
       <div class="col-12">
         <img src="assets/module-1.jpg" alt="{{module1['image-alt'].value | replace('\n', '')}}">
+        {%- if module1.h5 and module1.h5.value -%}
+          <h5>{{module1.h5.value}}</h5>
+        {% endif -%}
         {%- if module1.copy and module1.copy.value -%}
           <p>{{module1.copy.value}}</p>
         {% endif -%}
@@ -23,6 +26,9 @@
     <div class="container items-start gutters-all">
       <div class="col-12">
         <img src="assets/module-2.jpg" alt="{{module2['image-alt'].value | replace('\n', '')}}">
+        {%- if module2.h5 and module2.h5.value -%}
+          <h5>{{module2.h5.value}}</h5>
+        {% endif -%}
         {%- if module2.copy and module2.copy.value -%}
           <p>{{module2.copy.value}}</p>
         {% endif -%}
@@ -35,6 +41,9 @@
     <div class="container items-start gutters-all">
       <div class="col-12">
         <img src="assets/module-3.jpg" alt="{{module3['image-alt'].value | replace('\n', '')}}">
+        {%- if module3.h5 and module3.h5.value -%}
+          <h5>{{module3.h5.value}}</h5>
+        {% endif -%}
         {%- if module3.copy and module3.copy.value -%}
           <p>{{module3.copy.value}}</p>
         {% endif -%}

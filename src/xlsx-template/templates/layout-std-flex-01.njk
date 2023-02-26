@@ -15,13 +15,14 @@
       <script src="{{'./js/' + jsCssName + '.js'}}"></script>
     {%- endblock %}
     {% block script -%}
-      {%- if flexSliderCols === 3 -%}
+    {# flexSliderCols is useless now!!! #}
+      {%- if numSliderCols === 3 -%}
         {%- include "partials/flex-inline-js-3-cols.njk" -%}
-      {%- elif flexSliderCols === 4 -%}
+      {%- elif numSliderCols === 4 -%}
         {%- include "partials/flex-inline-js-4-cols.njk" -%}
-      {%- elif flexSliderCols === 5 -%}
+      {%- elif numSliderCols === 5 -%}
         {%- include "partials/flex-inline-js-5-cols.njk" -%}
-      {%- elif flexSliderCols === 6 -%}
+      {%- elif numSliderCols === 6 -%}
         {%- include "partials/flex-inline-js-6-cols.njk" -%}
       {%- endif -%}
     {%- endblock -%}

@@ -338,7 +338,8 @@ const buildNunjucks = () => {
             //console.log("buildNunjucks tplValues:", tplValues);
             //console.log("buildNunjucks tplValues.module2:", tplValues.module2);
             //console.log("buildNunjucks tplValues.module3:", tplValues.module3);
-            //console.log("buildNunjucks tplValues.module4:", tplValues.module4);
+            console.log("buildNunjucks tplValues.module4:", tplValues.module4);
+            //console.log("buildNunjucks tplValues.module5.table:", tplValues.module5.table);
             return tplValues;
           } catch (error) {
             console.log("*");

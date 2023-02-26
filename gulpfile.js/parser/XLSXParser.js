@@ -6,9 +6,14 @@ const { col } = require("../console-col");
  * Created: 20.07.2022
  */
 class XLSXParser {
+  static MOD_TYPE_STD = "STD";
+  static MOD_TYPE_ARRAY = "ARRAY";
+  static MOD_TYPE_TABLE = "TABLE";
+
   constructor(template) {
     this._template = template;
     this._elems = {};
+    this.captionStartNums = [];
     this._failed = 0;
     console.log("XLSXParser constructor");
   }
@@ -29,12 +34,35 @@ class XLSXParser {
     this._template = value;
   }
 
-  get parsed() {
-    return this._elems;
+  get captionStartNums() {
+    return this._captionStartNums;
   }
 
-  set parsed(value) {
-    throw new TypeError("XLSXParser - Attempted to assign to readonly property 'parsed'.");
+  set captionStartNums(value) {
+    this._captionStartNums = value;
+  }
+
+  addModules() {
+    const elems = this._elems;
+    const modules = [];
+    for (let key in elems) {
+      if (elems.hasOwnProperty(key) && key.indexOf("module") !== -1) {
+        let elem = elems[key];
+        let type = XLSXParser.MOD_TYPE_STD;
+        //moduleTypeSTD moduleTypeARRAY moduleTypeTABLE
+        if (elem.hasOwnProperty('moduleTypeARRAY')) {
+          type = XLSXParser.MOD_TYPE_ARRAY;
+        }
+        else if (elem.hasOwnProperty('moduleTypeTABLE')) {
+          type = XLSXParser.MOD_TYPE_TABLE;
+          elems.numSliderCols = elem.table[0].length - 1;
+        }
+        //add to modules
+        modules.push({ name: key, id: modules.length + 1, type: type, elem: elem });
+      }
+    }
+    elems.modules = modules;
+    return modules;
   }
 
   execute() {
@@ -106,7 +134,7 @@ class XLSXParser {
     } catch (error) {
       //console.log('\x1b[36m%s\x1b[0m', 'I am cyan');
       this._failed++;
-      console.log(
+      /* console.log(
         col.dim,
         "** setFieldValue",
         col.reset,
@@ -120,7 +148,7 @@ class XLSXParser {
         col.reset,
         this.failed,
         col.reset
-      );
+      ); */
     }
     return obj;
   }
