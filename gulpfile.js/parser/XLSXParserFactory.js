@@ -1,12 +1,5 @@
 const { XLSX_TYPE_ENUM } = require("./XLSXParserEnum");
 const { XLSXParser } = require("./XLSXParser");
-const { XLSX1441f3 } = require("./XLSX-1-4-4-1-f-3");
-const { XLSX1441f4 } = require("./XLSX-1-4-4-1-f-4");
-const { XLSX1331f4 } = require("./XLSX-1-3-3-1-f-4");
-const { XLSX1144f6 } = require("./XLSX-1-1-4-4-f-6");
-const { XLSX1113f6 } = require("./XLSX-1-1-1-3-f-6");
-const { XLSXB1113f6 } = require("./XLSX-B-1-1-1-3-f-6");
-const { XLSXM5FS6 } = require("./XLSX-M5-FS6");
 const { XLSXStdModuleParser } = require("./XLSXStdModuleParser");
 
 /**
@@ -15,6 +8,9 @@ const { XLSXStdModuleParser } = require("./XLSXStdModuleParser");
  * Created: 20.07.2022
  */
 module.exports.XLSXParserFactory = class XLSXParserFactory {
+
+  static parser = null;
+
   /**
    * Static factory method
    * @param {String} type Enum xlsx parser type
@@ -24,36 +20,15 @@ module.exports.XLSXParserFactory = class XLSXParserFactory {
   static create(type, template) {
     console.log("");
     console.log("XLSXParserFactory.create", "type:", type);
-    let parser = null;
+    //
     switch (type) {
       case XLSX_TYPE_ENUM.PARSER_STD_MODULE:
-        parser = new XLSXStdModuleParser(template);
-        break;
-      case XLSX_TYPE_ENUM.P_M5_FLEX_6:
-        parser = new XLSXM5FS6(template);
-        break;
-      case XLSX_TYPE_ENUM.P_B_1_1_1_3_FLEX_6:
-        parser = new XLSXB1113f6(template);
-        break;
-      case XLSX_TYPE_ENUM.P_1_1_1_3_FLEX_6:
-        parser = new XLSX1113f6(template);
-        break;
-      case XLSX_TYPE_ENUM.P_1_4_4_1_FLEX_3:
-        parser = new XLSX1441f3(template);
-        break;
-      case XLSX_TYPE_ENUM.P_1_4_4_1_FLEX_4:
-        parser = new XLSX1441f4(template);
-        break;
-      case XLSX_TYPE_ENUM.P_1_3_3_1_FLEX_4:
-        parser = new XLSX1331f4(template);
-        break;
-      case XLSX_TYPE_ENUM.P_1_1_4_4_FLEX_6:
-        parser = new XLSX1144f6(template);
+        XLSXParserFactory.parser = new XLSXStdModuleParser(template);
         break;
       default:
-        parser = new XLSXParser(template);
+        XLSXParserFactory.parser = new XLSXParser(template);
         break;
     }
-    return parser.execute();
+    return XLSXParserFactory.parser.execute();
   }
 };

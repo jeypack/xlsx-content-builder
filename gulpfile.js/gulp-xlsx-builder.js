@@ -1,6 +1,6 @@
 /**
- * GULP ALZA RESPONSIVE CONTENT BUILDER TOOL
- * AUTHOR: J. Pfeifer (c) 2021-2022
+ * GULP XLSX RESPONSIVE CONTENT BUILDER TOOL
+ * AUTHOR: J. Pfeifer (c) 2021-2023
  */
 const { col } = require("./console-col");
 //const fs = require("fs");
@@ -338,8 +338,9 @@ const buildNunjucks = () => {
             //console.log("buildNunjucks tplValues:", tplValues);
             //console.log("buildNunjucks tplValues.module2:", tplValues.module2);
             //console.log("buildNunjucks tplValues.module3:", tplValues.module3);
-            console.log("buildNunjucks tplValues.module4:", tplValues.module4);
-            //console.log("buildNunjucks tplValues.module5.table:", tplValues.module5.table);
+            //let length = tplValues.modules.length;
+            //console.log("buildNunjucks tplValues.module4:", tplValues.modules[length - 2]);
+            //console.log("buildNunjucks tplValues.module5.table:", tplValues.modules[length - 1].table);
             return tplValues;
           } catch (error) {
             console.log("*");
@@ -695,8 +696,8 @@ const makeImagesFolderType = (cb) => {
 
   //const path = config.SRC_PATH + '_images/' + folder + '/' + lang + '/' + type + '/';
   const path = config.SRC_PATH + "_images/" + folder + "/" + type + "/";
-  let log = "makeImages " + col.dim + " path: " + col.reset + path;
-  console.log(log);
+  let log = "makeImagesFolderType " + col.dim + " path: " + col.reset + path;
+  console.log(log, "type:", type);
 
   //VERION-3
   const stream = src([path + "**/**/*.*"])
@@ -725,10 +726,11 @@ const makeImagesFolderType = (cb) => {
         //get first part
         const index = partIndex.split("_").shift();
         const language = parts[parts.length - 3];
-        //console.log("parts:", parts.join("/"));
-        //console.log("data:", "partIndex:", partIndex, "startIndex:", startIndex, "index:", index, "language:", language);
+        console.log("parts:", parts.join("/"));
+        console.log("data:", "partIndex:", partIndex, "startIndex:", startIndex, "index:", index, "language:", language);
         const obj = {
           index: partIndex.indexOf("Banner") !== -1 ? -1 : parseInt(index, 10),
+          type: partIndex.indexOf("Feature") !== -1 ? "feature" : partIndex.indexOf("Banner") !== -1 ? "banner" : "product",
           language: parts[parts.length - 3],
           module: Number(parts[parts.length - 2].split("_").shift()),
           dirname: parts[0] + "_" + type + "_" + language + "_" + date,
@@ -736,11 +738,11 @@ const makeImagesFolderType = (cb) => {
         };
         //log = "makeImages obj " + JSON.stringify(obj);
         //console.log(log);
-        /* console.log("::");
+        console.log("::");
         log = "makeImages parts " + parts.join(', ');
         console.log(log);
         log = "makeImages obj " + JSON.stringify(obj);
-        console.log(log); */
+        console.log(log);
         return obj;
       })
     )
@@ -769,7 +771,7 @@ const makeImagesFolderType = (cb) => {
         let basename = "module-" + file.data.module;
         //check for feature or
         if (file.data.index !== -1) {
-          if (file.data.module === 5) {
+          if (file.data.type === "product") {
             basename += "-product-" + file.data.index;
           } else {
             basename += "-feature-" + file.data.index;
@@ -936,7 +938,9 @@ exports.images = series(
   next,
   makeImagesWithoutType,
   next,
-  makeImagesWithoutType
+  makeImagesWithoutType,
+  next,
+  makeImagesWithoutType,
 );
 
 exports.imagesFolderType = series(
@@ -952,7 +956,15 @@ exports.imagesFolderType = series(
   next,
   makeImagesFolderType,
   next,
-  makeImagesFolderType
+  makeImagesFolderType,
+  next,
+  makeImagesFolderType,
+  next,
+  makeImagesFolderType,
+  next,
+  makeImagesFolderType,
+  next,
+  makeImagesFolderType,
 );
 
 //unused
@@ -971,6 +983,14 @@ exports.dev = series(
   setStartTemplate,
   buildTemplate,
   //repeat this until end of templates
+  next,
+  buildTemplate,
+  next,
+  buildTemplate,
+  next,
+  buildTemplate,
+  next,
+  buildTemplate,
   next,
   buildTemplate,
   next,

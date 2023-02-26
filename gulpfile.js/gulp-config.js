@@ -31,7 +31,7 @@ const config = {
   JPEG_QUALITY: 82,
   EXPORT_LENGTH: 4, //unused
   //change this for development testing
-  CURRENT: 0,
+  CURRENT: 4,
   CURRENT_LANGUAGE: 0,
   CURRENT_VERSION: 0,
   CURRENT_TPL_VERSION: "LANG", //@see getTplNameFunction
