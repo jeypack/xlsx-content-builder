@@ -5,33 +5,35 @@
   {% for module in modules %}
     {% set elem = module.elem %}
     {# MODULE 'STD' WITH HEADLINE AND FULLSIZE IMAGE PLUS ALT TEXT #}
-    {% if module.type === "STD" %}
-      {% if elem.headline and elem.headline.value %}
+    {%- if module.type === "STD" -%}
+      {%- if elem.headline and elem.headline.value %}
         <div class="container items-start gutters-all">
           <div class="col-12">
-            <h4>{{elem.headline.value}}</h4>
+            <h4>{{elem.headline.value | trim}}</h4>
           </div>
         </div>
       {% endif -%}
       <div class="container items-start gutters-all">
         <div class="col-12">
           <img src="assets/module-{{module.id}}.jpg" alt="{{elem['image-alt'].value | replace('\n', '')}}">
-          {%- if elem.h5 and elem.h5.value -%}
-            <h5>{{elem.h5.value}}</h5>
+          {%- if elem.h5 and elem.h5.value %}
+            <h5>{{elem.h5.value | trim}}</h5>
           {% endif -%}
-          {%- if elem.copy and elem.copy.value -%}
+          {%- if elem.copy and elem.copy.value %}
             <p>{{elem.copy.value}}</p>
           {% endif -%}
         </div>
       </div>
     {# MODULE 'ARRAY' WITH 3-4 COLS IMAGE HEADLINE COPY #}
-    {% elif module.type === "ARRAY" %}
+    {%- elif module.type === "ARRAY" -%}
       <div class="container items-start gutters-all">
-        <div class="col-12">
-          <h4>{{elem.h4.value}}</h4>
-        </div>
+        {%- if elem.headline and elem.headline.value %}
+          <div class="col-12">
+            <h4>{{elem.headline.value | trim}}</h4>
+          </div>
+        {% endif -%}
         {# Loop through all the headline and copy #}
-        {% for item in elem.copy -%}
+        {%- for item in elem.copy -%}
           <div class="col-sm-{{3 if loop.length === 4 else 4 }} col-xs-6 col-12">
             {%- if elem['image-alt'] and elem['image-alt'][loop.index0] -%}
               <img src="assets/module-{{module.id}}-feature-{{loop.index}}.jpg" alt="{{elem['image-alt'][loop.index0].value | replace('\n', '')}}">
@@ -39,7 +41,7 @@
               <img src="assets/module-{{module.id}}-feature-{{loop.index}}.jpg">
             {% endif -%}
             {%- if elem.h5 and elem.h5[loop.index0] -%}
-              <h5>{{elem.h5[loop.index0].value}}</h5>
+              <h5>{{elem.h5[loop.index0].value | trim}}</h5>
             {% endif -%}
             {%- if elem.copy[loop.index0].spl -%}
               <p>{{elem.copy[loop.index0].spl[0]}}</p>
@@ -51,11 +53,11 @@
         {%- endfor -%}
       </div>
     {# MODULE 'TABLE' SLIDER TABLE PART #}
-    {% elif module.type === "TABLE" %}
+    {%- elif module.type === "TABLE" -%}
       <div class="container items-start gutters-all">
         <div class="col-12">
           {%- if elem.headline -%}
-            <h4>{{elem.headline.value}}</h4>
+            <h4>{{elem.headline.value | trim}}</h4>
           {% endif -%}
         </div>
       </div>
@@ -80,7 +82,7 @@
         <div class="table text-center">
           {# first table row with images plus logo - last one is first one #}
           <div class="row items-center">
-            {% for i in range(0, numSliderCols) -%}
+            {%- for i in range(0, numSliderCols) -%}
               <div class="col order-{{loop.index}}">
                 <img src="assets/module-{{module.id}}-product-{{loop.index}}.jpg">
               </div>
@@ -93,7 +95,7 @@
           {% for row in elem.table -%}
             {% set index = loop.index0 %}
             <div class="row items-stretch border-bottom">
-              {% for i in range(0, numSliderCols) -%}
+              {%- for i in range(0, numSliderCols) -%}
                 <div class="col padding-bottom align-center order-{{loop.index}}">
                   {%- if index === 0 %}
                     <h5>{{row[i + 1].value | replace('\n', '')}}</h5>
@@ -113,7 +115,7 @@
           {% endfor -%}
         </div>
       </div>
-    {% endif %}
+    {%- endif -%}
   {% endfor %}
 
 {%- endblock %}

@@ -2,7 +2,7 @@ const { col } = require("../console-col");
 
 /**
  * XLSXParser XLSXParser.js
- * AUTHOR: J. Pfeifer (c) 2022
+ * AUTHOR: J. Pfeifer (c) 2022-2023
  * Created: 20.07.2022
  */
 class XLSXParser {
@@ -13,23 +13,22 @@ class XLSXParser {
   constructor(template) {
     this._template = template;
     this._elems = {};
-    this.captionStartNums = [];
+    this._captionStartNums = [];
     this._failed = 0;
-    console.log("XLSXParser constructor");
   }
 
   get failed() {
     return this._failed;
   }
-
   set failed(value) {
-    throw new TypeError("XLSXParser - Attempted to assign to readonly property 'failed'.");
+    throw new TypeError(
+      "XLSXParser - Attempted to assign to readonly property 'failed'."
+    );
   }
 
   get template() {
     return this._template;
   }
-
   set template(value) {
     this._template = value;
   }
@@ -37,11 +36,16 @@ class XLSXParser {
   get captionStartNums() {
     return this._captionStartNums;
   }
-
   set captionStartNums(value) {
-    this._captionStartNums = value;
+    throw new TypeError(
+      "XLSXParser - Attempted to assign to readonly property 'captionStartNums'."
+    );
   }
 
+  /**
+   * Template method - subclasses should call not override!
+   * @returns An array of all modules listed by key name, id and type
+   */
   addModules() {
     const elems = this._elems;
     const modules = [];
@@ -50,21 +54,29 @@ class XLSXParser {
         let elem = elems[key];
         let type = XLSXParser.MOD_TYPE_STD;
         //moduleTypeSTD moduleTypeARRAY moduleTypeTABLE
-        if (elem.hasOwnProperty('moduleTypeARRAY')) {
+        if (elem.hasOwnProperty("moduleTypeARRAY")) {
           type = XLSXParser.MOD_TYPE_ARRAY;
-        }
-        else if (elem.hasOwnProperty('moduleTypeTABLE')) {
+        } else if (elem.hasOwnProperty("moduleTypeTABLE")) {
           type = XLSXParser.MOD_TYPE_TABLE;
           elems.numSliderCols = elem.table[0].length - 1;
         }
         //add to modules
-        modules.push({ name: key, id: modules.length + 1, type: type, elem: elem });
+        modules.push({
+          name: key,
+          id: modules.length + 1,
+          type: type,
+          elem: elem,
+        });
       }
     }
     elems.modules = modules;
     return modules;
   }
 
+  /**
+   * Public Template method
+   * @returns An parsed object from xlsx and all modules listed by key name, id and type
+   */
   execute() {
     //this.value = value;
     this._parse();
@@ -72,8 +84,8 @@ class XLSXParser {
   }
 
   /**
-   * Abstract member with default content.
-   * Let subclasses override this protected member function.
+   * Abstract Protected member with default content.
+   * Leave this to subclasses to override this member function.
    */
   _parse() {
     //we set a default value

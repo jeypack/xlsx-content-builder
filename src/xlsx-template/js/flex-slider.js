@@ -1,7 +1,7 @@
 /**
  * Flex Slider
  * Author   : J. Pfeifer @egplusww.com
- * Version  : 1.0.0
+ * Version  : 1.0.1
  */
 (function () {
 
@@ -10,14 +10,14 @@
   var p, isIOS = (/iPad|iPhone|iPod/.test(navigator.userAgent));
 
   //extend Math
-  Math.distance = function (ax, ay, bx, by) {
+  function distance(ax, ay, bx, by) {
     var vx = bx - ax,
       vy = by - ay;
     if (vx !== 0 || vy !== 0) {
       return Math.sqrt(vx * vx + vy * vy);
     }
     return 0.001;
-  };
+  }
 
   function extendOptions(options, props) {
     var name;
@@ -242,7 +242,7 @@
     var opts = this.options;
     opts.x = e.clientX || e.touches[0].clientX;
     opts.y = e.clientY || e.touches[0].clientY;
-    opts.distance = Math.distance(opts.origX, opts.origY, opts.x, opts.y);
+    opts.distance = distance(opts.origX, opts.origY, opts.x, opts.y);
     opts.distanceY = Math.abs(opts.y - opts.origY);
     if (opts.x < opts.origX) {
       opts.direction = 'left';
@@ -259,7 +259,7 @@
     var opts = this.options;
     document.body.removeEventListener(opts.EVENT_UP, this.handlePointerUp);
     this.table.removeEventListener(opts.EVENT_MOVE, this.handlePointerMove);
-    opts.distance = Math.distance(opts.origX, opts.origY, opts.x, opts.y);
+    opts.distance = distance(opts.origX, opts.origY, opts.x, opts.y);
     opts.distanceY = Math.abs(opts.y - opts.origY);
     if (opts.distanceY < opts.minDistanceYToCancel && opts.distance > opts.minDistanceToSwipe) {
       if (opts.direction === 'left') {
@@ -381,10 +381,12 @@
       //breakpoint behavior
       winWidth = window.innerWidth,
       //our main container inside celek with padding left and right
-      availableWidth = document.body.querySelector('#celek > .main').clientWidth,
+      availableWidth = 1,
       colLogoWidth = this.table.querySelector('.col-logo').clientWidth,
       colSpace = availableWidth - colLogoWidth - opts.gutters * 2;
-
+    if (document.body.querySelector('#celek > .main')) {
+      document.body.querySelector('#celek > .main').clientWidth;
+    }
     this.visibleCols = 1;
 
     for (i = 0; i < mediaLength; i++) {
@@ -392,10 +394,12 @@
         break;
       }
     }
-    media = opts.media[i - 1];
+    media = opts.media[mediaLength - 1];
+    //console.log("FlexSlider", "setSize", "opts.media:", opts.media);
+    //console.log("FlexSlider", "setSize", "media:", media);
+    //console.log("FlexSlider", "setSize", "this.currentMedia:", this.currentMedia);
     this.visibleCols = media.cols;
 
-    //console.log("FlexSlider", "setSize", "this.currentMedia:", this.currentMedia);
     //console.log("FlexSlider", "setSize", "media:", media);
     colWidth = Math.ceil(colSpace / this.visibleCols);
     highestMedia = opts.media[mediaLength - 1];

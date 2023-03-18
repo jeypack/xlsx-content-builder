@@ -36,8 +36,8 @@ class XLSXStdModuleParser extends XLSXParser {
     let startNum = this.captionStartNums[index];
     let module = "module" + (index + 1);
     this._setFieldValue(module, "BLANK", "moduleTypeSTD");
-    console.log(" ");
-    console.log("_setStdModule", "module", module);
+    //console.log(" ");
+    //console.log("_setStdModule", "module", module);
     /* 
     Caption
     Image
@@ -66,8 +66,8 @@ class XLSXStdModuleParser extends XLSXParser {
   _setArrayModule(index) {
     let startNum = this.captionStartNums[index];
     let module = "module" + (index + 1);
-    console.log(" ");
-    console.log("_setArrayModule", "module:", module);
+    //console.log(" ");
+    //console.log("_setArrayModule", "module:", module);
     this._setFieldValue(module, "BLANK", "moduleTypeARRAY");
     this._setFieldValue(module, "Y" + startNum, "headline");
     let colIDs = ["Y", "AC", "AG", "AK", "AN"];
@@ -85,7 +85,7 @@ class XLSXStdModuleParser extends XLSXParser {
         break;
       }
     }
-    console.log("_setArrayModule", "objIndicies:", objIndicies);
+    //console.log("_setArrayModule", "objIndicies:", objIndicies);
     for (let i = 0, l = colIDs.length; i < l; i++) {
       if (objIndicies.alt) {
         this._setFieldValue(
@@ -107,7 +107,14 @@ class XLSXStdModuleParser extends XLSXParser {
         "copy",
         "ARRAY"
       );
-      console.log("_setArrayModule", i, ":", colIDs[i] + (objIndicies.header + 1), "obj:", obj);
+      /* console.log(
+        "_setArrayModule",
+        i,
+        ":",
+        colIDs[i] + (objIndicies.header + 1),
+        "obj:",
+        obj
+      ); */
     }
   }
 
@@ -115,8 +122,8 @@ class XLSXStdModuleParser extends XLSXParser {
     //let startNum = this.captionStartNums[index] + 3;
     let startNum = this.captionStartNums[index];
     let module = "module" + (index + 1);
-    console.log(" ");
-    console.log("_setTableModule ", "module:", module);
+    //console.log(" ");
+    //console.log("_setTableModule ", "module:", module);
     this._setFieldValue(module, "BLANK", "moduleTypeTABLE");
     this._setFieldValue(module, "Y" + startNum, "headline");
     // module table
@@ -141,7 +148,11 @@ class XLSXStdModuleParser extends XLSXParser {
     let colIDs = ["Y", "AC", "AE", "AG", "AI", "AK", "AM", "AN", "AO"];
     //get 'Title' row values to find out num cols
     for (let i = 1, l = colIDs.length; i < l; i++) {
-      obj = this._setFieldValue("check", colIDs[i] + objIndicies.title, "title");
+      obj = this._setFieldValue(
+        "check",
+        colIDs[i] + objIndicies.title,
+        "title"
+      );
       /* console.log(
         "_setTableModule",
         "i:",
@@ -187,10 +198,11 @@ class XLSXStdModuleParser extends XLSXParser {
     }
   }
 
+  // overridden class member
   _parse() {
     //let subclasses override this protected member function
     console.log(
-      "XLSXStdModuleParser extends XLSXParser - call protected method _parse"
+      "XLSXStdModuleParser extends XLSXParser - overridden method _parse"
     );
     //
     //get module start position via 'caption' field

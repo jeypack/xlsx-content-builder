@@ -1,3 +1,5 @@
+
+//const { series, parallel } = require("gulp");
 const { XLSX_TYPE_ENUM } = require("../parser/XLSXParserEnum");
 
 const TPL_NAMES = {
@@ -38,7 +40,7 @@ const TPL_NAMES = {
   DATE: ["220324", "220324"],
   SIZE: "1195xAUTO",
   PREFIX: "HTML5",
-  SUFFIX: "",
+  SUFFIX: "web_2022_10",
 };
 
 module.exports.TPL_NAMES = TPL_NAMES;
