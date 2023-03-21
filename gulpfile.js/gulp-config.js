@@ -1,7 +1,6 @@
 const fs = require("fs");
-//const { XLSX_TYPE_ENUM } = require("./parser/XLSXParserEnum");
-//const { TPL_NAMES } = require("./config/OralB-Genesis5");
-const { TPL_NAMES } = require("./config/P8-STD");
+const { TPL_NAMES } = require("./config/OralB-Genesis5");
+//const { TPL_NAMES } = require("./config/P8-STD");
 //const { TPL_NAMES } = require("./config/MOJITO-BABYDRY");
 //const { TPL_NAMES } = require("./config/P-MATISSE-BABYDRY");
 //const { TPL_NAMES } = require("./config/P-PANDORA");
@@ -15,6 +14,10 @@ const TPL_ENUM = {
 };
 
 const SRC_PATH = "./src/xlsx-template/";
+//here we break for 'PRODUCT', that could be more than one…
+//TODO: get 'TEMPLATE_FOLDER' and 'TEMPLATE_SRC' via functions
+const BRAND = TPL_NAMES.BRAND[0];
+const PRODUCT = TPL_NAMES.PRODUCT[0];
 const config = {
   UID: 0,
   DEVELOPMENT: true,
@@ -23,11 +26,20 @@ const config = {
   //PATH_INCLUDES_SASS: ['bower_components/juiced/sass/'],
   HTDOCS_PATH: "/Applications/MAMP/htdocs/",
   SRC_PATH: SRC_PATH,
+  SRC_PATH_BUILD_IGNORES: [
+    "!" + SRC_PATH + "**/_images/**",
+    "!" + SRC_PATH + "**/pages/**",
+    "!" + SRC_PATH + "**/scss/**",
+    "!" + SRC_PATH + "**/js/**",
+    "!" + SRC_PATH + "**/xlsx/**",
+    "!" + SRC_PATH + "**/templates/**",
+  ],
   SRC_VENDOR: "./src/vendor/",
   DEV_FOLDER: "./_temp/",
   TEST_FOLDER: "./_test/",
   BUILD_FOLDER: "./_build/",
-  TEMPLATE_FOLDER: SRC_PATH + TPL_NAMES.BRAND[0] + "_" + TPL_NAMES.PRODUCT[0],
+  TEMPLATE_SRC: SRC_PATH + BRAND + "_" + PRODUCT,
+  OUTPUT_FOLDERS: [],
   // PREFIX_BRAND_PRODUCT_TYPE_LANGUAGE_VERSION_SIZE_CLIENT_VERSION_DATE
   //e.g. HTML5_OralB_Genesis5_KIDS-Lightyear_HU_V1_1195xAUTO_V01_220626
   TPL_NAMES: TPL_NAMES,
@@ -37,7 +49,7 @@ const config = {
   //change this for development testing
   CURRENT: 0, // TYPE
   CURRENT_LANGUAGE: 0,
-  CURRENT_VERSION: 0,
+  CURRENT_SUJET: 0,
   CURRENT_TPL_VERSION: "LANG", //@see getTplNameFunction
   destination: "./_temp/",
 };
@@ -55,6 +67,38 @@ const directoryContains = (path, doneFn, errorFn) => {
       }
     }
   });
+};
+
+//e.g.: Pampers_P8-Std_Size-0-2_CZ_1_220324
+const getOutputNameByTemplate = (name) => {
+  //console.log("getOutputNameByTemplate", "name:", name);
+  //look over TPL_NAMES {object}
+  let current = 0;
+  let currentLanguage = 0;
+  const parts = name.split("_");
+  const type = parts[2];
+  let language = parts.slice(-3)[0];
+  //fallback if…
+  //…we got name without version/sujet
+  if (parts.length === 5) {
+    //e.g.: Pampers_P8-Std_Size-0-2_SK_220324
+    language = parts.slice(-2)[0];
+  }
+  //BRAND PRODUCT TYPE LANGUAGE VERSION CLIENT_VERSION DATE 
+  for (let i = 0, l = TPL_NAMES.TYPE.length; i < l; i++) {
+    if (TPL_NAMES.TYPE[i] === type) {
+      current = i;
+      break;
+    }
+  }
+  //search inside 2 dimensional lang array
+  for (let i = 0, l = TPL_NAMES.LANGUAGE[current].length; i < l; i++) {
+    if (TPL_NAMES.LANGUAGE[current][i] === language) {
+      currentLanguage = i;
+      break;
+    }
+  }
+  return getOutputName(current, currentLanguage);
 };
 
 const getTplNameFunction = () => {
@@ -126,7 +170,7 @@ const getTplVersionName = () => {
   const tplNames = config.TPL_NAMES;
   const index = config.CURRENT;
   const languageIndex = config.CURRENT_LANGUAGE;
-  const versionIndex = config.CURRENT_VERSION;
+  const sujetIndex = config.CURRENT_SUJET;
   const name =
     tplNames.BRAND[index] +
     "_" +
@@ -134,7 +178,7 @@ const getTplVersionName = () => {
     "_" +
     tplNames.TYPE[index] +
     "_" +
-    (versionIndex + 1) +
+    (sujetIndex + 1) +
     "_" +
     tplNames.DATE[index];
   //console.log("getTplVersionName", "NAME:", name);
@@ -145,7 +189,7 @@ const getTplLangVersionName = () => {
   const tplNames = config.TPL_NAMES;
   const index = config.CURRENT;
   const languageIndex = config.CURRENT_LANGUAGE;
-  const versionIndex = config.CURRENT_VERSION;
+  const sujetIndex = config.CURRENT_SUJET;
   const name =
     tplNames.BRAND[index] +
     "_" +
@@ -155,7 +199,7 @@ const getTplLangVersionName = () => {
     "_" +
     tplNames.LANGUAGE[index][languageIndex] +
     "_" +
-    (versionIndex + 1) +
+    (sujetIndex + 1) +
     "_" +
     tplNames.DATE[index];
   console.log("getTplLangVersionName", "NAME:", name);
@@ -179,7 +223,7 @@ const getXLSXName = () => {
   const tplNames = config.TPL_NAMES;
   const index = config.CURRENT;
   const languageIndex = config.CURRENT_LANGUAGE;
-  const versionIndex = config.CURRENT_VERSION;
+  const sujetIndex = config.CURRENT_SUJET;
   const name =
     tplNames.BRAND[index] +
     "_" +
@@ -189,21 +233,22 @@ const getXLSXName = () => {
     "_" +
     tplNames.LANGUAGE[index][languageIndex] +
     "_" +
-    (versionIndex + 1) +
+    (sujetIndex + 1) +
     "_" +
     tplNames.DATE[index];
   //console.log("getXLSXName", "NAME:", name);
   return name;
 };
 //PREFIX_BRAND_PRODUCT_TYPE_LANGUAGE_VERSION_SIZE_CLIENT_VERSION_DATE
-const getOutputName = () => {
+// 3 overloads
+const getOutputName = (index, languageIndex, sujetIndex) => {
   //_web_2023_03
   //config.DEVELOPMENT
   //tplNames.SUFFIX
   const tplNames = config.TPL_NAMES;
-  const index = config.CURRENT;
-  const languageIndex = config.CURRENT_LANGUAGE;
-  const versionIndex = config.CURRENT_VERSION;
+  index = typeof index === 'number' ? index : config.CURRENT;
+  languageIndex = typeof languageIndex === 'number' ? languageIndex : config.CURRENT_LANGUAGE;
+  sujetIndex = typeof sujetIndex === 'number' ? sujetIndex : config.CURRENT_SUJET;
   let name = "";
   if (config.DEVELOPMENT) {
     name =
@@ -218,8 +263,8 @@ const getOutputName = () => {
       tplNames.TYPE[index] +
       "_" +
       tplNames.LANGUAGE[index][languageIndex] +
-      "_" +
-      (versionIndex + 1) +
+      /* "_" +
+      (sujetIndex + 1) + */
       "_" +
       tplNames.SIZE +
       tplNames.CLIENT_VERSION[index] +
@@ -236,8 +281,8 @@ const getOutputName = () => {
       tplNames.TYPE[index] +
       "_" +
       tplNames.LANGUAGE[index][languageIndex] +
-      "_" +
-      (versionIndex + 1) +
+      /* "_" +
+      (sujetIndex + 1) + */
       "_" +
       tplNames.SIZE +
       tplNames.CLIENT_VERSION[index] +
@@ -284,7 +329,7 @@ const geXlsxParser = () => {
   return tplNames.XLSX_PARSER ? tplNames.XLSX_PARSER[index] : "";
 };
 const getLanguageVersion = () => {
-  return config.CURRENT_VERSION + 1;
+  return config.CURRENT_SUJET + 1;
 };
 const getFLexCols = () => {
   const tplNames = config.TPL_NAMES;
@@ -326,11 +371,11 @@ const nextIndex = () => {
   const versionLength = tpls.VERSION[config.CURRENT][config.CURRENT_LANGUAGE];
   const nextIndex = config.CURRENT + 1;
   const nextLanguageIndex = config.CURRENT_LANGUAGE + 1;
-  const nextVersionIndex = config.CURRENT_VERSION + 1;
+  const nextVersionIndex = config.CURRENT_SUJET + 1;
   if (nextVersionIndex < versionLength) {
-    config.CURRENT_VERSION = nextVersionIndex;
+    config.CURRENT_SUJET = nextVersionIndex;
   } else {
-    config.CURRENT_VERSION = 0;
+    config.CURRENT_SUJET = 0;
     if (nextLanguageIndex < languageLength) {
       config.CURRENT_LANGUAGE = nextLanguageIndex;
     } else {
@@ -352,14 +397,14 @@ const printIndex = () => {
     config.CURRENT,
     "CURRENT_LANGUAGE:",
     config.CURRENT_LANGUAGE,
-    "CURRENT_VERSION:",
-    config.CURRENT_VERSION
+    "CURRENT_SUJET:",
+    config.CURRENT_SUJET
   );
 };
 const resetIndex = () => {
   config.CURRENT = 0;
   config.CURRENT_LANGUAGE = 0;
-  config.CURRENT_VERSION = 0;
+  config.CURRENT_SUJET = 0;
   printIndex();
 };
 
@@ -377,6 +422,7 @@ module.exports.getTplLangVersionName = getTplLangVersionName;
 module.exports.getZipName = getZipName;
 module.exports.getXLSXName = getXLSXName;
 module.exports.getOutputName = getOutputName;
+module.exports.getOutputNameByTemplate = getOutputNameByTemplate;
 module.exports.getType = getType;
 module.exports.getDate = getDate;
 module.exports.getLanguage = getLanguage;

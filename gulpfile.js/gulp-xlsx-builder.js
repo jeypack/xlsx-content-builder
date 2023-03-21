@@ -28,7 +28,8 @@ const del = require("del");
 const { v4: uuidv4 } = require("uuid");
 const XLSX = require("xlsx");
 const zipper = require("./gulp-zipper");
-
+//inline plugin
+const through2 = require("through2");
 const {
   config,
   directoryContains,
@@ -38,11 +39,13 @@ const {
   getZipName,
   getXLSXName,
   getOutputName,
+  getOutputNameByTemplate,
   geXlsxParser,
   extendTemplateVars,
   nextIndex,
   resetIndex,
-  printIndex,
+  //printIndex,
+  getVersion,
   getDate,
   getType,
   getLanguage,
@@ -51,6 +54,7 @@ const {
 
 const { XLSX_TYPE_ENUM } = require("./parser/XLSXParserEnum");
 const { XLSXParserFactory } = require("./parser/XLSXParserFactory");
+const { obj } = require("through2");
 
 // GULP ENABLED
 const enableDevelopment = (cb) => {
@@ -296,9 +300,6 @@ const buildNunjucks = () => {
   //get nunjucks pages via name (.njk)
   const pageName = getTplName();
   const templateFolder = getTplFolder() + "/";
-  /* const getTplNameFunc = getTplNameFunction();
-  const templateName = getTplNameFunc() + "/";
-  const templateFolder = getTplFolder() + "/"; */
   //config.SRC_PATH + templateFolder + templateName + "index.scss"
   const source = config.HAS_NUNJUCK_TPL
     ? config.SRC_PATH + "pages/" + pageName
@@ -827,173 +828,169 @@ const makeImagesFolderType = (cb) => {
   //cb();
 };
 
-const moveDefaultScss = (cb) => {
-  const folder = getTplFolder();
-  const lang = getLanguage();
-  const type = getType();
-  const date = getDate();
+//
+//
+function getOutputData(path) {
+  const templateFolder = path.split("/").slice(-2)[0];
+  const folder = path.split("/").slice(-1)[0];
+  let parts = folder.split("_");
+  const brand = parts[0];
+  const product = parts[1];
+  const type = parts[2];
+  const language = parts.slice(-2)[0];
+  parts.splice(parts.length - 1, 0, "1");
+  const xlsxName = parts.join("_");
+  const output = templateFolder + "/" + getOutputNameByTemplate(xlsxName);
+  return {
+    bodyClass: "mobile",
+    jsCssName: "index.min",
+    brand: brand,
+    product: product,
+    type: type,
+    path: path,
+    template: folder,
+    templateFolder: templateFolder,
+    title: xlsxName,
+    language: language,
+    output: output,
+    version: getVersion(),
+  };
+}
 
-  //return src([config.SRC_PATH + 'scss/index-default.scss'])
-  return src([
-    config.SRC_PATH + "**/*",
-    "!" + config.SRC_PATH + "scss/**",
-    "!" + config.SRC_PATH + "_images/**",
-    "!" + config.SRC_PATH + "js/**",
-    "!" + config.SRC_PATH + "pages/**",
-    "!" + config.SRC_PATH + "templates/**",
-    "!" + config.SRC_PATH + "xlsx/**",
-  ]).pipe(
-    data(function (file) {
-      console.log("moveDefaultScss", file.path);
-    })
-  );
-  /* .pipe(
-      rename('index.scss')
-    )
-    .pipe(
-      dest('')
-    ); */
-};
-
-const buildStream = (cb) => {
-  let counter = 0;
-  let go = true;
-  let json = null;
-  const stream = merge2();
-  const noobFn = () => {};
-  //let stream = [];
-  //stream.add = (item) => { stream.push(item); };
-  while (counter < 4) {
-    console.log("buildStream", "counter:", counter);
-    //setDestination(noobFn);
-    //cleanDirectory(noobFn);
-    stream.add(
-      src(config.SRC_PATH + "config.json").pipe(
-        data(function (file) {
-          /* for (let key in file) {
-          console.log("buildStream", "data", "file key:", key, "value:", file[key]);
-        } */
-          json = JSON.parse(file._contents.toString());
-          //console.log("buildStream", "data", "file json:", json);
-          //console.log("buildStream", "data", "file path:", file.path);
-          setDestination(noobFn);
-          console.log("");
-          console.log(
-            "buildStream",
-            "data",
-            "config destination:",
-            config.destination
-          );
-          cleanDirectory(noobFn);
-          return json;
-        })
-      )
-    );
-    stream.add(moveAssets(cb));
-    stream.add(buildCss(cb));
-    stream.add(buildJs(cb));
-    stream.add(
-      buildNunjucks(cb).pipe(
-        data(function (file) {
-          console.log("buildStream", "data", "file.data:", file.data);
-          //console.log("buildStream", "data", "file.data:", con.data);
-          go = nextIndex();
-        })
-      )
-    );
-    //stream.add(next(noobFn));
-    counter++;
-    //let go = nextIndex();
-    /* if (config.CURRENT > config.EXPORT_LENGTH - 1) {
-      console.log("buildStream", "go:", go, "config.CURRENT > config.EXPORT_LENGTH - 1:", (config.CURRENT > config.EXPORT_LENGTH - 1));
-      //cb();
-      return stream;
-    } */
-  }
-  if (stream.length) {
-    return stream;
-  }
-  cb();
-};
-
-const noop = () => {};
-
-function buildTemplatesDev(cb) {
-  const destination = config.DEVELOPMENT
-    ? config.DEV_FOLDER
-    : config.BUILD_FOLDER;
-  //
+function printOutputFolders(cb) {
   let stream = [];
   stream.add = (item) => {
     stream.push(item);
   };
-  resetIndex();
-  //const tplFolderName = config.TPL_NAMES.BRAND[0] + "_" + config.TPL_NAMES.PRODUCT;
-  console.log("buildTemplatesDev TEMPLATE_FOLDER: " + config.TEMPLATE_FOLDER);
+  //
+  //config.OUTPUT_FOLDERS.splice(0);
+  const templateFolder = getTplFolder();
+  console.log("printOutputFolders templateFolder: ", (config.SRC_PATH + "xlsx/" + templateFolder));
   // LOG FILES
   stream.add(
     // except _images, pages, scss, js, xlsx and templates
     //src([config.SRC_PATH + "*/*", //product folders inside xlsx-template
     //src([config.SRC_PATH + "*/**", //concrete type folder
-    //config.TEMPLATE_FOLDER + "/*/**/*.*", //all files plus .scss
-    //config.TEMPLATE_FOLDER + "/*/**/assets/**/*", //move assets
-    src([
-      config.TEMPLATE_FOLDER + "/*/**/index.scss",
-      "!" + config.SRC_PATH + "**/_images/**",
-      "!" + config.SRC_PATH + "**/pages/**",
-      "!" + config.SRC_PATH + "**/scss/**",
-      "!" + config.SRC_PATH + "**/js/**",
-      "!" + config.SRC_PATH + "**/xlsx/**",
-      "!" + config.SRC_PATH + "**/templates/**",
-    ]).pipe(
+    //config.TEMPLATE_SRC + "/*/**/*.*", //all files plus .scss
+    //config.TEMPLATE_SRC + "/*/**/assets/**/*", //move assets
+    src([config.SRC_PATH + "xlsx/" + templateFolder + "/*.xlsx"]).pipe(
       data((file) => {
-        const folder = file.path.split("/").slice(-1)[0];
-        const parts = folder.split("_");
-        //console.log("buildTemplatesDev data folder: ", folder);
-        //console.log("buildTemplatesDev data parts: ", parts);
-        //console.log("buildTemplatesDev data path: ", file.path);
-        return { path: file.path, folder: folder };
+        const obj = getOutputData(file.path);
+        console.log("+++ printOutputFolders obj: ", obj);
+        console.log("+++ printOutputFolders file.path: ", file.path);
+        //config.OUTPUT_FOLDERS.push(obj);
+        //console.log("+++ addOutputFolders data config.OUTPUT_FOLDERS: ", config.OUTPUT_FOLDERS);
+        return obj;
       })
     )
   );
+  if (stream.length) {
+    return merge2(stream);
+  }
+  cb();
+}
+
+function addOutputFolders(cb) {
+  let stream = [];
+  stream.add = (item) => {
+    stream.push(item);
+  };
+  //
+  config.OUTPUT_FOLDERS.splice(0);
+  // LOG FILES
+  stream.add(
+    // except _images, pages, scss, js, xlsx and templates
+    //src([config.SRC_PATH + "*/*", //product folders inside xlsx-template
+    //src([config.SRC_PATH + "*/**", //concrete type folder
+    //config.TEMPLATE_SRC + "/*/**/*.*", //all files plus .scss
+    //config.TEMPLATE_SRC + "/*/**/assets/**/*", //move assets
+    src([config.TEMPLATE_SRC + "/*/", ...config.SRC_PATH_BUILD_IGNORES]).pipe(
+      data((file) => {
+        const obj = getOutputData(file.path);
+        console.log("addOutputFolders folder: ", obj.title);
+        config.OUTPUT_FOLDERS.push(obj);
+        //console.log("+++ addOutputFolders data config.OUTPUT_FOLDERS: ", config.OUTPUT_FOLDERS);
+        return obj;
+      })
+    )
+  );
+  if (stream.length) {
+    return merge2(stream);
+  }
+  cb();
+}
+
+function moveOutputAssets(cb) {
+  const destination = config.DEVELOPMENT
+    ? config.DEV_FOLDER
+    : config.BUILD_FOLDER;
+  //
+  console.log(
+    "moveOutputAssets TEMPLATE_SRC:",
+    config.TPL_NAMES.BRAND[0] + "_" + config.TPL_NAMES.PRODUCT[0],
+    config.TEMPLATE_SRC
+  );
   //
   // MOVE IMAGES INTO FOLDER
-  stream.add(
+  return (
     src([
-      config.TEMPLATE_FOLDER + "/*/**/assets/**/*",
-      "!" + config.SRC_PATH + "**/_images/**",
-      "!" + config.SRC_PATH + "**/pages/**",
-      "!" + config.SRC_PATH + "**/scss/**",
-      "!" + config.SRC_PATH + "**/js/**",
-      "!" + config.SRC_PATH + "**/xlsx/**",
-      "!" + config.SRC_PATH + "**/templates/**",
-    ]).pipe(dest(config.TEST_FOLDER))
+      config.TEMPLATE_SRC + "/*/assets/*.*",
+      ...config.SRC_PATH_BUILD_IGNORES,
+    ])
+      //.pipe(rename("main/text/ciao/goodbye.md"))
+      .pipe(
+        rename((path) => {
+          const name = path.dirname.split("/")[0];
+          const dirname = getOutputNameByTemplate(name);
+          console.log("moveOutputAssets rename", "name:", name, "dirname:", dirname);
+          return {
+            dirname: dirname + "/assets",
+            basename: path.basename,
+            extname: path.extname,
+          };
+        })
+      )
+      .pipe(
+        dest(
+          (file) => {
+            const parts = file.path.split("/");
+            const templateFolder = parts.slice(-4)[0];
+            //console.log("moveOutputAssets LAST STREAM templateFolder:", templateFolder);
+            return config.TEST_FOLDER + "/" + templateFolder;
+          },
+          { overwrite: true }
+        )
+      )
   );
+}
+
+function buildTemplatesCSS(cb) {
+  const destination = config.DEVELOPMENT
+    ? config.DEV_FOLDER
+    : config.BUILD_FOLDER;
+  //
+  //const tplFolderName = config.TPL_NAMES.BRAND[0] + "_" + config.TPL_NAMES.PRODUCT;
+  console.log("buildTemplatesCSS TEMPLATE_SRC: " + config.TEMPLATE_SRC);
   //
   // SCSS TO CSS
   const output = config.DEVELOPMENT ? "expanded" : "compressed";
   const processors = [autoprefixer, flexbugsfixer];
-  stream.add(
+  return (
     src(
       [
-        config.TEMPLATE_FOLDER + "/*/**/index.scss",
-        "!" + config.SRC_PATH + "**/_images/**",
-        "!" + config.SRC_PATH + "**/pages/**",
-        "!" + config.SRC_PATH + "**/scss/**",
-        "!" + config.SRC_PATH + "**/js/**",
-        "!" + config.SRC_PATH + "**/xlsx/**",
-        "!" + config.SRC_PATH + "**/templates/**",
+        config.TEMPLATE_SRC + "/*/**/index.scss",
+        ...config.SRC_PATH_BUILD_IGNORES,
       ],
       { sourcemaps: config.DEVELOPMENT }
     )
       .pipe(
         data((file) => {
-          const folder = file.path.split("/").slice(-2)[0];
-          const parts = folder.split("_");
-          //console.log("buildTemplatesDev data folder: ", folder);
-          //console.log("buildTemplatesDev data parts: ", parts);
-          //console.log("buildTemplatesDev scss data path: ", file.path);
-          return { path: file.path, folder: folder, parts: parts };
+          const parts = file.path.split("/");
+          const fileName = parts.pop();
+          const path = parts.join("/");
+          console.log("buildTemplatesCSS data fileName: ", fileName);
+          const obj = getOutputData(path);
+          return obj;
         })
       )
       .pipe(
@@ -1008,12 +1005,11 @@ function buildTemplatesDev(cb) {
       .pipe(postcss(processors))
       .pipe(gulpif(!config.DEVELOPMENT, cssnano({ safe: true })))
       .pipe(rename("index.min.css"))
-      //.pipe(dest(config.TEST_FOLDER))
+      //SOLO TURN - we allready got the template folder stream
       .pipe(
         dest(
           (file) => {
-            console.log("buildTemplatesDev dest file.data:", file.data);
-            return config.TEST_FOLDER + file.data.folder + "/css/";
+            return config.TEST_FOLDER + file.data.output + "/css/";
           },
           { overwrite: true }
         ),
@@ -1022,51 +1018,170 @@ function buildTemplatesDev(cb) {
         }
       )
   );
-  /* .pipe(dest(
-        (file) => {
-          //console.log('dest file.data:', file.data);
-          console.log('dest file.path:', file.path);
-          const pathSplit = file.path.split("/");
-          //return config.SRC_PATH + "_images/result/" + file.data.destination;
-          return config.TEST_FOLDER;
-        },
-        { overwrite: true }
-      ), {
-        sourcemaps: ".",
-      }) */
-  //"index.min", config.TEST_FOLDER
-  //console.log("buildTemplatesDev", "nextIndex:", nextIndex);
-  /* do {
-    //setDestination(noop);
-    stream.add(setDestination(noop));
-    stream.add(moveAssets());
-    //stream.add(buildCss());
-    //stream.add(buildJs());
-    //stream.add(moveAssets());
-    //moveAssets(noop);
-    //buildCss(noop);
-    //buildJs(noop);
-    //setConfigHasNunjuckTpl(noop);
-    //buildNunjucks(noop);
-    //console.log(config.CURRENT, config.destination);
-    //console.log("buildTemplatesDev", "printIndex:", printIndex());
-  } while (nextIndex()); */
+}
 
-  //config.CURRENT = 0;
-  //config.CURRENT_LANGUAGE = 0;
-  //config.CURRENT_VERSION = 0;
-  /* stream.add(setDestination());
-  RUNTIME_FOLDERS.forEach((obj) => {
-    //let dir = getAdDirName(obj, config);
-    if (obj.bundling === ENUM_BUNDLING.STANDARD) {
-      // extern
-      //streamB = minifyCSS(obj).pipe(dest(adBundler.DEST + obj.dir + '/')),
-      if (config.LOG_BUILD) {
-        console.log(grey("BUILDCSS"), col.bold(obj.advertiser), grey(obj.dir));
+function buildTemplatesJS(cb) {
+  let stream = [];
+  stream.add = (item) => {
+    stream.push(item);
+  };
+  //
+  //sources, name, destination, minified
+  const sourcesJS = config.DEVELOPMENT
+    ? [config.SRC_PATH + "js/flex-slider.js", config.SRC_PATH + "js/index.js"]
+    : [config.SRC_PATH + "js/flex-slider.js"];
+  const name = "index.min";
+  //const destination = config.destination + "js";
+  /* const name = config.DEVELOPMENT
+    ? "index.min"
+    : "index." + config.UID + ".min"; */
+  //
+  //loop over destinations and add to pipeline
+  config.OUTPUT_FOLDERS.forEach((pData) => {
+    console.log("loop over", pData);
+    stream.add(
+      src(sourcesJS)
+        .pipe(concat(name + ".js"))
+        .pipe(
+          data((file) => {
+            //here we return output folders data for our JS
+            return pData;
+          })
+        )
+        .pipe(
+          gulpif(
+            !config.DEVELOPMENT,
+            removeLogging({
+              methods: ["log", "info"],
+            })
+          )
+        )
+        .pipe(
+          gulpif(
+            !config.DEVELOPMENT,
+            uglify({
+              output: {
+                comments: saveLicense,
+              },
+            })
+          )
+        )
+        .pipe(
+          dest(
+            (file) => {
+              console.log(
+                "buildTemplatesJS LAST STREAM file.data:",
+                file.data.output + "/js/"
+              );
+              return config.TEST_FOLDER + file.data.output + "/js/";
+            },
+            { overwrite: true }
+          )
+        )
+    );
+  });
+  if (stream.length) {
+    return merge2(stream);
+  }
+  cb();
+}
+
+function buildTemplatesNunjucks() {
+  let stream = [];
+  stream.add = (item) => {
+    stream.push(item);
+  };
+  //obj.jsCssName = config.DEVELOPMENT ? "index.min" : "index." + config.UID + ".min";
+  //, { allowEmpty: true, debug: true }
+  config.OUTPUT_FOLDERS.forEach((pData) => {
+    console.log("buildTemplatesNunjucks loop over", pData);
+    const templateFolder = pData.templateFolder;
+    const xlsxName = pData.title;
+    //console.log("buildTemplatesNunjucks loop over xlsxName:", xlsxName);
+    const extendTemplateVars = (obj) => {
+      if (typeof obj !== "object") {
+        obj = {};
       }
-      stream.add(minifyCSS(obj).pipe(dest(adBundler.SRC + "templates/partials/ads/" + obj.dir)));
-    }
-  }); */
+      //copy
+      for (let key in pData) {
+        if (pData.hasOwnProperty(key)) {
+          obj[key] = pData[key];
+        }
+      }
+      return obj;
+    };
+    //get nunjucks pages via name (.njk)
+    // BRAND_PRODUCT_TYPE_DATE
+    //this is the standard: generic nunjucks template
+    const source = getStandardLayout();
+    stream.add(
+      src(config.SRC_PATH + "pages/" + source + ".njk")
+        .pipe(
+          data(function (file) {
+            //console.log("buildTemplatesNunjucks data path: " + file.path);
+            //pageName | templateFolder | xlsxName
+            //BRAND_PRODUCT_TYPE_LANGUAGE_VERSION_DATE
+            console.log("buildTemplatesNunjucks data xlsxName: " + xlsxName);
+            //tplNames.XLSX_PARSER[index]
+            const xlsxParser = XLSX_TYPE_ENUM.PARSER_STD_MODULE;
+            console.log("buildTemplatesNunjucks data xlsxParser:", xlsxParser);
+            const filename =
+              config.SRC_PATH +
+              "xlsx/" +
+              templateFolder +
+              "/" +
+              xlsxName +
+              ".xlsx";
+            console.log("buildTemplatesNunjucks data filename:", filename);
+            // try to get the sheet named 'Template' FROM workbook HERE
+            try {
+              const workbook = XLSX.read(filename, { type: "file" });
+              //console.log("buildTemplatesNunjucks data workbook:", workbook);
+              //Call simple factory method
+              const tplValues = XLSXParserFactory.create(
+                xlsxParser,
+                workbook.Sheets.Template
+              );
+              extendTemplateVars(tplValues);
+              //console.log("buildTemplatesNunjucks tplValues:", tplValues);
+              //console.log("buildTemplatesNunjucks tplValues.module2:", tplValues.module2);
+              //console.log("buildTemplatesNunjucks tplValues.module3:", tplValues.module3);
+              //let length = tplValues.modules.length;
+              //console.log("buildTemplatesNunjucks tplValues.module4:", tplValues.modules[length - 2]);
+              //console.log("buildTemplatesNunjucks tplValues.module5.table:", tplValues.modules[length - 1].table);
+              return tplValues;
+            } catch (error) {
+              console.log("*");
+              console.log("buildTemplatesNunjucks data catch error:", error);
+              console.log("*");
+            }
+            return extendTemplateVars();
+            //return cb(undefined, tplValues);
+          })
+        )
+        // Renders template with nunjucks
+        .pipe(
+          nunjucksRender({
+            path: [config.SRC_PATH + "templates"],
+          })
+        )
+        // output files (index.html) in app folder
+        .pipe(rename("index.html"))
+        .pipe(
+          dest(
+            (file) => {
+              console.log(
+                "buildTemplatesNunjucks LAST STREAM file.data:",
+                file.data.output
+              );
+              return config.TEST_FOLDER + file.data.output + "/";
+            },
+            { overwrite: true }
+          )
+        )
+    );
+  });
+
   if (stream.length) {
     return merge2(stream);
   }
@@ -1090,7 +1205,7 @@ const buildTemplateViaHtml = series(
   buildHtml
 );
 
-//const buildTemplatesDev = series();
+//const buildTemplatesCSS = series();
 
 // EXPORTS
 exports.default = series(
@@ -1099,8 +1214,16 @@ exports.default = series(
   //plus .zip bundles (complete)
   buildTemplate,
   watchDirectory,
-  reloadBrowser,
-  buildTemplatesDev
+  reloadBrowser
+);
+exports.dev = series(
+  setUID,
+  printOutputFolders,
+  /* addOutputFolders,
+  moveOutputAssets,
+  buildTemplatesCSS,
+  buildTemplatesJS,
+  buildTemplatesNunjucks */
 );
 
 exports.images = series(
@@ -1146,7 +1269,7 @@ exports.imagesFolderType = series(
 );
 
 //
-exports.dev = series(
+/* exports.dev = series(
   enableDevelopment,
   cleanZipFolder,
   setUID,
@@ -1159,8 +1282,7 @@ exports.dev = series(
   buildTemplate,
   next,
   buildTemplate,
-  /* next,
-  buildTemplate,
+  //TEMP START
   next,
   buildTemplate,
   next,
@@ -1170,10 +1292,13 @@ exports.dev = series(
   next,
   buildTemplate,
   next,
-  buildTemplate, */
+  buildTemplate,
+  next,
+  buildTemplate,
+  //TEMP END
   setConfigHasFolderToZip,
   zip
-);
+); */
 
 exports.build = series(
   enableProduction,

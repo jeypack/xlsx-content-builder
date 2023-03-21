@@ -1,6 +1,6 @@
 # [xlsx](https://www.npmjs.com/package/xlsx)-content-builder
 
-## EG+ XLSX Content Builder: 2.2.0
+## EG+ XLSX Content Builder: 2.2.1
 >A product template tool based on [`sheetjs`](https://sheetjs.com/), [`nunjucks`](https://www.npmjs.com/package/nunjucks) and the [`juiced`](http://juicedcss.com/) library with responsive `flexbox slider` section.
 
 [Author](joerg.pfeifer@geplusww.com) Jörg Pfeifer 22.07.2022

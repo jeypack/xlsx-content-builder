@@ -46,7 +46,7 @@ const TPL_NAMES = {
   DATE: ["220613", "220613", "220626"],
   SIZE: "1195xAUTO",
   PREFIX: "HTML5",
-  SUFFIX: "",
+  SUFFIX: "web_2022_06",
 };
 
 module.exports.TPL_NAMES = TPL_NAMES;
