@@ -26,10 +26,10 @@ const TPL_NAMES = {
     [1, 1],
     [1, 1],
   ],
-  FLEX_COLS: [
+  /* FLE X_COLS: [
     [6, 6],
     [6, 6],
-  ],
+  ], */
   BODY_CLASS: [
     ["mobile", "mobile"],
     ["mobile", "mobile"],

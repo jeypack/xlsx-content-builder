@@ -2,7 +2,7 @@
  * GULP XLSX RESPONSIVE CONTENT BUILDER TOOL
  * AUTHOR: J. Pfeifer (c) 2021-2023
  */
-const { col } = require("./console-col");
+const { col, timeprint } = require("./console-col");
 //const fs = require("fs");
 const { watch, series, parallel, src, dest } = require("gulp");
 const imagemin = require("gulp-imagemin");
@@ -29,7 +29,7 @@ const { v4: uuidv4 } = require("uuid");
 const XLSX = require("xlsx");
 const zipper = require("./gulp-zipper");
 //inline plugin
-const through2 = require("through2");
+//const through2 = require("through2");
 const {
   config,
   directoryContains,
@@ -94,21 +94,21 @@ const setConfigHasNunjuckTpl = (cb) => {
     (resp) => {
       const length = resp.files.length;
       /* for (let i = 0; i < length; i++) {
-      console.log("zip", "i:", i, "files:", resp.files[i]);
-    } */
+        console.log("zip", "i:", i, "files:", resp.files[i]);
+      } */
       config.HAS_NUNJUCK_TPL = length > 1;
-      console.log(
-        "nunjuck",
-        "tplFile:",
-        tplFile,
-        "config.HAS_NUNJUCK_TPL:",
-        config.HAS_NUNJUCK_TPL
-      );
+      console.log(timeprint(), "HAS_NUNJUCK_TPL:", config.HAS_NUNJUCK_TPL);
+      console.log(timeprint(), "tplFile:", tplFile);
       cb();
     },
-    (error) => {
+    (err) => {
       config.HAS_NUNJUCK_TPL = false;
-      console.log("nunjuck", "tplFile:", tplFile, "error:", error, "...");
+      console.log(
+        timeprint(true),
+        col.fg.yellow + "NO SUCH TEMPLATE:",
+        col.reset + col.dim + tplFile + col.reset,
+        col.fg.yellow + "USING -> StandardFlexLayout.njk"
+      );
       cb();
     }
   );
@@ -251,6 +251,13 @@ const buildCss = (cb) => {
   const getTplNameFunc = getTplNameFunction();
   const templateName = getTplNameFunc() + "/";
   const templateFolder = getTplFolder() + "/";
+  console.log(
+    "buildCss",
+    "templateFolder:",
+    templateFolder,
+    "templateName:",
+    templateName
+  );
   const sources = [
     config.SRC_PATH + templateFolder + templateName + "index.scss",
   ];
@@ -865,7 +872,10 @@ function printOutputFolders(cb) {
   //
   //config.OUTPUT_FOLDERS.splice(0);
   const templateFolder = getTplFolder();
-  console.log("printOutputFolders templateFolder: ", (config.SRC_PATH + "xlsx/" + templateFolder));
+  console.log(
+    "printOutputFolders templateFolder: ",
+    config.SRC_PATH + "xlsx/" + templateFolder
+  );
   // LOG FILES
   stream.add(
     // except _images, pages, scss, js, xlsx and templates
@@ -897,6 +907,23 @@ function addOutputFolders(cb) {
   };
   //
   config.OUTPUT_FOLDERS.splice(0);
+  //get sources from BRAND
+  // (in future versions there may be more than one brand per config!)
+  const sourcesTemplates = [];
+  //SRC_PATH = "./src/xlsx-template/"
+  const brandNames = config.TPL_NAMES.BRAND;
+  const productNames = config.TPL_NAMES.PRODUCT;
+  for (let i = 0, l = brandNames.length; i < l; i++) {
+    for (let c = 0, ll = productNames.length; c < ll; c++) {
+      sourcesTemplates.push(
+        config.SRC_PATH + brandNames[i] + "/" + productNames[c] + "/*/"
+      );
+    }
+  }
+  const sources = [...new Set(sourcesTemplates)];
+  let counter = 0;
+  console.log("addOutputFolders", col.fg.yellow, sourcesTemplates, col.reset);
+  console.log("addOutputFolders", col.fg.yellow, sources, col.reset);
   // LOG FILES
   stream.add(
     // except _images, pages, scss, js, xlsx and templates
@@ -904,10 +931,11 @@ function addOutputFolders(cb) {
     //src([config.SRC_PATH + "*/**", //concrete type folder
     //config.TEMPLATE_SRC + "/*/**/*.*", //all files plus .scss
     //config.TEMPLATE_SRC + "/*/**/assets/**/*", //move assets
-    src([config.TEMPLATE_SRC + "/*/", ...config.SRC_PATH_BUILD_IGNORES]).pipe(
+    src([...sources, ...config.SRC_PATH_BUILD_IGNORES]).pipe(
       data((file) => {
         const obj = getOutputData(file.path);
-        console.log("addOutputFolders folder: ", obj.title);
+        console.log("addOutputFolders folder:", (++counter), file.path);
+        //console.log("addOutputFolders folder: ", obj);
         config.OUTPUT_FOLDERS.push(obj);
         //console.log("+++ addOutputFolders data config.OUTPUT_FOLDERS: ", config.OUTPUT_FOLDERS);
         return obj;
@@ -942,7 +970,13 @@ function moveOutputAssets(cb) {
         rename((path) => {
           const name = path.dirname.split("/")[0];
           const dirname = getOutputNameByTemplate(name);
-          console.log("moveOutputAssets rename", "name:", name, "dirname:", dirname);
+          console.log(
+            "moveOutputAssets rename",
+            "name:",
+            name,
+            "dirname:",
+            dirname
+          );
           return {
             dirname: dirname + "/assets",
             basename: path.basename,
@@ -1218,9 +1252,9 @@ exports.default = series(
 );
 exports.dev = series(
   setUID,
-  printOutputFolders,
-  /* addOutputFolders,
-  moveOutputAssets,
+  //printOutputFolders,
+  addOutputFolders
+  /* moveOutputAssets,
   buildTemplatesCSS,
   buildTemplatesJS,
   buildTemplatesNunjucks */
