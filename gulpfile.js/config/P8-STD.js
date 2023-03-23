@@ -19,17 +19,18 @@ const TPL_NAMES = {
     ["CZ", "SK"],
     ["CZ", "SK"],
   ],
-  //every language may have more than 1 version
-  //here we keep version length for every language entry
-  //e.g. TPL_NAMES.VERSION[CURRENT_LANGUAGE] = 1 means one version ...
-  VERSION: [
-    [1, 1],
-    [1, 1],
+  //every language may have more than 1 sujet
+  //CURRENT_SUJET of gulp-config keeps track of inside index
+  SUJET: [
+    [["S1"], ["S1"], ["S1"], ["S1"]],
+    [["S1"], ["S1"], ["S1"], ["S1"]],
   ],
-  /* FLE X_COLS: [
-    [6, 6],
-    [6, 6],
-  ], */
+  //we need client version min for every language
+  //better also for every sujet too
+  CLIENT_VERSION: [
+    [["V01"], ["V01"], ["V01"], ["V01"]],
+    [["V01"], ["V01"], ["V01"], ["V01"]],
+  ],
   BODY_CLASS: [
     ["mobile", "mobile"],
     ["mobile", "mobile"],
@@ -38,13 +39,11 @@ const TPL_NAMES = {
     XLSX_TYPE_ENUM.PARSER_STD_MODULE,
     XLSX_TYPE_ENUM.PARSER_STD_MODULE,
   ],
-  //TPL_NAMES.CLIENT_VERSION DATE SIZE PREFIX SUFFIX
-  // . "V01" "220324" "1195xAUTO" "HTML5" "web_2022_10"
-  CLIENT_VERSION: ["V01", "V01"],
   DATE: ["220324", "220324"],
+  CURRENT_TPL_VERSION: "LANG_VERSION", //@see getTplNameFunction
   SIZE: "1195xAUTO",
   PREFIX: "HTML5",
-  SUFFIX: "web_2022_10",
+  SUFFIX: "web_2022_03",
 };
 
 module.exports.TPL_NAMES = TPL_NAMES;

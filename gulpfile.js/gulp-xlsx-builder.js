@@ -75,9 +75,10 @@ const next = (cb) => {
 };
 
 const setStartTemplate = (cb) => {
-  config.CURRENT = 0;
+  resetIndex();
+  /* config.CURRENT = 0;
   config.CURRENT_LANGUAGE = 0;
-  config.CURRENT_VERSION = 0;
+  config.CURRENT_VERSION = 0; */
   cb();
 };
 
@@ -143,7 +144,10 @@ const cleanZipFolder = (cb) => {
 };
 
 const cleanBuild = (cb) => {
-  del.sync([config.BUILD_FOLDER + "**"], {
+  //move from template folder to output (destination) folder
+  const templateFolder = getTplFolder() + "/";
+  console.log(timeprint(), "cleanBuild", (config.BUILD_FOLDER + templateFolder + "**"));
+  del.sync([config.BUILD_FOLDER + templateFolder + "**"], {
     force: true,
   });
   cb();
@@ -838,65 +842,68 @@ const makeImagesFolderType = (cb) => {
 //
 //
 function getOutputData(path) {
-  const templateFolder = path.split("/").slice(-2)[0];
   const folder = path.split("/").slice(-1)[0];
   let parts = folder.split("_");
   const brand = parts[0];
   const product = parts[1];
   const type = parts[2];
-  const language = parts.slice(-2)[0];
-  parts.splice(parts.length - 1, 0, "1");
+  const sujet = parts[3];
+  const language = parts[4];
+  const date = parts.slice(-1)[0];
   const xlsxName = parts.join("_");
-  const output = templateFolder + "/" + getOutputNameByTemplate(xlsxName);
+  //"./src/xlsx-template/"
+  const filename =
+    config.SRC_PATH +
+    "xlsx/" +
+    brand +
+    "/" +
+    product +
+    "/" +
+    xlsxName +
+    ".xlsx";
+  const output =
+    brand + "/" + product + "/" + getOutputNameByTemplate(xlsxName);
   return {
     bodyClass: "mobile",
     jsCssName: "index.min",
     brand: brand,
     product: product,
     type: type,
+    sujet: sujet,
+    language: language,
+    date: date,
     path: path,
     template: folder,
-    templateFolder: templateFolder,
-    title: xlsxName,
-    language: language,
+    xlsxFile: filename,
+    xlsxName: xlsxName,
     output: output,
     version: getVersion(),
   };
 }
 
-function printOutputFolders(cb) {
-  let stream = [];
-  stream.add = (item) => {
-    stream.push(item);
-  };
-  //
-  //config.OUTPUT_FOLDERS.splice(0);
-  const templateFolder = getTplFolder();
-  console.log(
-    "printOutputFolders templateFolder: ",
-    config.SRC_PATH + "xlsx/" + templateFolder
-  );
-  // LOG FILES
-  stream.add(
-    // except _images, pages, scss, js, xlsx and templates
-    //src([config.SRC_PATH + "*/*", //product folders inside xlsx-template
-    //src([config.SRC_PATH + "*/**", //concrete type folder
-    //config.TEMPLATE_SRC + "/*/**/*.*", //all files plus .scss
-    //config.TEMPLATE_SRC + "/*/**/assets/**/*", //move assets
-    src([config.SRC_PATH + "xlsx/" + templateFolder + "/*.xlsx"]).pipe(
-      data((file) => {
-        const obj = getOutputData(file.path);
-        console.log("+++ printOutputFolders obj: ", obj);
-        console.log("+++ printOutputFolders file.path: ", file.path);
-        //config.OUTPUT_FOLDERS.push(obj);
-        //console.log("+++ addOutputFolders data config.OUTPUT_FOLDERS: ", config.OUTPUT_FOLDERS);
-        return obj;
-      })
-    )
-  );
-  if (stream.length) {
-    return merge2(stream);
+function getTplSourcesBy(glob) {
+  const sourcesTpl = [];
+  const brandNames = config.TPL_NAMES.BRAND;
+  const productNames = config.TPL_NAMES.PRODUCT;
+  for (let i = 0, l = brandNames.length; i < l; i++) {
+    for (let c = 0, ll = productNames.length; c < ll; c++) {
+      sourcesTpl.push(
+        config.SRC_PATH + brandNames[i] + "/" + productNames[c] + glob
+      );
+    }
   }
+  const sources = [...new Set(sourcesTpl)];
+  console.log(timeprint(), col.fg.yellow, sources, col.reset);
+  return sources;
+}
+
+function printOutputFolders(cb) {
+  //loop over destinations and add to pipeline
+  /* config.OUTPUT_FOLDERS.forEach((pData) => {
+    console.log(timeprint(), "printOutputFolders", pData);
+  }); */
+  //short print first item
+  console.log(timeprint(), "printOutputFolders", config.OUTPUT_FOLDERS[0]);
   cb();
 }
 
@@ -909,32 +916,19 @@ function addOutputFolders(cb) {
   config.OUTPUT_FOLDERS.splice(0);
   //get sources from BRAND
   // (in future versions there may be more than one brand per config!)
-  const sourcesTemplates = [];
-  //SRC_PATH = "./src/xlsx-template/"
-  const brandNames = config.TPL_NAMES.BRAND;
-  const productNames = config.TPL_NAMES.PRODUCT;
-  for (let i = 0, l = brandNames.length; i < l; i++) {
-    for (let c = 0, ll = productNames.length; c < ll; c++) {
-      sourcesTemplates.push(
-        config.SRC_PATH + brandNames[i] + "/" + productNames[c] + "/*/"
-      );
-    }
-  }
-  const sources = [...new Set(sourcesTemplates)];
+  const sourcesTpl = getTplSourcesBy("/*/");
+  // LOG AND PUSH FILE DATA OBJECTS
   let counter = 0;
-  console.log("addOutputFolders", col.fg.yellow, sourcesTemplates, col.reset);
-  console.log("addOutputFolders", col.fg.yellow, sources, col.reset);
-  // LOG FILES
   stream.add(
     // except _images, pages, scss, js, xlsx and templates
     //src([config.SRC_PATH + "*/*", //product folders inside xlsx-template
     //src([config.SRC_PATH + "*/**", //concrete type folder
     //config.TEMPLATE_SRC + "/*/**/*.*", //all files plus .scss
     //config.TEMPLATE_SRC + "/*/**/assets/**/*", //move assets
-    src([...sources, ...config.SRC_PATH_BUILD_IGNORES]).pipe(
+    src([...sourcesTpl, ...config.SRC_PATH_BUILD_IGNORES]).pipe(
       data((file) => {
         const obj = getOutputData(file.path);
-        console.log("addOutputFolders folder:", (++counter), file.path);
+        console.log(timeprint(), "folder:", ++counter, col.dim + file.path);
         //console.log("addOutputFolders folder: ", obj);
         config.OUTPUT_FOLDERS.push(obj);
         //console.log("+++ addOutputFolders data config.OUTPUT_FOLDERS: ", config.OUTPUT_FOLDERS);
@@ -950,35 +944,38 @@ function addOutputFolders(cb) {
 
 function moveOutputAssets(cb) {
   const destination = config.DEVELOPMENT
-    ? config.DEV_FOLDER
+    ? //? config.DEV_FOLDER
+      config.PREVIEW_FOLDER
     : config.BUILD_FOLDER;
   //
-  console.log(
-    "moveOutputAssets TEMPLATE_SRC:",
-    config.TPL_NAMES.BRAND[0] + "_" + config.TPL_NAMES.PRODUCT[0],
-    config.TEMPLATE_SRC
-  );
+  const sourcesAssets = getTplSourcesBy("/*/assets/*.*");
   //
   // MOVE IMAGES INTO FOLDER
+  //let counter = 0;
   return (
     src([
-      config.TEMPLATE_SRC + "/*/assets/*.*",
+      ...sourcesAssets,
       ...config.SRC_PATH_BUILD_IGNORES,
     ])
+      /* .pipe(
+        data((file) => {
+          console.log(timeprint(), "data:", ++counter, col.dim + file.path);
+          //const obj = getOutputData(path);
+          return obj;
+        })
+      ) */
       //.pipe(rename("main/text/ciao/goodbye.md"))
       .pipe(
         rename((path) => {
+          //console.log(timeprint());
+          //console.log(timeprint(), "moveOutputAssets", path);
+          //get folder name without /assets folder
           const name = path.dirname.split("/")[0];
-          const dirname = getOutputNameByTemplate(name);
-          console.log(
-            "moveOutputAssets rename",
-            "name:",
-            name,
-            "dirname:",
-            dirname
-          );
+          const output = getOutputNameByTemplate(name);
+          //console.log(timeprint(), "rename", output);
           return {
-            dirname: dirname + "/assets",
+            dirname: output + "/assets",
+            //dirname: path.dirname,
             basename: path.basename,
             extname: path.extname,
           };
@@ -987,10 +984,15 @@ function moveOutputAssets(cb) {
       .pipe(
         dest(
           (file) => {
-            const parts = file.path.split("/");
-            const templateFolder = parts.slice(-4)[0];
-            //console.log("moveOutputAssets LAST STREAM templateFolder:", templateFolder);
-            return config.TEST_FOLDER + "/" + templateFolder;
+            const partsPath = file.path.split("/");
+            let parts = partsPath.slice(-5);
+            parts = parts.slice(0, -1);
+            const brand = parts[0];
+            const product = parts[1];
+            //console.log("moveOutputAssets LAST STREAM parts:", parts.join("/"));
+            return destination + "/" + parts[0] + "/" + parts[1];
+            //return destination + "/" + parts.join("/");
+            //return destination + file.data.output + "/css/";
           },
           { overwrite: true }
         )
@@ -1000,11 +1002,11 @@ function moveOutputAssets(cb) {
 
 function buildTemplatesCSS(cb) {
   const destination = config.DEVELOPMENT
-    ? config.DEV_FOLDER
+    ? //? config.DEV_FOLDER
+      config.PREVIEW_FOLDER
     : config.BUILD_FOLDER;
   //
-  //const tplFolderName = config.TPL_NAMES.BRAND[0] + "_" + config.TPL_NAMES.PRODUCT;
-  console.log("buildTemplatesCSS TEMPLATE_SRC: " + config.TEMPLATE_SRC);
+  const sourcesAssets = getTplSourcesBy("/*/index.scss");
   //
   // SCSS TO CSS
   const output = config.DEVELOPMENT ? "expanded" : "compressed";
@@ -1012,7 +1014,7 @@ function buildTemplatesCSS(cb) {
   return (
     src(
       [
-        config.TEMPLATE_SRC + "/*/**/index.scss",
+        ...sourcesAssets,
         ...config.SRC_PATH_BUILD_IGNORES,
       ],
       { sourcemaps: config.DEVELOPMENT }
@@ -1020,9 +1022,9 @@ function buildTemplatesCSS(cb) {
       .pipe(
         data((file) => {
           const parts = file.path.split("/");
-          const fileName = parts.pop();
+          parts.pop();
           const path = parts.join("/");
-          console.log("buildTemplatesCSS data fileName: ", fileName);
+          console.log("buildTemplatesCSS data path: ", path);
           const obj = getOutputData(path);
           return obj;
         })
@@ -1043,7 +1045,7 @@ function buildTemplatesCSS(cb) {
       .pipe(
         dest(
           (file) => {
-            return config.TEST_FOLDER + file.data.output + "/css/";
+            return destination + file.data.output + "/css/";
           },
           { overwrite: true }
         ),
@@ -1065,7 +1067,10 @@ function buildTemplatesJS(cb) {
     ? [config.SRC_PATH + "js/flex-slider.js", config.SRC_PATH + "js/index.js"]
     : [config.SRC_PATH + "js/flex-slider.js"];
   const name = "index.min";
-  //const destination = config.destination + "js";
+  const destination = config.DEVELOPMENT
+    ? //? config.DEV_FOLDER
+      config.PREVIEW_FOLDER
+    : config.BUILD_FOLDER;
   /* const name = config.DEVELOPMENT
     ? "index.min"
     : "index." + config.UID + ".min"; */
@@ -1107,7 +1112,7 @@ function buildTemplatesJS(cb) {
                 "buildTemplatesJS LAST STREAM file.data:",
                 file.data.output + "/js/"
               );
-              return config.TEST_FOLDER + file.data.output + "/js/";
+              return destination + file.data.output + "/js/";
             },
             { overwrite: true }
           )
@@ -1128,9 +1133,9 @@ function buildTemplatesNunjucks() {
   //obj.jsCssName = config.DEVELOPMENT ? "index.min" : "index." + config.UID + ".min";
   //, { allowEmpty: true, debug: true }
   config.OUTPUT_FOLDERS.forEach((pData) => {
-    console.log("buildTemplatesNunjucks loop over", pData);
-    const templateFolder = pData.templateFolder;
-    const xlsxName = pData.title;
+    //console.log("buildTemplatesNunjucks loop over", pData);
+    const xlsxName = pData.xlsxName;
+    const xlsxFile = pData.xlsxFile;
     //console.log("buildTemplatesNunjucks loop over xlsxName:", xlsxName);
     const extendTemplateVars = (obj) => {
       if (typeof obj !== "object") {
@@ -1144,6 +1149,10 @@ function buildTemplatesNunjucks() {
       }
       return obj;
     };
+    const destination = config.DEVELOPMENT
+    ? //? config.DEV_FOLDER
+      config.PREVIEW_FOLDER
+    : config.BUILD_FOLDER;
     //get nunjucks pages via name (.njk)
     // BRAND_PRODUCT_TYPE_DATE
     //this is the standard: generic nunjucks template
@@ -1153,23 +1162,15 @@ function buildTemplatesNunjucks() {
         .pipe(
           data(function (file) {
             //console.log("buildTemplatesNunjucks data path: " + file.path);
-            //pageName | templateFolder | xlsxName
             //BRAND_PRODUCT_TYPE_LANGUAGE_VERSION_DATE
             console.log("buildTemplatesNunjucks data xlsxName: " + xlsxName);
             //tplNames.XLSX_PARSER[index]
             const xlsxParser = XLSX_TYPE_ENUM.PARSER_STD_MODULE;
             console.log("buildTemplatesNunjucks data xlsxParser:", xlsxParser);
-            const filename =
-              config.SRC_PATH +
-              "xlsx/" +
-              templateFolder +
-              "/" +
-              xlsxName +
-              ".xlsx";
-            console.log("buildTemplatesNunjucks data filename:", filename);
+            console.log("buildTemplatesNunjucks data xlsxFile:", xlsxFile);
             // try to get the sheet named 'Template' FROM workbook HERE
             try {
-              const workbook = XLSX.read(filename, { type: "file" });
+              const workbook = XLSX.read(xlsxFile, { type: "file" });
               //console.log("buildTemplatesNunjucks data workbook:", workbook);
               //Call simple factory method
               const tplValues = XLSXParserFactory.create(
@@ -1208,7 +1209,7 @@ function buildTemplatesNunjucks() {
                 "buildTemplatesNunjucks LAST STREAM file.data:",
                 file.data.output
               );
-              return config.TEST_FOLDER + file.data.output + "/";
+              return destination + file.data.output + "/";
             },
             { overwrite: true }
           )
@@ -1241,7 +1242,9 @@ const buildTemplateViaHtml = series(
 
 //const buildTemplatesCSS = series();
 
-// EXPORTS
+// +++ EXPORTS +++
+
+//creates one dev build with watching
 exports.default = series(
   enableDevelopment,
   setUID,
@@ -1250,14 +1253,29 @@ exports.default = series(
   watchDirectory,
   reloadBrowser
 );
+
 exports.dev = series(
   setUID,
-  //printOutputFolders,
-  addOutputFolders
-  /* moveOutputAssets,
+  enableDevelopment,
+  addOutputFolders,
+  printOutputFolders,
+  moveOutputAssets,
   buildTemplatesCSS,
   buildTemplatesJS,
-  buildTemplatesNunjucks */
+  buildTemplatesNunjucks,
+);
+
+exports.build = series(
+  cleanBuild,
+  enableProduction,
+  addOutputFolders,
+  printOutputFolders,
+  moveOutputAssets,
+  buildTemplatesCSS,
+  buildTemplatesJS,
+  buildTemplatesNunjucks,
+  //setConfigHasFolderToZip,
+  //zip,
 );
 
 exports.images = series(
@@ -1302,80 +1320,10 @@ exports.imagesFolderType = series(
   makeImagesFolderType, */
 );
 
-//
-/* exports.dev = series(
-  enableDevelopment,
-  cleanZipFolder,
-  setUID,
-  setStartTemplate,
-  buildTemplate,
-  //repeat this until end of templates
-  next,
-  buildTemplate,
-  next,
-  buildTemplate,
-  next,
-  buildTemplate,
-  //TEMP START
-  next,
-  buildTemplate,
-  next,
-  buildTemplate,
-  next,
-  buildTemplate,
-  next,
-  buildTemplate,
-  next,
-  buildTemplate,
-  next,
-  buildTemplate,
-  //TEMP END
-  setConfigHasFolderToZip,
-  zip
-); */
-
-exports.build = series(
-  enableProduction,
-  cleanZipFolder,
-  cleanDirectory,
-  setUID,
-  setStartTemplate,
-  buildTemplate,
-  //repeat this until end of templates
-  next,
-  buildTemplate,
-  /* next,
-  buildTemplate,
-  next,
-  buildTemplate,
-  next,
-  buildTemplate,
-  next,
-  buildTemplate,
-  next,
-  buildTemplate,
-  next,
-  buildTemplate,
-  next,
-  buildTemplate,
-  next,
-  buildTemplate, */
-  setConfigHasFolderToZip,
-  zip
-);
-
 exports.cleanAll = series(cleanAll);
 
 exports.cleanBuild = series(cleanBuild);
 
-//unused
-/* exports.html = series(
-  enableDevelopment,
-  setUID,
-  buildTemplateViaHtml,
-  watchDirectory,
-  reloadBrowser
-); */
 //################## ABLAUF NEUES PROJEKT #####################
 
 //1.  Create Folder inside src/xlsx-template/_images with project-name/Language/01_Module - xx_Module

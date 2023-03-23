@@ -17,6 +17,13 @@ const TPL_NAMES = {
     [["S1"], ["S1"], ["S1", "S2", "S3"], ["S1"]],
     [["S1"], ["S1"], ["S1"], ["S1"]],
   ],
+  //we need client version min for every language
+  //better also for every sujet too
+  CLIENT_VERSION: [
+    [["V01"], ["V01"], ["V01"], ["V01"]],
+    [["V01"], ["V01"], ["V01", "V01", "V01"], ["V01"]],
+    [["V01"], ["V01"], ["V01"], ["V01"]],
+  ],
   BODY_CLASS: [
     ["mobile", "mobile", "mobile", "mobile"],
     ["mobile", "mobile", "mobile", "mobile"],
@@ -28,7 +35,6 @@ const TPL_NAMES = {
     XLSX_TYPE_ENUM.PARSER_STD_MODULE,
     XLSX_TYPE_ENUM.PARSER_STD_MODULE,
   ],
-  CLIENT_VERSION: ["V01", "V01", "V01"],
   DATE: ["220613", "220613", "220626"],
   CURRENT_TPL_VERSION: "LANG_VERSION", //@see getTplNameFunction
   SIZE: "1195xAUTO",

@@ -1,10 +1,10 @@
 const fs = require("fs");
-const { TPL_NAMES } = require("./config/OralB-Genesis5");
+//const { TPL_NAMES } = require("./config/OralB-Genesis5");
 //const { TPL_NAMES } = require("./config/P8-STD");
 //const { TPL_NAMES } = require("./config/MOJITO-BABYDRY");
 //const { TPL_NAMES } = require("./config/P-MATISSE-BABYDRY");
 //const { TPL_NAMES } = require("./config/P-PANDORA");
-//const { TPL_NAMES } = require("./config/P-PAW-PATROL");
+const { TPL_NAMES } = require("./config/P-PAW-PATROL");
 
 const TPL_ENUM = {
   STD: "NAME",
@@ -14,10 +14,6 @@ const TPL_ENUM = {
 };
 
 const SRC_PATH = "./src/xlsx-template/";
-//here we break for 'PRODUCT', that could be more than one…
-//TODO: get 'TEMPLATE_FOLDER' and 'TEMPLATE_SRC' via functions
-const BRAND = TPL_NAMES.BRAND[0];
-const PRODUCT = TPL_NAMES.PRODUCT[0];
 const config = {
   UID: 0,
   DEVELOPMENT: true,
@@ -25,6 +21,7 @@ const config = {
   HAS_NUNJUCK_TPL: false,
   //PATH_INCLUDES_SASS: ['bower_components/juiced/sass/'],
   HTDOCS_PATH: "/Applications/MAMP/htdocs/",
+  CLIENT_FOLDER: "egplus_ads", //just for testing
   SRC_PATH: SRC_PATH,
   SRC_PATH_BUILD_IGNORES: [
     "!" + SRC_PATH + "**/_images/**",
@@ -36,10 +33,10 @@ const config = {
   ],
   SRC_VENDOR: "./src/vendor/",
   DEV_FOLDER: "./_temp/",
-  TEST_FOLDER: "./_test/",
+  PREVIEW_FOLDER: "./_preview/",
   BUILD_FOLDER: "./_build/",
-  TEMPLATE_SRC: SRC_PATH + BRAND + "_" + PRODUCT,
   OUTPUT_FOLDERS: [],
+  TPL_SOURCES: SRC_PATH,
   // PREFIX_BRAND_PRODUCT_TYPE_LANGUAGE_VERSION_SIZE_CLIENT_VERSION_DATE
   //e.g. HTML5_OralB_Genesis5_KIDS-Lightyear_HU_V1_1195xAUTO_V01_220626
   TPL_NAMES: TPL_NAMES,
@@ -47,8 +44,8 @@ const config = {
   JPEG_QUALITY: 82,
   EXPORT_LENGTH: 4, //unused
   //change this for development testing
-  CURRENT: 2, // TYPE
-  CURRENT_LANGUAGE: 2,
+  CURRENT: 0, // TYPE
+  CURRENT_LANGUAGE: 0,
   CURRENT_SUJET: 0,
   destination: "./_temp/",
 };
@@ -70,19 +67,15 @@ const directoryContains = (path, doneFn, errorFn) => {
 
 //e.g.: Pampers_P8-Std_Size-0-2_CZ_1_220324
 const getOutputNameByTemplate = (name) => {
-  //console.log("getOutputNameByTemplate", "name:", name);
+  console.log("getOutputNameByTemplate", "name:", name);
   //look over TPL_NAMES {object}
   let current = 0;
   let currentLanguage = 0;
+  let currentSujet = 0;
   const parts = name.split("_");
   const type = parts[2];
-  let language = parts.slice(-3)[0];
-  //fallback if…
-  //…we got name without version/sujet
-  if (parts.length === 5) {
-    //e.g.: Pampers_P8-Std_Size-0-2_SK_220324
-    language = parts.slice(-2)[0];
-  }
+  const sujet = parts[3];
+  const language = parts[4];
   //BRAND PRODUCT TYPE LANGUAGE VERSION CLIENT_VERSION DATE
   for (let i = 0, l = TPL_NAMES.TYPE.length; i < l; i++) {
     if (TPL_NAMES.TYPE[i] === type) {
@@ -97,7 +90,18 @@ const getOutputNameByTemplate = (name) => {
       break;
     }
   }
-  return getOutputName(current, currentLanguage);
+  //search inside 3 dimensional sujet array
+  for (
+    let i = 0, l = TPL_NAMES.SUJET[current][currentLanguage].length;
+    i < l;
+    i++
+  ) {
+    if (TPL_NAMES.SUJET[current][currentLanguage][i] === sujet) {
+      currentSujet = i;
+      break;
+    }
+  }
+  return getOutputName(current, currentLanguage, currentSujet);
 };
 
 const getTplNameFunction = () => {
@@ -245,13 +249,16 @@ const getOutputName = (index, languageIndex, sujetIndex) => {
     typeof sujetIndex === "number" ? sujetIndex : config.CURRENT_SUJET;
   let name = "";
   if (config.DEVELOPMENT) {
+    //egplus_ads_HTML5_web_2023_02_Pampers_Pandora_Sensitive0Perc_S1_CZ_1195xAUTOV01_230214
     name =
-      TPL_NAMES.BRAND[index] +
+      config.CLIENT_FOLDER +
       "_" +
       TPL_NAMES.PREFIX +
       "_" +
       TPL_NAMES.SUFFIX +
       "_" +
+      TPL_NAMES.BRAND[index] +
+      "_" +
       TPL_NAMES.PRODUCT[index] +
       "_" +
       TPL_NAMES.TYPE[index] +
@@ -261,10 +268,11 @@ const getOutputName = (index, languageIndex, sujetIndex) => {
       TPL_NAMES.LANGUAGE[index][languageIndex] +
       "_" +
       TPL_NAMES.SIZE +
-      TPL_NAMES.CLIENT_VERSION[index] +
+      TPL_NAMES.CLIENT_VERSION[index][languageIndex][sujetIndex] +
       "_" +
       TPL_NAMES.DATE[index];
   } else {
+    //Pampers_HTML5_Pandora_Sensitive0Perc_S1_SK_1195xAUTOV01_230214
     name =
       TPL_NAMES.BRAND[index] +
       "_" +
@@ -278,8 +286,8 @@ const getOutputName = (index, languageIndex, sujetIndex) => {
       "_" +
       TPL_NAMES.LANGUAGE[index][languageIndex] +
       "_" +
-      TPL_NAMES.SIZE +
-      TPL_NAMES.CLIENT_VERSION[index] +
+      //TPL_NAMES.SIZE +
+      TPL_NAMES.CLIENT_VERSION[index][languageIndex][sujetIndex] +
       "_" +
       TPL_NAMES.DATE[index];
   }
@@ -326,7 +334,7 @@ const getLanguageVersion = () => {
   return TPL_NAMES.FLEX_COLS[index][languageIndex];
 }; */
 const getVersion = () => {
-  return "STD TPL V2.2.0 | 17.03.2023 | " + new Date().toDateString();
+  return "STD TPL V2.3.0 | 22.03.2023 | " + new Date().toDateString();
 };
 
 const extendTemplateVars = (obj) => {

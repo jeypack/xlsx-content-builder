@@ -7,29 +7,19 @@ const TPL_NAMES = {
   PRODUCT: ["Paw-Patrol", "Paw-Patrol"],
   TYPE: ["BabyDry-Pants", "BabyDry-Pants"],
   LANGUAGE: [["CZ", "SK"]],
-  //every language may have more than 1 version
-  //here we keep version length for every language entry
-  //e.g. TPL_NAMES.VERSION[CURRENT_LANGUAGE] = 1 means one version ...
-  VERSION: [
-    [1, 1],
-    [1, 1],
-    [1, 1],
-    [1, 1],
-    [1, 1],
+  //every language may have more than 1 sujet
+  //CURRENT_SUJET of gulp-config keeps track of inside index
+  SUJET: [
+    [["S1"], ["S1"]],
+    [["S1"], ["S1"]],
   ],
-  //@see gulp-config.js -> getFLexCols() - now via XLSXParser ->numSliderCols
-  //TODO: remove in future versions
-  /* FLE X_COLS: [
-    [6, 6],
-    [6, 6],
-    [6, 6],
-    [6, 6],
-    [6, 6],
-  ], */
+  //we need client version min for every language
+  //better also for every sujet too
+  CLIENT_VERSION: [
+    [["V01"], ["V01"]],
+    [["V01"], ["V01"]],
+  ],
   BODY_CLASS: [
-    ["mobile", "mobile"],
-    ["mobile", "mobile"],
-    ["mobile", "mobile"],
     ["mobile", "mobile"],
     ["mobile", "mobile"],
   ],
@@ -37,12 +27,9 @@ const TPL_NAMES = {
   XLSX_PARSER: [
     XLSX_TYPE_ENUM.PARSER_STD_MODULE,
     XLSX_TYPE_ENUM.PARSER_STD_MODULE,
-    XLSX_TYPE_ENUM.PARSER_STD_MODULE,
-    XLSX_TYPE_ENUM.PARSER_STD_MODULE,
-    XLSX_TYPE_ENUM.PARSER_STD_MODULE,
   ],
-  CLIENT_VERSION: ["V01", "V01", "V01", "V01", "V01"],
-  DATE: ["230309", "230309", "230309", "230309", "230309"],
+  DATE: ["230309", "230309", "230309"],
+  CURRENT_TPL_VERSION: "LANG_VERSION", //@see getTplNameFunction
   SIZE: "1195xAUTO",
   PREFIX: "HTML5",
   SUFFIX: "web_2023_03",

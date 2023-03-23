@@ -66,12 +66,10 @@ module.exports.timeprint = (warn) => {
   const hours = d.getHours();
   const minutes = d.getMinutes();
   const seconds = d.getSeconds();
-  const timePrint =
-    (hours.length === 1 ? "0" + hours : hours) +
-    ":" +
-    (minutes.length === 1 ? "0" + minutes : minutes) +
-    ":" +
-    (seconds.length === 1 ? "0" + seconds : seconds);
+  const hoursOut = (hours + 100).toString().substring(1);
+  const minutesOut = (minutes + 100).toString().substring(1);
+  const secondsOut = (seconds + 100).toString().substring(1);
+  const timePrint = hoursOut + ":" + minutesOut + ":" + secondsOut;
   const col = warn ? color.fg.yellow : color.dim;
   return "[" + col + timePrint + color.reset + "]";
 };
