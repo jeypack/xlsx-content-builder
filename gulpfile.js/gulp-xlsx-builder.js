@@ -146,7 +146,11 @@ const cleanZipFolder = (cb) => {
 const cleanBuild = (cb) => {
   //move from template folder to output (destination) folder
   const templateFolder = getTplFolder() + "/";
-  console.log(timeprint(), "cleanBuild", (config.BUILD_FOLDER + templateFolder + "**"));
+  console.log(
+    timeprint(),
+    "cleanBuild",
+    config.BUILD_FOLDER + templateFolder + "**"
+  );
   del.sync([config.BUILD_FOLDER + templateFolder + "**"], {
     force: true,
   });
@@ -285,28 +289,6 @@ const buildJs = (cb) => {
   return createCombinedJS(sources, name, destination, !config.DEVELOPMENT);
 };
 
-const buildHtml = (cb) => {
-  const getTplNameFunc = getTplNameFunction();
-  const templateName = getTplNameFunc() + "/";
-  const name = config.DEVELOPMENT
-    ? "index.min"
-    : "index." + config.UID + ".min";
-  return src(config.SRC_PATH + templateName + "index.html")
-    .pipe(
-      htmlReplace({
-        css: "./css/" + name + ".css",
-        js: "./js/" + name + ".js",
-      })
-    )
-    .pipe(rename("index.html"))
-    .pipe(dest(config.destination))
-    .pipe(
-      reload({
-        stream: true,
-      })
-    );
-};
-
 const buildNunjucks = () => {
   //get nunjucks pages via name (.njk)
   const pageName = getTplName();
@@ -442,8 +424,8 @@ const setConfigHasFolderToZip = (cb) => {
     (resp) => {
       const length = resp.files.length;
       /* for (let i = 0; i < length; i++) {
-      console.log("zip", "i:", i, "files:", resp.files[i]);
-    } */
+        console.log("zip", "i:", i, "files:", resp.files[i]);
+      } */
       config.HAS_FOLDER_TO_ZIP = length > 1;
       console.log(
         "zip",
@@ -467,27 +449,6 @@ const setConfigHasFolderToZip = (cb) => {
       cb();
     }
   );
-};
-
-const zip = (cb) => {
-  const folder = config.DEVELOPMENT ? config.DEV_FOLDER : config.BUILD_FOLDER;
-  const name = getZipName();
-  console.log("zip", "folder:", col.dim, folder, col.reset);
-  const stream = src([
-    folder + "*",
-    "!" + folder + "zip",
-    "!" + folder + "*.*",
-  ]).pipe(
-    zipper({ destination: folder + "zip/", name: name }, (evt) => {
-      console.log(evt.index, evt.file.path.split("/").pop());
-    })
-  );
-  if (config.HAS_FOLDER_TO_ZIP) {
-    // leave fallbacks folder by default: "!" + folder + "fallbacks"
-    // get only folders inside directory without single files and zip folder
-    return stream;
-  }
-  cb();
 };
 
 //Version 1: imagefolder with Language (CZ) and Type (Size-1-2) plus Module and folder (01_Module/02_jpg) inside
@@ -881,15 +842,14 @@ function getOutputData(path) {
   };
 }
 
-function getTplSourcesBy(glob) {
+function getTplSourcesBy(source, glob) {
   const sourcesTpl = [];
   const brandNames = config.TPL_NAMES.BRAND;
   const productNames = config.TPL_NAMES.PRODUCT;
+  //loop through brand and product
   for (let i = 0, l = brandNames.length; i < l; i++) {
     for (let c = 0, ll = productNames.length; c < ll; c++) {
-      sourcesTpl.push(
-        config.SRC_PATH + brandNames[i] + "/" + productNames[c] + glob
-      );
+      sourcesTpl.push(source + brandNames[i] + "/" + productNames[c] + glob);
     }
   }
   const sources = [...new Set(sourcesTpl)];
@@ -916,7 +876,7 @@ function addOutputFolders(cb) {
   config.OUTPUT_FOLDERS.splice(0);
   //get sources from BRAND
   // (in future versions there may be more than one brand per config!)
-  const sourcesTpl = getTplSourcesBy("/*/");
+  const sourcesTpl = getTplSourcesBy(config.SRC_PATH, "/*/");
   // LOG AND PUSH FILE DATA OBJECTS
   let counter = 0;
   stream.add(
@@ -928,7 +888,13 @@ function addOutputFolders(cb) {
     src([...sourcesTpl, ...config.SRC_PATH_BUILD_IGNORES]).pipe(
       data((file) => {
         const obj = getOutputData(file.path);
-        console.log(timeprint(), "folder:", ++counter, col.dim + file.path);
+        console.log(
+          timeprint(),
+          "folder:",
+          ++counter,
+          col.dim + file.path,
+          col.reset
+        );
         //console.log("addOutputFolders folder: ", obj);
         config.OUTPUT_FOLDERS.push(obj);
         //console.log("+++ addOutputFolders data config.OUTPUT_FOLDERS: ", config.OUTPUT_FOLDERS);
@@ -948,18 +914,15 @@ function moveOutputAssets(cb) {
       config.PREVIEW_FOLDER
     : config.BUILD_FOLDER;
   //
-  const sourcesAssets = getTplSourcesBy("/*/assets/*.*");
+  const sourcesAssets = getTplSourcesBy(config.SRC_PATH, "/*/assets/*.*");
   //
   // MOVE IMAGES INTO FOLDER
   //let counter = 0;
   return (
-    src([
-      ...sourcesAssets,
-      ...config.SRC_PATH_BUILD_IGNORES,
-    ])
+    src([...sourcesAssets, ...config.SRC_PATH_BUILD_IGNORES])
       /* .pipe(
         data((file) => {
-          console.log(timeprint(), "data:", ++counter, col.dim + file.path);
+          console.log(timeprint(), "data:", ++counter, col.dim + file.path, col.reset);
           //const obj = getOutputData(path);
           return obj;
         })
@@ -1006,19 +969,15 @@ function buildTemplatesCSS(cb) {
       config.PREVIEW_FOLDER
     : config.BUILD_FOLDER;
   //
-  const sourcesAssets = getTplSourcesBy("/*/index.scss");
+  const sourcesAssets = getTplSourcesBy(config.SRC_PATH, "/*/index.scss");
   //
   // SCSS TO CSS
   const output = config.DEVELOPMENT ? "expanded" : "compressed";
   const processors = [autoprefixer, flexbugsfixer];
   return (
-    src(
-      [
-        ...sourcesAssets,
-        ...config.SRC_PATH_BUILD_IGNORES,
-      ],
-      { sourcemaps: config.DEVELOPMENT }
-    )
+    src([...sourcesAssets, ...config.SRC_PATH_BUILD_IGNORES], {
+      sourcemaps: config.DEVELOPMENT,
+    })
       .pipe(
         data((file) => {
           const parts = file.path.split("/");
@@ -1150,9 +1109,9 @@ function buildTemplatesNunjucks() {
       return obj;
     };
     const destination = config.DEVELOPMENT
-    ? //? config.DEV_FOLDER
-      config.PREVIEW_FOLDER
-    : config.BUILD_FOLDER;
+      ? //? config.DEV_FOLDER
+        config.PREVIEW_FOLDER
+      : config.BUILD_FOLDER;
     //get nunjucks pages via name (.njk)
     // BRAND_PRODUCT_TYPE_DATE
     //this is the standard: generic nunjucks template
@@ -1223,6 +1182,53 @@ function buildTemplatesNunjucks() {
   cb();
 }
 
+function zip(cb) {
+  const sources = getTplSourcesBy(config.BUILD_FOLDER, "/*");
+  const names = getTplSourcesBy("", "");
+  const name = names[0].split("/").join("_");
+  console.log(timeprint(), "sources", col.fg.yellow, sources, col.reset);
+  console.log(timeprint(), "names", col.fg.yellow, names, col.reset);
+  console.log(timeprint(), "names", col.fg.yellow, name, col.reset);
+  //const folder = config.DEVELOPMENT ? config.DEV_FOLDER : config.BUILD_FOLDER;
+  /* const name =
+    TPL_NAMES.BRAND[index] +
+    "_" +
+    TPL_NAMES.PRODUCT[index] +
+    "_" +
+    TPL_NAMES.TYPE[index]; */
+  //console.log("zip", "folder:", col.dim, folder, col.reset);
+  let counter = 0;
+  const stream = src([...sources]).pipe(
+    data((file) => {
+      //const obj = getOutputData(file.path);
+      console.log(
+        timeprint(),
+        "folder:",
+        ++counter,
+        col.dim + file.path,
+        col.reset
+      );
+      //console.log("addOutputFolders folder: ", obj);
+      //console.log("+++ addOutputFolders data config.OUTPUT_FOLDERS: ", config.OUTPUT_FOLDERS);
+      return {};
+    }).pipe(
+      zipper(
+        { destination: config.BUILD_FOLDER + names + "/zip/", name: name },
+        (evt) => {
+          console.log(evt.index, evt.file.path.split("/").pop());
+        }
+      )
+    )
+  );
+  /* if (config.HAS_FOLDER_TO_ZIP) {
+    // leave fallbacks folder by default: "!" + folder + "fallbacks"
+    // get only folders inside directory without single files and zip folder
+    return stream;
+  } */
+  //cb();
+  return stream;
+}
+
 // GULP SERIES
 const buildTemplate = series(
   setDestination,
@@ -1231,16 +1237,6 @@ const buildTemplate = series(
   parallel(buildCss, buildJs, setConfigHasNunjuckTpl),
   buildNunjucks
 );
-
-const buildTemplateViaHtml = series(
-  setDestination,
-  cleanDirectory,
-  moveAssets,
-  parallel(buildCss, buildJs, setConfigHasNunjuckTpl),
-  buildHtml
-);
-
-//const buildTemplatesCSS = series();
 
 // +++ EXPORTS +++
 
@@ -1262,7 +1258,7 @@ exports.dev = series(
   moveOutputAssets,
   buildTemplatesCSS,
   buildTemplatesJS,
-  buildTemplatesNunjucks,
+  buildTemplatesNunjucks
 );
 
 exports.build = series(
@@ -1275,7 +1271,7 @@ exports.build = series(
   buildTemplatesJS,
   buildTemplatesNunjucks,
   //setConfigHasFolderToZip,
-  //zip,
+  zip
 );
 
 exports.images = series(
@@ -1341,6 +1337,39 @@ exports.cleanBuild = series(cleanBuild);
 //11.
 
 //+++ R.I.P. +++
+
+/* const buildTemplateViaHtml = series(
+  setDestination,
+  cleanDirectory,
+  moveAssets,
+  parallel(buildCss, buildJs, setConfigHasNunjuckTpl),
+  buildHtml
+);
+
+const buildHtml = (cb) => {
+  const getTplNameFunc = getTplNameFunction();
+  const templateName = getTplNameFunc() + "/";
+  const name = config.DEVELOPMENT
+    ? "index.min"
+    : "index." + config.UID + ".min";
+  return src(config.SRC_PATH + templateName + "index.html")
+    .pipe(
+      htmlReplace({
+        css: "./css/" + name + ".css",
+        js: "./js/" + name + ".js",
+      })
+    )
+    .pipe(rename("index.html"))
+    .pipe(dest(config.destination))
+    .pipe(
+      reload({
+        stream: true,
+      })
+    );
+};
+
+*/
+
 //ACTIVATE THIS FOR INLINE BUILD
 /* const buildHtmlInline = (cb) => {
   const sourcesScss = [config.SRC_PATH + 'scss/index.scss'];

@@ -3,7 +3,7 @@ const { XLSX_TYPE_ENUM } = require("../parser/XLSXParserEnum");
 const TPL_NAMES = {
   CLIENT: "P&G",
   //HERE WE GET LENGTH VOR CALCULATIONS
-  BRAND: ["pampers", "pampers"],
+  BRAND: ["Pampers", "Pampers"],
   PRODUCT: ["Paw-Patrol", "Paw-Patrol"],
   TYPE: ["BabyDry-Pants", "BabyDry-Pants"],
   LANGUAGE: [["CZ", "SK"]],
