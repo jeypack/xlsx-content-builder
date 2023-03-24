@@ -1,6 +1,6 @@
 {
   "name": "xlsx-content-builder",
-  "version": "2.2.0",
+  "version": "2.3.1",
   "description": "Generates responsive content from xlsx via nunjucks templates.",
   "main": "index.js",
   "scripts": {

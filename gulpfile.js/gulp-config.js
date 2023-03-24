@@ -1,10 +1,10 @@
 const fs = require("fs");
-//const { TPL_NAMES } = require("./config/OralB-Genesis5");
+const { TPL_NAMES } = require("./config/OralB-Genesis5");
 //const { TPL_NAMES } = require("./config/P8-STD");
 //const { TPL_NAMES } = require("./config/MOJITO-BABYDRY");
 //const { TPL_NAMES } = require("./config/P-MATISSE-BABYDRY");
 //const { TPL_NAMES } = require("./config/P-PANDORA");
-const { TPL_NAMES } = require("./config/P-PAW-PATROL");
+//const { TPL_NAMES } = require("./config/P-PAW-PATROL");
 
 const TPL_ENUM = {
   STD: "NAME",
@@ -258,7 +258,7 @@ const getOutputName = (index, languageIndex, sujetIndex) => {
       TPL_NAMES.SUFFIX +
       "_" +
       TPL_NAMES.BRAND[index] +
-      "_" +
+      "-" +
       TPL_NAMES.PRODUCT[index] +
       "_" +
       TPL_NAMES.TYPE[index] +
