@@ -4,10 +4,10 @@
  * Version  : 1.0.1
  */
 (function () {
+  "use strict";
 
-  'use strict';
-
-  var p, isIOS = (/iPad|iPhone|iPod/.test(navigator.userAgent));
+  var p,
+    isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
   //extend Math
   function distance(ax, ay, bx, by) {
@@ -74,19 +74,21 @@
     this.selector = selector;
     this.currentMedia = null;
     this.slider = document.querySelector(selector);
-    this.table = this.slider.querySelector('.table');
-    this.colsPlain = this.slider.querySelectorAll('.col:not(.col-logo)');
+    this.table = this.slider.querySelector(".table");
+    this.colsPlain = this.slider.querySelectorAll(".col:not(.col-logo)");
     this.cols = [];
     //get table rows and loop through to find all cols
-    var i, cols, dot,
-      rows = this.table.querySelectorAll('.row'),
-      navigation = this.slider.querySelector('.navigation'),
+    var i,
+      cols,
+      dot,
+      rows = this.table.querySelectorAll(".row"),
+      navigation = this.slider.querySelector(".navigation"),
       l = rows.length;
     for (i = 0; i < l; i++) {
       //console.log("FlexSlider", "row:", this.rows[i]);
-      cols = rows[i].querySelectorAll('.col:not(.col-logo)');
+      cols = rows[i].querySelectorAll(".col:not(.col-logo)");
       if (i > 1) {
-        rows[i].classList.add('col-hover');
+        rows[i].classList.add("col-hover");
       }
       //console.log("FlexSlider", "cols:", cols);
       this.cols.push(cols);
@@ -95,25 +97,25 @@
     this.order = new Order(cols.length, 1);
     //this.slider.dataset.(camelCase);
     if (navigation) {
-      this.slideLeft = navigation.querySelector('.slide-left');
-      this.slideRight = navigation.querySelector('.slide-right');
-      this.pagination = navigation.querySelector('.pagination');
+      this.slideLeft = navigation.querySelector(".slide-left");
+      this.slideRight = navigation.querySelector(".slide-right");
+      this.pagination = navigation.querySelector(".pagination");
       this.handleDots = this.handleDots.bind(this);
       this.handleSlide = this.handleSlide.bind(this);
       this.handleResize = this.handleResize.bind(this);
       //add dot class indicies
       if (this.pagination) {
-        this.dots = navigation.querySelectorAll('.dot');
+        this.dots = navigation.querySelectorAll(".dot");
         l = this.dots.length;
         for (i = 0; i < l; i++) {
           dot = this.dots[i];
-          dot.classList.add('dot-' + i);
+          dot.classList.add("dot-" + i);
         }
-        this.pagination.addEventListener('click', this.handleDots);
+        this.pagination.addEventListener("click", this.handleDots);
       }
       if (this.slideLeft && this.slideRight) {
-        this.slideLeft.addEventListener('click', this.handleSlide);
-        this.slideRight.addEventListener('click', this.handleSlide);
+        this.slideLeft.addEventListener("click", this.handleSlide);
+        this.slideRight.addEventListener("click", this.handleSlide);
       }
       window.addEventListener("resize", this.handleResize);
       this.handleResize();
@@ -126,19 +128,21 @@
     this.handlePointerMove = this.handlePointerMove.bind(this);
     this.handlePointerUp = this.handlePointerUp.bind(this);
     if (this.options.flag > 0) {
-      this.table.addEventListener(this.options.EVENT_DOWN, this.handlePointerDown);
+      this.table.addEventListener(
+        this.options.EVENT_DOWN,
+        this.handlePointerDown
+      );
     }
     console.log("FlexSlider", "slider:", this.slider);
     console.log("FlexSlider", "navigation:", this.navigation);
     console.log("FlexSlider", "slideLeft:", this.slideLeft);
     console.log("FlexSlider", "slideRight:", this.slideRight);
     console.log("FlexSlider", "pagination:", this.pagination);
-    console.log("FlexSlider", "rows:", rows);
-    console.log("FlexSlider", "dots:", this.dots);
-    console.log("FlexSlider", "cols:", this.cols);
-    console.log("FlexSlider", "colsPlain:", this.colsPlain);
+    //console.log("FlexSlider", "rows:", rows);
+    //console.log("FlexSlider", "dots:", this.dots);
+    //console.log("FlexSlider", "cols:", this.cols);
+    //console.log("FlexSlider", "colsPlain:", this.colsPlain);
     console.log("FlexSlider", "order:", this.order);
-
   }
 
   p = FlexSlider.prototype;
@@ -151,17 +155,19 @@
       { width: 480, cols: 3 },
       { width: 768, cols: 4 },
       { width: 860, cols: 5 },
-      { width: 992, cols: 6 }
+      { width: 992, cols: 6 },
     ],
     loop: false,
     minDistanceToDrag: 2,
     minDistanceYToCancel: 30,
     minDistanceToSwipe: 40,
-    gutters: 16
+    gutters: 16,
   };
 
   FlexSlider.extendOSEventNames = function (options) {
-    if (!options) { options = {}; }
+    if (!options) {
+      options = {};
+    }
     var flag = 0;
     try {
       document.createEvent("TouchEvent");
@@ -175,25 +181,25 @@
     }
     switch (flag) {
       case 0:
-        options.EVENT_DOWN = 'mousedown';
-        options.EVENT_UP = 'mouseup';
-        options.EVENT_MOVE = 'mousemove';
+        options.EVENT_DOWN = "mousedown";
+        options.EVENT_UP = "mouseup";
+        options.EVENT_MOVE = "mousemove";
         break;
       case 1:
-        options.EVENT_DOWN = 'touchstart';
-        options.EVENT_UP = 'touchend';
+        options.EVENT_DOWN = "touchstart";
+        options.EVENT_UP = "touchend";
         //options.EVENT_CANCEL = 'touchcancel';
-        options.EVENT_MOVE = 'touchmove';
+        options.EVENT_MOVE = "touchmove";
         break;
       case 2:
-        options.EVENT_DOWN = 'pointerup';
-        options.EVENT_UP = 'pointerdown';
-        options.EVENT_MOVE = 'pointermove';
+        options.EVENT_DOWN = "pointerup";
+        options.EVENT_UP = "pointerdown";
+        options.EVENT_MOVE = "pointermove";
         break;
       case 3:
-        options.EVENT_DOWN = 'MSPointerDown';
-        options.EVENT_UP = 'MSPointerUp';
-        options.EVENT_MOVE = 'MSPointerMove';
+        options.EVENT_DOWN = "MSPointerDown";
+        options.EVENT_UP = "MSPointerUp";
+        options.EVENT_MOVE = "MSPointerMove";
         break;
     }
     options.flag = flag;
@@ -210,7 +216,8 @@
    * @returns {FlexSlider}
    */
   FlexSlider.get = function (selector, options) {
-    var i, flexSlider,
+    var i,
+      flexSlider,
       instances = FlexSlider.instances,
       l = instances.length;
     //early out
@@ -245,9 +252,9 @@
     opts.distance = distance(opts.origX, opts.origY, opts.x, opts.y);
     opts.distanceY = Math.abs(opts.y - opts.origY);
     if (opts.x < opts.origX) {
-      opts.direction = 'left';
+      opts.direction = "left";
     } else if (opts.x > opts.origX) {
-      opts.direction = 'right';
+      opts.direction = "right";
     }
     if (opts.distanceY < opts.minDistanceYToCancel) {
       e.preventDefault();
@@ -261,10 +268,13 @@
     this.table.removeEventListener(opts.EVENT_MOVE, this.handlePointerMove);
     opts.distance = distance(opts.origX, opts.origY, opts.x, opts.y);
     opts.distanceY = Math.abs(opts.y - opts.origY);
-    if (opts.distanceY < opts.minDistanceYToCancel && opts.distance > opts.minDistanceToSwipe) {
-      if (opts.direction === 'left') {
+    if (
+      opts.distanceY < opts.minDistanceYToCancel &&
+      opts.distance > opts.minDistanceToSwipe
+    ) {
+      if (opts.direction === "left") {
         this.next();
-      } else if (opts.direction === 'right') {
+      } else if (opts.direction === "right") {
         this.prev();
       }
     }
@@ -278,8 +288,17 @@
   };
 
   p.handleSlide = function (e) {
-    var direction = e.target.classList.contains('slide-left') ? -1 : 1;
-    console.log("FlexSlider", "handleSlide", "event:", e, "order:", this.order, "direction:", direction);
+    var direction = e.target.classList.contains("slide-left") ? -1 : 1;
+    console.log(
+      "FlexSlider",
+      "handleSlide",
+      "event:",
+      e,
+      "order:",
+      this.order,
+      "direction:",
+      direction
+    );
     if (direction > 0) {
       this.next();
     } else if (direction < 0) {
@@ -288,19 +307,20 @@
   };
 
   p.handleDots = function (e) {
-    var i, dot,
+    var i,
+      dot,
       dots = this.dots,
       l = dots.length,
       index = 0,
       count = 0,
       list = e.target.classList,
-      isDot = list.contains('dot') && list.contains('unvisible');
+      isDot = list.contains("dot") && list.contains("unvisible");
     if (isDot) {
-      index = parseInt(e.target.classList.item(1).split('dot-')[1], 10);
+      index = parseInt(e.target.classList.item(1).split("dot-")[1], 10);
       for (i = index - 1; i >= 0; i--) {
         dot = dots[i];
         count++;
-        if (!dot.classList.contains('unvisible')) {
+        if (!dot.classList.contains("unvisible")) {
           break;
         }
         if (i === 0) {
@@ -311,7 +331,7 @@
         for (i = index + 1; i < l; i++) {
           dot = dots[i];
           count--;
-          if (!dot.classList.contains('unvisible')) {
+          if (!dot.classList.contains("unvisible")) {
             break;
           }
         }
@@ -325,16 +345,30 @@
           this.next();
         }
       }
-      console.log("FlexSlider", "handleDots", "index:", index, "count:", count, "order:", this.order.cols[index], "visibleCols:", this.visibleCols);
+      console.log(
+        "FlexSlider",
+        "handleDots",
+        "index:",
+        index,
+        "count:",
+        count,
+        "order:",
+        this.order.cols[index],
+        "visibleCols:",
+        this.visibleCols
+      );
     }
   };
 
   p.removeOrder = function () {
-    var i, j, cols, l = this.order.max;
+    var i,
+      j,
+      cols,
+      l = this.order.max;
     for (i = 0; i < this.cols.length; i++) {
       cols = this.cols[i];
       for (j = 0; j < cols.length; j++) {
-        cols[j].classList.remove('order-' + this.order.cols[j]);
+        cols[j].classList.remove("order-" + this.order.cols[j]);
         //console.log("FlexSlider", "removeOrder", "col:", cols[j], "order:", this.order.cols[j]);
       }
     }
@@ -347,55 +381,71 @@
   };
 
   p.setOrder = function () {
-    var i, j, cols, l = this.order.max;
+    var i,
+      j,
+      cols,
+      l = this.order.max;
     for (i = 0; i < this.cols.length; i++) {
       cols = this.cols[i];
       for (j = 0; j < cols.length; j++) {
-        cols[j].classList.add('order-' + this.order.cols[j]);
+        cols[j].classList.add("order-" + this.order.cols[j]);
         //console.log("FlexSlider", "setOrder", "col:", cols[j], "order:", this.order.cols[j]);
       }
     }
   };
 
   p.setPagination = function () {
-    var i, dot, col,
+    var i,
+      dot,
+      col,
       dots = this.dots,
       cols = this.order.cols,
       l = this.order.max;
     for (i = 0; i < l; i++) {
       col = cols[i];
       dot = dots[i];
-      dot.classList.remove('unvisible');
+      dot.classList.remove("unvisible");
       if (col > this.visibleCols) {
-        dot.classList.add('unvisible');
+        dot.classList.add("unvisible");
       }
     }
   };
 
   p.setSize = function () {
-    //console.log("FlexSlider", "setSize", "*");
-    //console.log("FlexSlider", "setSize", "this:", this);
-    var i, col, media, colWidth, highestMedia, maxWidth, maxCols, tableWidth,
+    console.log("FlexSlider", "setSize", "*");
+    var i,
+      col,
+      media,
+      colWidth,
+      highestMedia,
+      maxWidth,
+      maxCols,
+      tableWidth,
       opts = this.options,
       mediaLength = opts.media.length,
       //breakpoint behavior
       winWidth = window.innerWidth,
       //our main container inside celek with padding left and right
       availableWidth = 1,
-      colLogoWidth = this.table.querySelector('.col-logo').clientWidth,
-      colSpace = availableWidth - colLogoWidth - opts.gutters * 2;
-    if (document.body.querySelector('#celek > .main')) {
-      document.body.querySelector('#celek > .main').clientWidth;
+      colLogoWidth = 100,
+      //this ist the visible part of the table without logo and gutters
+      colSpace = winWidth;
+    if (document.body.querySelector("#celek > .main")) {
+      availableWidth =
+        document.body.querySelector("#celek > .main").clientWidth;
     }
-    this.visibleCols = 1;
+    //
+    colLogoWidth = this.table.querySelector(".col-logo").clientWidth;
+    colSpace = availableWidth - colLogoWidth - opts.gutters * 2;
 
+    this.visibleCols = 1;
     for (i = 0; i < mediaLength; i++) {
       if (opts.media[i].width > availableWidth) {
         break;
       }
     }
-    media = opts.media[mediaLength - 1];
-    //console.log("FlexSlider", "setSize", "opts.media:", opts.media);
+    media = opts.media[i - 1];
+    //console.log("FlexSlider", "setSize", "availableWidth:", availableWidth);
     //console.log("FlexSlider", "setSize", "media:", media);
     //console.log("FlexSlider", "setSize", "this.currentMedia:", this.currentMedia);
     this.visibleCols = media.cols;
@@ -404,6 +454,14 @@
     colWidth = Math.ceil(colSpace / this.visibleCols);
     highestMedia = opts.media[mediaLength - 1];
     maxWidth = highestMedia.width;
+    console.log(
+      "FlexSlider",
+      "setSize",
+      "colSpace:",
+      colSpace,
+      "colWidth:",
+      colWidth
+    );
     if (winWidth < maxWidth) {
       if (this.currentMedia !== media) {
         this.resetOrder();
@@ -411,6 +469,17 @@
 
       maxCols = highestMedia.cols;
       tableWidth = Math.ceil(colLogoWidth + colWidth * maxCols);
+
+      console.log(
+        "FlexSlider",
+        "setSize",
+        "colLogoWidth:",
+        colLogoWidth,
+        "+ colWidth:",
+        colWidth,
+        "maxCols:",
+        maxCols
+      );
       this.table.style.width = tableWidth + "px";
       for (i = 0; i < this.colsPlain.length; i++) {
         col = this.colsPlain[i];
@@ -419,9 +488,9 @@
         //console.log("FlexSlider", "setSize", "col:", col);
       }
     } else {
-      this.table.style.removeProperty('width');
+      this.table.style.removeProperty("width");
       for (i = 0; i < this.colsPlain.length; i++) {
-        this.colsPlain[i].removeAttribute('style');
+        this.colsPlain[i].removeAttribute("style");
       }
       this.resetOrder();
     }
@@ -443,15 +512,18 @@
   p.setArrowState = function () {
     var opts = this.options;
     if (this.slideLeft && this.slideRight) {
-      this.slideLeft.classList.remove('disabled');
-      this.slideRight.classList.remove('disabled');
+      this.slideLeft.classList.remove("disabled");
+      this.slideRight.classList.remove("disabled");
       //prev
       if (!opts.loop && this.order.cols[0] <= this.visibleCols) {
-        this.slideLeft.classList.add('disabled');
+        this.slideLeft.classList.add("disabled");
       }
       //next
-      if (!opts.loop && this.order.cols[this.order.max - 1] <= this.visibleCols) {
-        this.slideRight.classList.add('disabled');
+      if (
+        !opts.loop &&
+        this.order.cols[this.order.max - 1] <= this.visibleCols
+      ) {
+        this.slideRight.classList.add("disabled");
       }
     }
   };
@@ -497,5 +569,4 @@
   }
   //
   window.initEGP = init; */
-
-}());
+})();

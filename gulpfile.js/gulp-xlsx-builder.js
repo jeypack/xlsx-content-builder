@@ -331,7 +331,7 @@ const buildNunjucks = () => {
               workbook.Sheets.Template
             );
             extendTemplateVars(tplValues);
-            //console.log("buildNunjucks tplValues:", tplValues);
+            console.log("buildNunjucks tplValues.numSliderCols:", tplValues.numSliderCols);
             //console.log("buildNunjucks tplValues.module2:", tplValues.module2);
             //console.log("buildNunjucks tplValues.module3:", tplValues.module3);
             //let length = tplValues.modules.length;
